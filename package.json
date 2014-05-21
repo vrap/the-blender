@@ -10,6 +10,9 @@
     "winston": "~0.7.3"
   },
   "devDependencies": {},
+  "scripts": {
+    "start": "node app/the-blender.js"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/vrap/the-blender.git"
