@@ -1,0 +1,20 @@
+{
+  "name": "the-blender",
+  "version": "0.0.0",
+  "description": "",
+  "main": "",
+  "dependencies": {
+    "johnny-five": "~0.7.36",
+    "socket.io": "~0.9.16",
+    "express": "~4.2.0",
+    "winston": "~0.7.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/vrap/the-blender.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vrap/the-blender/issues"
+  }
+}
