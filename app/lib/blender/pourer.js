@@ -5,14 +5,23 @@ var util = require('util'),
  * Pourer Module prototype
  * @type {Pourer}
  */
-exports.Pourer = Pourer = function(order, components, liquid) {
+exports.Pourer = Pourer = function () {
 	Pourer.super_.call(this);
+};
+util.inherits(Pourer, Module);
 
+/**
+ * Initialization of the pourer
+ *
+ * @param order
+ * @param components
+ * @param liquid
+ */
+Pourer.prototype.init = function(order, components, liquid) {
 	this.order = order;
 	this.components = components;
 	this.liquid = liquid;
 };
-util.inherits(Pourer, Module);
 
 /**
  * Call actuators to pour some liquid

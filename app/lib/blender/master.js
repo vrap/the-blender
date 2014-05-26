@@ -5,13 +5,19 @@ var util = require('util'),
  * Master Module prototype
  * @type {Master}
  */
-exports.Master = Master = function (components) {
+exports.Master = Master = function () {
 	Master.super_.call(this);
+};
+util.inherits(Master, Module);
 
+/**
+ * Initialization of the master
+ * @param components
+ */
+Master.prototype.init = function (components) {
 	this.order = 0; // 0 because the master is the first module
 	this.components = components;
 };
-util.inherits(Master, Module);
 
 /**
  * Call actuators to move the glass
