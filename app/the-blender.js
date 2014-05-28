@@ -8,7 +8,8 @@ var Server = require('./lib/server').Server,
 	Recipe = require('./lib/recipe/recipe').Recipe,
 	Step = require('./lib/recipe/step').Step,
 	Parameter = require('./lib/recipe/parameter').Parameter,
-    Five   = require('johnny-five');
+    Five   = require('johnny-five'),
+	database = require('../config/database');
 
 // Instanciate the server.
 var server = new Server();
@@ -16,26 +17,5 @@ var server = new Server();
 // Start the server.
 server.init(5555);
 
-/**
- * Setting the routes
- */
-// The API to communicate with the Angular app
-server.app.get('/api/blender/recipes', function(req, res) {
-	// Get every recipes available in the blender
-	res.send('These are my recipes.');
-});
-
-server.app.post('/api/blender/recipes/:recipe_uid', function(req, res) {
-	// Save a new recipe in the blender
-	res.send('Oh a new recipe ! Thank you my lord');
-});
-
-server.app.delete('/api/blender/recipes/:recipe_uid', function(req, res) {
-	// Delete a recipe in the blender
-	res.send('Bye bye sweet recipe ...');
-});
-
-server.app.post('/api/blender/execute/:recipe_uid', function(req, res) {
-	// Ask the blender to create a recipe (already saved or created by user)
-	res.send('More work ! Yes my lord !');
-});
+// Setting the routes
+require('../config/routes')(server.app);

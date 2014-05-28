@@ -3,17 +3,4 @@
  */
 
 // Configuration
-var app = angular.module('the-blender', []);
-
-/**
- * Controllers
- */
-app.controller('mainController', ['$scope', '$http', function ($scope, $http){
-	$http.get('/api/blender/recipes')
-			.success(function(data) {
-				console.log(data);
-			})
-			.error(function(data) {
-				console.log('Error ' + data);
-			})
-}]);
+var app = angular.module('the-blender', ['blenderController', 'blenderService']);
