@@ -22,20 +22,20 @@ server.init(5555);
 // The API to communicate with the Angular app
 server.app.get('/api/blender/recipes', function(req, res) {
 	// Get every recipes available in the blender
-	console.log('These are my recipes.');
+	res.send('These are my recipes.');
 });
 
 server.app.post('/api/blender/recipes/:recipe_uid', function(req, res) {
 	// Save a new recipe in the blender
-	console.log('Oh a new recipe ! Thank you my lord');
+	res.send('Oh a new recipe ! Thank you my lord');
 });
 
 server.app.delete('/api/blender/recipes/:recipe_uid', function(req, res) {
 	// Delete a recipe in the blender
-	console.log('Bye bye sweet recipe ...');
+	res.send('Bye bye sweet recipe ...');
 });
 
 server.app.post('/api/blender/execute/:recipe_uid', function(req, res) {
 	// Ask the blender to create a recipe (already saved or created by user)
-	console.log('More work ! Yes my lord !');
+	res.send('More work ! Yes my lord !');
 });
