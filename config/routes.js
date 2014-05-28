@@ -9,6 +9,11 @@ module.exports = function(app) {
 		res.send('These are my recipes.');
 	});
 
+	app.get('/api/blender/recipes/:recipe_uid', function(req, res) {
+		// Get a recipe available in the blender
+		res.send('This is the recipe.');
+	});
+
 	app.post('/api/blender/recipes/:recipe_uid', function(req, res) {
 		// Save a new recipe in the blender
 		res.send('Oh a new recipe ! Thank you my lord');
