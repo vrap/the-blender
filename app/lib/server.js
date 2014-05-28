@@ -28,8 +28,9 @@ Server.prototype.init = function(port) {
     app.use(express.static(__dirname + '/../../public'));
 
     // Initialize http server.
-    this.server = http.createServer(app);
-    this.server.listen(port);
+	app.listen(port);
+    this.app = app;
+	this.server = http.createServer(app);
     this.socket = io.listen(
         this.server, {
             logger: {
