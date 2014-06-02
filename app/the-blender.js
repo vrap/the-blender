@@ -9,6 +9,7 @@ var Server = require('./lib/server').Server,
 	Step = require('./lib/recipe/step').Step,
 	Parameter = require('./lib/recipe/parameter').Parameter,
     Five   = require('johnny-five'),
+    mongoose = require('mongoose'),
 	database = require('../config/database');
 
 // Instanciate the server.
@@ -17,5 +18,9 @@ var server = new Server();
 // Start the server.
 server.init(5555);
 
+// Connecting to database
+mongoose.connect(database.url);
+
 // Setting the routes
-require('../config/routes')(server.app);
+require('./lib/routes')(server.app);
+

@@ -3,5 +3,5 @@
  */
 
 module.exports = {
-	url: 'url/of/database'
+	url: 'mongodb://localhost/the-blender'
 };
