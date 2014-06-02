@@ -2,11 +2,12 @@
  *
  */
 var bc = angular.module('blenderController', []);
+var communityUri = 'http://localhost:9999';
 
 // Recipe Controller to manage interactions between the view and the service
-bc.controller('recipeController', ['$scope', '$http', 'Recipes', 'Community', function ($scope, $http, Recipes, Community){
+bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', function ($scope, $http, Blender, Community){
 	// Display local recipes
-    Recipes.getAll()
+    Blender.Recipes.getAll()
         .success(function(data) {
             $scope.recipes = data;
         })
@@ -15,7 +16,7 @@ bc.controller('recipeController', ['$scope', '$http', 'Recipes', 'Community', fu
         });
 
     // Display community recipes
-    Community.Recipes.getAll('http://localhost:9999')
+    Community.Recipes.getAll(communityUri)
         .success(function(data) {
             var recipes = [];
             // Formats return
@@ -23,7 +24,7 @@ bc.controller('recipeController', ['$scope', '$http', 'Recipes', 'Community', fu
                 var recipe = {};
                 recipe.name = data.data[i].name;
                 // Search user by its uuid
-                Community.Users.get('http://localhost:9999', data.data[i].author)
+                Community.Users.get(communityUri, data.data[i].author)
                     .success(function(res) {
                         recipe.author = res.data.username;
                     })
