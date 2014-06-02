@@ -10,12 +10,20 @@
 <body ng-app="the-blender">
 
   <div ng-controller="recipeController">
-    {{ recipes }}
+      Recettes locales : <br/>
+      {{ recipes }}
+      <br/>
+      Recettes de la communauté : <br/>
+      <ul>
+          <li ng-repeat="comRecipe in comRecipes">
+              {{ comRecipe.name }} by {{ comRecipe.author }}
+          </li>
+      </ul>
   </div>
 
 
-  <script src="js/controllers/blenderControllers.js"></script>
-  <script src="js/services/blenderServices.js"></script>
+  <script src="js/blender/controllers.js"></script>
+  <script src="js/blender/services.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
