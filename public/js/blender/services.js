@@ -24,13 +24,7 @@ bs.factory('Recipes', ['$http', function($http) {
 		delete: function(ruid) {
 			// Some code to delete a recipe
 			return $http.delete('/api/blender/recipes/' + ruid);
-		},
-        getAllFromCommunity: function(communityUri) {
-            return $http.get(communityUri + '/recipes');
-        },
-        getFromCommunity: function(communityUri, ruid) {
-            return $http.get(communityUri + '/recipes/' + ruid);
-        }
+		}
 	}
 }]);
 
@@ -40,3 +34,25 @@ bs.factory('Modules', function() {
 
 	}
 });
+
+// Service for community management
+bs.factory('Community', ['$http', function($http) {
+    return {
+        Recipes: {
+            getAll: function(communityUri) {
+                return $http.get(communityUri + '/recipes');
+            },
+            get: function(communityUri, ruid) {
+                return $http.get(communityUri + '/recipes/' + ruid);
+            }
+        },
+        Users: {
+            getAll: function(communityUri) {
+                return $http.get(communityUri + '/users');
+            },
+            get: function(communityUri, ruid) {
+                return $http.get(communityUri + '/users/' + ruid);
+            }
+        }
+    }
+}]);
