@@ -10,20 +10,20 @@ bs.factory('Recipes', ['$http', function($http) {
 			// Some code to get the recipes
 			return $http.get('/api/blender/recipes');
 		},
-		get: function(ruid) {
+		get: function(uuid) {
 			// Some code to get the recipes
-			return $http.get('/api/blender/recipes/' + ruid);
+			return $http.get('/api/blender/recipes/' + uuid);
 		},
 		create: function() {
 			// Some code to create a recipe
 		},
-		save: function(ruid) {
+		save: function(uuid) {
 			// Some code to save a recipe in The Blender
-			return $http.post('/api/blender/recipes/' + ruid);
+			return $http.post('/api/blender/recipes/' + uuid);
 		},
-		delete: function(ruid) {
+		delete: function(uuid) {
 			// Some code to delete a recipe
-			return $http.delete('/api/blender/recipes/' + ruid);
+			return $http.delete('/api/blender/recipes/' + uuid);
 		}
 	}
 }]);
@@ -42,16 +42,16 @@ bs.factory('Community', ['$http', function($http) {
             getAll: function(communityUri) {
                 return $http.get(communityUri + '/recipes');
             },
-            get: function(communityUri, ruid) {
-                return $http.get(communityUri + '/recipes/' + ruid);
+            get: function(communityUri, uuid) {
+                return $http.get(communityUri + '/recipes/' + uuid);
             }
         },
         Users: {
             getAll: function(communityUri) {
                 return $http.get(communityUri + '/users');
             },
-            get: function(communityUri, ruid) {
-                return $http.get(communityUri + '/users/' + ruid);
+            get: function(communityUri, uuid) {
+                return $http.get(communityUri + '/users/' + uuid);
             }
         }
     }
