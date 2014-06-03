@@ -12,8 +12,8 @@ var Server = require('./lib/server').Server,
     mongoose = require('mongoose'),
     http = require('http'),
 	database = require('../config/database'),
-    Version = require('./lib/version'),
-    Ingredient = require('./lib/recipe/ingredient');
+    Version = require('./lib/model/version'),
+    Ingredient = require('./lib/model/ingredient');
 
 var masterUri = "http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master";
 
