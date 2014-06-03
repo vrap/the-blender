@@ -10,9 +10,9 @@ module.exports = mongoose.model('Recipe', {
     steps: [{
         order: Number,
         action: String,
-        parameters: {
+        parameters: [{
             name: String,
             value: mongoose.Schema.Types.Mixed
-        }
+        }]
     }]
 });
