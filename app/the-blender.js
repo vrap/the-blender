@@ -1,7 +1,6 @@
 /**
  * Module dependencies.
  */
-
 var Five  = require('johnny-five'),
     board = new Five.Board({
         port: '/dev/ttyACM0'
@@ -33,9 +32,7 @@ board.on('ready', function() {
     var db = mongoose.connection;
 
     // Check if the blender is up-to-date
-    if(checkVersion()) {
-        // Have to be updated
-    }
+    update();
 
     // Setting the routes
     require('./lib/routes')(server.app);
@@ -43,24 +40,62 @@ board.on('ready', function() {
 
 /**
  * Check if an update have to be done
- *
- * @return {Boolean} True if the blender have to be updated
  */
-function checkVersion() {
+function update() {
     var body = "",
-        res,
-        current;
+        result;
 
     http.get(masterUri + "/version.json", function(res) {
         res.on('data', function (chunk) {
             body += chunk;
         });
         res.on('end', function () {
-            var res = JSON.parse(body);
-            Version.findOne(function(err, post) {
-                current = post.version;
+            var result = JSON.parse(body);
+            var newVersion = result.version,
+                newChecksum = result.checksum;
 
-                return parseFloat(res.version) > parseFloat(current);
+            // Get current version
+            Version.findOne(function(err, post) {
+                var id = post._id,
+                    currentVersion = post.version,
+                    currentChecksum = post.checksum;
+
+                // Blender outdated
+                if(parseFloat(newVersion) > parseFloat(currentVersion)) {
+                    body = "";
+                    // Get ingredients
+                    http.get(masterUri + "/master.json", function(res) {
+                        res.on('data', function (chunk) {
+                            body += chunk;
+                        });
+                        res.on('end', function () {
+                            result = JSON.parse(body);
+
+                            for(var i in result.ingredients) {
+                                // Save ingredient if not exist
+                                Ingredient.update(
+                                    {uuid: i},
+                                    { $set: {
+                                            name: result.ingredients[i].name
+                                        }
+                                    },
+                                    {
+                                        upsert: true
+                                    }
+                                ).exec();
+                            }
+
+                            // Update version
+                            Version.update(
+                                {_id: id},
+                                { $set: {
+                                    version: newVersion,
+                                    checksum: newChecksum
+                                }
+                                }).exec();
+                        })
+                    });
+                }
             });
         });
     });
