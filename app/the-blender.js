@@ -1,38 +1,41 @@
 /**
  * Module dependencies.
  */
-var Server = require('./lib/server').Server,
-	Blender = require('./lib/blender/blender').Blender,
-	Master = require('./lib/blender/master').Master,
-	Pourer = require('./lib/blender/pourer').Pourer,
-	Recipe = require('./lib/recipe/recipe').Recipe,
-	Step = require('./lib/recipe/step').Step,
-	Parameter = require('./lib/recipe/parameter').Parameter,
+
+board.on('ready', function() {
+    var Server = require('./lib/server').Server,
+    Blender = require('./lib/blender/blender').Blender,
+    Plateau = require('./lib/blender/plateau').PLateau,
+    Pourer = require('./lib/blender/pourer').Pourer,
+    Recipe = require('./lib/recipe/recipe').Recipe,
+    Step = require('./lib/recipe/step').Step,
+    Parameter = require('./lib/recipe/parameter').Parameter,
     Five   = require('johnny-five'),
     mongoose = require('mongoose'),
     http = require('http'),
-	database = require('../config/database'),
+    database = require('../config/database'),
     Version = require('./lib/version');
 
-var masterUri = "http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master";
+    var masterUri = "http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master";
 
-// Instanciate the server.
-var server = new Server();
+    // Instanciate the server.
+    var server = new Server();
 
-// Start the server.
-server.init(5555);
+    // Start the server.
+    server.init(6666);
 
-// Connecting to database
-mongoose.connect(database.url);
-var db = mongoose.connection;
+    // Connecting to database
+    mongoose.connect(database.url);
+    var db = mongoose.connection;
 
-// Check if the blender is up-to-date
-if(checkVersion()) {
-    // Have to be updated
-}
+    // Check if the blender is up-to-date
+    if(checkVersion()) {
+        // Have to be updated
+    }
 
-// Setting the routes
-require('./lib/routes')(server.app);
+    // Setting the routes
+    require('./lib/routes')(server.app);
+});
 
 /**
  * Check if an update have to be done
