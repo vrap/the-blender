@@ -9,7 +9,19 @@ var communityUri = 'http://localhost:9999',
     token;
 
 // Home controller
+bc.controller('connectionController', ['$scope', '$http', '$location', function($scope, $http, $location){
+
+    $scope.LoginWithOutAccount = function(){
+        $location.path("/home");
+    }
+
+}])
+
+// Home controller
 bc.controller('homeController', ['$scope', '$http', function($scope, $http){
+
+    $scope.recipeCommunity = false;
+    $scope.recipeMaster = true;
 
 }])
 
