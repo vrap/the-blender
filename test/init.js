@@ -4,7 +4,8 @@ var mongoose = require('mongoose'),
     database = require('../config/database'),
     Version = require('../app/lib/model/version'),
     Recipe = require('../app/lib/model/recipe'),
-    Ingredient = require('../app/lib/model/ingredient');
+    Ingredient = require('../app/lib/model/ingredient'),
+    Module = require('../app/lib/model/module');
 
 // Create database
 mongoose.connect(database.url);
@@ -77,5 +78,42 @@ var r = new Recipe({
 });
 r.save();
 console.log('Table Recipe created');
+
+// Module table
+var m1 = new Module({
+    order: 1,
+    components: [
+        {
+            type: "sensor",
+            pins: [1]
+        }
+    ]
+});
+var m2 = new Module({
+    order: 2,
+    components: [
+        {
+            type: "pourer",
+            pins: [2]
+        },
+        {
+            type: "sensor",
+            pins: [3]
+        }
+    ]
+});
+var m3 = new Module({
+    order: 3,
+    components: [
+        {
+            type: "pourer",
+            pins: [4]
+        }
+    ]
+});
+m1.save();
+m2.save();
+m3.save();
+console.log('Table Module created');
 
 console.log('Initialization done!');
