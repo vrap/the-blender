@@ -2,10 +2,16 @@
  *
  */
 var bc = angular.module('blenderController', []);
+
 var communityUri = 'http://localhost:9999',
     communityUser = 'test2',
     communityPwd = 'test2',
     token;
+
+// Home controller
+bc.controller('homeController', ['$scope', '$http', function($scope, $http){
+
+}])
 
 // Recipe Controller to manage interactions between the view and the service
 bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', function ($scope, $http, Blender, Community){
@@ -17,10 +23,6 @@ bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', fu
         .error(function(data) {
             console.log('Error :' + data);
         });
-
-
-
-
 
 }]);
 
