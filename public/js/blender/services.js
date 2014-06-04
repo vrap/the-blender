@@ -37,18 +37,26 @@ bs.factory('Blender', ['$http', function($http) {
 bs.factory('Community', ['$http', function($http) {
     return {
         Recipes: {
-            getAll: function(communityUri) {
+            getAll: function(communityUri, token) {
                 return $http.get(communityUri + '/recipes');
             },
-            get: function(communityUri, uuid) {
+            get: function(communityUri, token, uuid) {
                 return $http.get(communityUri + '/recipes/' + uuid);
             }
         },
         Users: {
-            getAll: function(communityUri) {
+            connect: function(communityUri, user, pwd) {
+                return $http({
+                    method: 'POST',
+                    url: communityUri + '/login',
+                    data: 'username='+ user +'&password=' + pwd,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                });
+            },
+            getAll: function(communityUri, token) {
                 return $http.get(communityUri + '/users');
             },
-            get: function(communityUri, uuid) {
+            get: function(communityUri, token, uuid) {
                 return $http.get(communityUri + '/users/' + uuid);
             }
         }
