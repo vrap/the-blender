@@ -28,6 +28,9 @@ body {
   margin: 0;
   padding: 0;
 }
+.panel-heading h3 {
+  margin: 0;
+}
 .navbar-nav {
   width: 202px;
   margin: 0 auto;

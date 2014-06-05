@@ -27,7 +27,19 @@ bc.controller('homeController', ['$scope', '$http', function($scope, $http){
 
 // Recipe Controller to manage interactions between the view and the service
 bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', function ($scope, $http, Blender, Community){
-   	// Display local recipes
+    
+    $scope.recipeList = true;
+
+    $scope.openRecipe = function(){
+        $scope.recipeList = false;
+    }
+
+    $scope.BackListRecipe = function(){
+        $scope.recipeList = true;
+    }
+
+
+    // Display local recipes
     Blender.Recipes.getAll()
         .success(function(data) {
             $scope.recipes = data;
