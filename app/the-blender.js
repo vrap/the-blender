@@ -1,6 +1,7 @@
 /**
  * Module dependencies.
  */
+
 var Five    = require('johnny-five'),
     config  = require('../config/config'),
     Version   = require('./lib/model/version'),
@@ -9,10 +10,10 @@ var Five    = require('johnny-five'),
         port: config.board.port
     });
 
-board.on('ready', function() {
+// board.on('ready', function() {
     var Server    = require('./lib/server').Server,
         Blender   = require('./lib/blender/blender').Blender,
-        Plateau   = require('./lib/blender/plateau').Plateau,
+        Cart      = require('./lib/blender/cart').Cart,
         Pourer    = require('./lib/blender/pourer').Pourer,
         Recipe    = require('./lib/recipe/recipe').Recipe,
         Step      = require('./lib/recipe/step').Step,
@@ -39,7 +40,11 @@ board.on('ready', function() {
 
     // Setting the routes
     require('./lib/routes')(server.app);
-});
+
+    // console.log(Cart);
+
+    Cart.init();
+// });
 
 /**
  * Check if an update have to be done
