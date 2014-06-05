@@ -4,8 +4,8 @@
 
 var Five    = require('johnny-five'),
     config  = require('../config/config'),
-    Version   = require('./lib/model/version'),
-    Ingredient   = require('./lib/model/ingredient'),
+    VersionModel   = require('./lib/model/version'),
+    IngredientModel   = require('./lib/model/ingredient'),
     board   = new Five.Board({
         port: config.board.port
     });
@@ -63,7 +63,7 @@ function update() {
                 newChecksum = result.checksum;
 
             // Get current version
-            Version.findOne(function(err, post) {
+            VersionModel.findOne(function(err, post) {
                 var id = post._id,
                     currentVersion = post.version,
                     currentChecksum = post.checksum;
@@ -81,7 +81,7 @@ function update() {
 
                             for(var i in result.ingredients) {
                                 // Save ingredient if not exist
-                                Ingredient.update(
+                                IngredientModel.update(
                                     {uuid: i},
                                     { $set: {
                                             name: result.ingredients[i].name
@@ -94,7 +94,7 @@ function update() {
                             }
 
                             // Update version
-                            Version.update(
+                            VersionModel.update(
                                 {_id: id},
                                 { $set: {
                                     version: newVersion,

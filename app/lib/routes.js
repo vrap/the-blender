@@ -9,7 +9,7 @@ module.exports = function(app) {
 	app.get('/api/blender/recipes', function(req, res) {
 		
 		// Get every recipes available in the blender
-		recipes = RecipeModel.find(function(err, data){
+		var recipes = RecipeModel.find(function(err, data){
 			res.send(data);
 		});
 
