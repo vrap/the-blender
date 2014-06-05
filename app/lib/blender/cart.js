@@ -1,6 +1,6 @@
-var util    = require('util'),
-    Module  = require('./module').Module,
-    stepper = new Five.Stepper({
+var util   = require('util'),
+    Module = require('../model/module').Module;
+    /*stepper  = new Five.Stepper({
         type: Five.Stepper.TYPE.TWO_WIRE,
         stepsPerRev: 200,
         pins: {
@@ -9,40 +9,45 @@ var util    = require('util'),
         }
     }),
     maxSpeed = 200,
-    minSpeed = 20;
+    minSpeed = 20;*/
 
 /**
- * Plateau Module prototype
- * @type {Plateau}
+ * Cart Module prototype
+ * @type {Cart}
  */
-exports.Plateau = Plateau = function() {
-    Plateau.super_.call(this);
+exports.Cart = Cart = function() {
+    Cart.super_.call(this);
 };
 
-util.inherits(Plateau, Module);
+util.inherits(Cart, Module);
 
 /**
- * Initializing the position of the plateau
+ * Initializing the position of the cart
  */
-Plateau.prototype.init = function() { 
-    var pwmA   = new Five.Pin(3).high();
+Cart.prototype.init = function() { 
+    /*var pwmA   = new Five.Pin(3).high();
     var pwmB   = new Five.Pin(11).high();
     var brakeA = new Five.Pin(9).low();
-    var brakeB = new Five.Pin(8).low();
+    var brakeB = new Five.Pin(8).low();*/
+
+    Module.findOne(function(err, post) {
+        console.log(post);
+    });
+
 
     // Récupérer le 1er module dans MongoDB
     // moveTo ce module pour RAZ
 
     // var master =
 
-    this.moveTo(master, maxSpeed);
+    // this.moveTo(master, maxSpeed);
 };
 
 /**
  * Call actuators to move the glass
  * @param {Module} module
  */
-Plateau.prototype.moveTo = function(module, speed) {
+Cart.prototype.moveTo = function(module, speed) {
     if (false === module instanceof Module) {
         throw 'Bad parameter instance. Instance of Module expected';
     }
