@@ -1,6 +1,7 @@
-var util   = require('util'),
-    Module = require('../model/module').Module;
-    /*stepper  = new Five.Stepper({
+var util = require('util'),
+    Module = require('./module').Module,
+    modelModule = require('../model/module').Module;
+/*stepper  = new Five.Stepper({
         type: Five.Stepper.TYPE.TWO_WIRE,
         stepsPerRev: 200,
         pins: {
@@ -11,8 +12,8 @@ var util   = require('util'),
     maxSpeed = 200,
     minSpeed = 20;*/
 
-    var moduleWidth  = 70, 
-        cartPosition = 0;
+var moduleWidth = 70,
+    cartPosition = 0;
 
 /**
  * Cart Module prototype
@@ -27,7 +28,7 @@ util.inherits(Cart, Module);
 /**
  * Initializing the position of the cart
  */
-Cart.prototype.init = function() { 
+Cart.prototype.init = function() {
     /*var pwmA   = new Five.Pin(3).high();
     var pwmB   = new Five.Pin(11).high();
     var brakeA = new Five.Pin(9).low();
