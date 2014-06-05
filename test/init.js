@@ -82,6 +82,7 @@ console.log('Table Recipe created');
 // Module table
 var m1 = new Module({
     order: 1,
+    content: "b52d956f-e690-a7e3-ad38-dfb1db377f49",
     components: [
         {
             type: "sensor",
@@ -91,6 +92,7 @@ var m1 = new Module({
 });
 var m2 = new Module({
     order: 2,
+    content: "b52d956f-e690-11e3-ad47-dfb1db377127",
     components: [
         {
             type: "pourer",
@@ -104,6 +106,7 @@ var m2 = new Module({
 });
 var m3 = new Module({
     order: 3,
+    content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
     components: [
         {
             type: "pourer",
