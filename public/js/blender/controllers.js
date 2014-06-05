@@ -30,14 +30,17 @@ bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', fu
     
     $scope.recipeList = true;
 
-    $scope.openRecipe = function(){
+    // Open Panel for the recipe details
+    $scope.openRecipe = function(recipe){
+        $scope.cocktailRecipe = recipe;
+        console.log(recipe);
         $scope.recipeList = false;
     }
 
+    // Close Panel for the recipe details
     $scope.BackListRecipe = function(){
         $scope.recipeList = true;
     }
-
 
     // Display local recipes
     Blender.Recipes.getAll()
