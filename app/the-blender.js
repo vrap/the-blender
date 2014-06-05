@@ -1,8 +1,9 @@
 /**
  * Module dependencies.
  */
-var Five  = require('johnny-five'),
-    board = new Five.Board({
+var Five    = require('johnny-five'),
+    config  = require('../config/config'),
+    board   = new Five.Board({
         port: '/dev/ttyACM0'
     });
 
@@ -16,10 +17,7 @@ board.on('ready', function() {
         Parameter = require('./lib/recipe/parameter').Parameter,
         mongoose  = require('mongoose'),
         http      = require('http'),
-        database  = require('../config/database'),
         Version   = require('./lib/version');
-
-    var masterUri = "http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master";
 
     // Instanciate the server.
     var server = new Server();
@@ -28,11 +26,15 @@ board.on('ready', function() {
     server.init(6666);
 
     // Connecting to database
-    mongoose.connect(database.url);
+    mongoose.connect(config.database.url);
     var db = mongoose.connection;
 
     // Check if the blender is up-to-date
-    //update();
+    if(null !== config.master.url) {
+        update();
+    } else {
+        console.log("Cannot update ingredients. Master url don't given.");
+    }
 
     // Setting the routes
     require('./lib/routes')(server.app);
@@ -45,7 +47,7 @@ function update() {
     var body = "",
         result;
 
-    http.get(masterUri + "/version.json", function(res) {
+    http.get(config.master.url + "/version.json", function(res) {
         res.on('data', function (chunk) {
             body += chunk;
         });
@@ -64,7 +66,7 @@ function update() {
                 if(parseFloat(newVersion) > parseFloat(currentVersion)) {
                     body = "";
                     // Get ingredients
-                    http.get(masterUri + "/master.json", function(res) {
+                    http.get(config.master.url + "/master.json", function(res) {
                         res.on('data', function (chunk) {
                             body += chunk;
                         });
