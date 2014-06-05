@@ -1,15 +1,15 @@
 console.log('Initialization start ...');
 
 var mongoose = require('mongoose'),
-    database = require('../config/database'),
+    config = require('../config/config'),
     Version = require('../app/lib/model/version'),
     Recipe = require('../app/lib/model/recipe'),
     Ingredient = require('../app/lib/model/ingredient'),
     Module = require('../app/lib/model/module');
 
 // Create database
-mongoose.connect(database.url);
-console.log('Database ' + database.url + ' created.');
+mongoose.connect(config.database.url);
+console.log('Database ' + config.database.url + ' created.');
 
 // Version table
 var v = new Version({
