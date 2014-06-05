@@ -10,7 +10,7 @@ var Five    = require('johnny-five'),
         port: config.board.port
     });
 
-// board.on('ready', function() {
+board.on('ready', function() {
     var Server    = require('./lib/server').Server,
         Blender   = require('./lib/blender/blender').Blender,
         Cart      = require('./lib/blender/cart').Cart,
@@ -42,9 +42,9 @@ var Five    = require('johnny-five'),
     require('./lib/routes')(server.app);
 
     // console.log(Cart);
-
-    Cart.init();
-// });
+    var cart = new Cart();
+    cart.init();
+});
 
 /**
  * Check if an update have to be done
