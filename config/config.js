@@ -11,5 +11,8 @@ module.exports = {
     },
     server: {
         port: 5555
+    },
+    board: {
+        port: '/dev/ttyACM0'
     }
 };

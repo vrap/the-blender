@@ -4,7 +4,7 @@
 var Five    = require('johnny-five'),
     config  = require('../config/config'),
     board   = new Five.Board({
-        port: '/dev/ttyACM0'
+        port: config.board.port
     });
 
 board.on('ready', function() {
