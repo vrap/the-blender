@@ -5,12 +5,12 @@
 var Five    = require('johnny-five'),
     config  = require('../config/config'),
     VersionModel   = require('./lib/model/version'),
-    IngredientModel   = require('./lib/model/ingredient'),
-    board   = new Five.Board({
-        port: config.board.port
-    });
+    IngredientModel   = require('./lib/model/ingredient');
+    // board   = new Five.Board({
+    //     port: config.board.port
+    // });
 
-board.on('ready', function() {
+//board.on('ready', function() {
     var Server    = require('./lib/server').Server,
         Blender   = require('./lib/blender/blender').Blender,
         Cart      = require('./lib/blender/cart').Cart,
@@ -44,7 +44,7 @@ board.on('ready', function() {
     // console.log(Cart);
     var cart = new Cart();
     cart.init();
-});
+//});
 
 /**
  * Check if an update have to be done

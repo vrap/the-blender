@@ -3,4 +3,4 @@
  */
 
 // Configuration
-var app = angular.module('the-blender', ['blenderController', 'blenderService', 'blenderRoute']);
+var app = angular.module('the-blender', ['blenderController', 'blenderService', 'blenderRoute', 'blenderDirective']);
