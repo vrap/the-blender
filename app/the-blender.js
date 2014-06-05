@@ -23,7 +23,7 @@ board.on('ready', function() {
     var server = new Server();
 
     // Start the server.
-    server.init(6666);
+    server.init(config.server.port);
 
     // Connecting to database
     mongoose.connect(config.database.url);

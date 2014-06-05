@@ -8,5 +8,8 @@ module.exports = {
     },
 	master: {
         url: 'http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master'
+    },
+    server: {
+        port: 5555
     }
 };
