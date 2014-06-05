@@ -15,8 +15,9 @@ bs.factory('Blender', ['$http', function($http) {
                 // Some code to get the recipes
                 return $http.get('/api/blender/recipes/' + uuid);
             },
-            create: function() {
+            execute: function(recipe) {
                 // Some code to create a recipe
+                return $http.post('/api/blender/execute', recipe);
             },
             save: function(uuid) {
                 // Some code to save a recipe in The Blender

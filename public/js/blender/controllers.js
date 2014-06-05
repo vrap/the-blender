@@ -15,15 +15,15 @@ bc.controller('connectionController', ['$scope', '$http', '$location', function(
         $location.path("/home");
     }
 
-}])
+}]);
 
 // Home controller
-bc.controller('homeController', ['$scope', '$http', function($scope, $http){
+bc.controller('homeController', ['$scope', '$http', 'Blender', function($scope, $http, Blender){
 
     $scope.recipeCommunity = false;
     $scope.recipeMaster = true;
 
-}])
+}]);
 
 // Recipe Controller to manage interactions between the view and the service
 bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', function ($scope, $http, Blender, Community){
@@ -35,12 +35,16 @@ bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', fu
         $scope.cocktailRecipe = recipe;
         console.log(recipe);
         $scope.recipeList = false;
-    }
+    };
+
+    $scope.blend = function(recipe) {
+        Blender.Recipes.execute(recipe);
+    };
 
     // Close Panel for the recipe details
     $scope.BackListRecipe = function(){
         $scope.recipeList = true;
-    }
+    };
 
     // Display local recipes
     Blender.Recipes.getAll()
