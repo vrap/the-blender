@@ -38,7 +38,10 @@ bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', fu
     };
 
     $scope.blend = function(recipe) {
-        Blender.Recipes.execute(recipe);
+        Blender.Recipes.execute(recipe)
+            .success(function(data) {
+               console.log(data);
+            });
     };
 
     // Close Panel for the recipe details

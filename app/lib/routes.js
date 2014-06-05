@@ -1,5 +1,7 @@
 var mongoose  	= require('mongoose'),
-	RecipeModel = require('./model/recipe.js');
+    Blender     = require('./blender/blender').Blender,
+    ModuleModel = require('./model/module'),
+	RecipeModel = require('./model/recipe');
 
 /**
  * Routes for the application
@@ -9,7 +11,7 @@ module.exports = function(app) {
 	app.get('/api/blender/recipes', function(req, res) {
 		
 		// Get every recipes available in the blender
-		var recipes = RecipeModel.find(function(err, data){
+		RecipeModel.find(function(err, data){
 			res.send(data);
 		});
 
@@ -30,8 +32,25 @@ module.exports = function(app) {
 		res.send('Bye bye sweet recipe ...');
 	});
 
-	app.post('/api/blender/execute/:recipe_uid', function(req, res) {
+	app.post('/api/blender/execute', function(req, res) {
 		// Ask the blender to create a recipe (already saved or created by user)
-		res.send('More work ! Yes my lord !');
+        var blender = new Blender(),
+            modules,
+            body = "";
+
+        ModuleModel.find(function(err, data) {
+            modules = data;
+            blender.init(modules);
+
+            req.on('data', function (chunk) {
+                body += chunk;
+            });
+            req.on('end', function () {
+                var a = JSON.parse(body);
+                blender.execute(a.steps);
+
+                res.send('More work ! Yes my lord !');
+            });
+        });
 	});
 };
