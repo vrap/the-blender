@@ -1,6 +1,6 @@
 var util = require('util'),
     Module = require('./module').Module,
-    modelModule = require('../model/module').Module;
+    ModuleModel = require('../model/module');
 /*stepper  = new Five.Stepper({
         type: Five.Stepper.TYPE.TWO_WIRE,
         stepsPerRev: 200,
@@ -34,7 +34,7 @@ Cart.prototype.init = function() {
     var brakeA = new Five.Pin(9).low();
     var brakeB = new Five.Pin(8).low();*/
 
-    Module.findOne(function(err, post) {
+    ModuleModel.findOne(function(err, post) {
         console.log(post);
     });
 
