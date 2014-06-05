@@ -32,7 +32,7 @@ board.on('ready', function() {
     var db = mongoose.connection;
 
     // Check if the blender is up-to-date
-    update();
+    //update();
 
     // Setting the routes
     require('./lib/routes')(server.app);

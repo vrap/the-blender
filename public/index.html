@@ -3,20 +3,34 @@
 <head>
 	<meta charset="UTF-8">
 	<title>The Blender</title>
+  
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootflat.css">
+  <link rel="stylesheet" href="css/styles.css">
 
 	<script src="js/angular/angular.min.js"></script>
   <script src="js/angular/angular-route.min.js"></script>
 </head>
 <body ng-app="the-blender">
 
-  <div ng-controller="recipeController">
-      Recettes locales : <br/>
-      {{ recipes }}
-      <br/>
-  </div>
+
+  
+
+  <div class="container" ng-view></div>
+
+  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#"><i class="glyphicon glyphicon-glass vrap-nav-icon"></i><br>Drink</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-flash vrap-nav-icon"></i><br>Create</a></li>
+        <li><a href="#"><i class="glyphicon glyphicon-cog vrap-nav-icon"></i><br>Seeting</a></li>
+      </ul>
+    </div>
+  </nav>
 
   <script src="js/blender/controllers.js"></script>
   <script src="js/blender/services.js"></script>
+  <script src="js/blender/routes.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
