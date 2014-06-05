@@ -1,5 +1,6 @@
 var util    = require('util'),
     Module  = require('./module').Module,
+    Five    = require('johnny-five'),
     stepper = new Five.Stepper({
         type: Five.Stepper.TYPE.TWO_WIRE,
         stepsPerRev: 200,
