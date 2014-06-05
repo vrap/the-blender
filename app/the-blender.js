@@ -1,37 +1,42 @@
 /**
  * Module dependencies.
  */
-var Server = require('./lib/server').Server,
-	Blender = require('./lib/blender/blender').Blender,
-	Master = require('./lib/blender/master').Master,
-	Pourer = require('./lib/blender/pourer').Pourer,
-	Recipe = require('./lib/recipe/recipe').Recipe,
-	Step = require('./lib/recipe/step').Step,
-	Parameter = require('./lib/recipe/parameter').Parameter,
-    Five   = require('johnny-five'),
-    mongoose = require('mongoose'),
-    http = require('http'),
-	database = require('../config/database'),
-    Version = require('./lib/model/version'),
-    Ingredient = require('./lib/model/ingredient');
+var Five  = require('johnny-five'),
+    board = new Five.Board({
+        port: '/dev/ttyACM0'
+    });
 
-var masterUri = "http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master";
+board.on('ready', function() {
+    var Server    = require('./lib/server').Server,
+        Blender   = require('./lib/blender/blender').Blender,
+        Plateau   = require('./lib/blender/plateau').Plateau,
+        Pourer    = require('./lib/blender/pourer').Pourer,
+        Recipe    = require('./lib/recipe/recipe').Recipe,
+        Step      = require('./lib/recipe/step').Step,
+        Parameter = require('./lib/recipe/parameter').Parameter,
+        mongoose  = require('mongoose'),
+        http      = require('http'),
+        database  = require('../config/database'),
+        Version   = require('./lib/version');
 
-// Instanciate the server.
-var server = new Server();
+    var masterUri = "http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master";
 
-// Start the server.
-server.init(5555);
+    // Instanciate the server.
+    var server = new Server();
 
-// Connecting to database
-mongoose.connect(database.url);
-var db = mongoose.connection;
+    // Start the server.
+    server.init(6666);
 
-// Check if the blender is up-to-date
-//update();
+    // Connecting to database
+    mongoose.connect(database.url);
+    var db = mongoose.connection;
 
-// Setting the routes
-require('./lib/routes')(server.app);
+    // Check if the blender is up-to-date
+    //update();
+
+    // Setting the routes
+    require('./lib/routes')(server.app);
+});
 
 /**
  * Check if an update have to be done
