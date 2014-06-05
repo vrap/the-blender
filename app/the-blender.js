@@ -4,6 +4,8 @@
 
 var Five    = require('johnny-five'),
     config  = require('../config/config'),
+    Version   = require('./lib/model/version'),
+    Ingredient   = require('./lib/model/ingredient'),
     board   = new Five.Board({
         port: config.board.port
     });
@@ -17,9 +19,7 @@ var Five    = require('johnny-five'),
         Step      = require('./lib/recipe/step').Step,
         Parameter = require('./lib/recipe/parameter').Parameter,
         mongoose  = require('mongoose'),
-        http      = require('http'),
-        database  = require('../config/database'),
-        Version   = require('./lib/model/version');
+        http      = require('http');
 
     // Instanciate the server.
     var server = new Server();
