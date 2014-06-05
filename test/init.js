@@ -41,7 +41,7 @@ console.log('Table Ingredient created');
 var r = new Recipe({
     uuid: "b52d956f-e690-11e3-ad38-dfb1db377fd7",
     name: "Mojito",
-    author: "7cc528de-e6bf-11e3-ad38-dfb1db377fd7",
+    author: "",
     created: new Date(),
     updated: null,
     forked: null,
@@ -115,5 +115,4 @@ m1.save();
 m2.save();
 m3.save();
 console.log('Table Module created');
-
 console.log('Initialization done!');

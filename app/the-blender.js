@@ -1,15 +1,15 @@
 /**
  * Module dependencies.
  */
-var Five  = require('johnny-five'),
-    board = new Five.Board({
-        port: '/dev/ttyACM0'
-    });
+var Five  = require('johnny-five');
+    // board = new Five.Board({
+    //     port: '/dev/ttyACM0'
+    // });
 
-board.on('ready', function() {
+//board.on('ready', function() {
     var Server    = require('./lib/server').Server,
         Blender   = require('./lib/blender/blender').Blender,
-        Plateau   = require('./lib/blender/plateau').Plateau,
+        //Plateau   = require('./lib/blender/plateau').Plateau,
         Pourer    = require('./lib/blender/pourer').Pourer,
         Recipe    = require('./lib/recipe/recipe').Recipe,
         Step      = require('./lib/recipe/step').Step,
@@ -17,7 +17,7 @@ board.on('ready', function() {
         mongoose  = require('mongoose'),
         http      = require('http'),
         database  = require('../config/database'),
-        Version   = require('./lib/version');
+        Version   = require('./lib/model/version');
 
     var masterUri = "http://localhost:8080/LP-DevWeb/The%20Blender/the-blender-master";
 
@@ -25,7 +25,7 @@ board.on('ready', function() {
     var server = new Server();
 
     // Start the server.
-    server.init(6666);
+    server.init(5555);
 
     // Connecting to database
     mongoose.connect(database.url);
@@ -36,7 +36,7 @@ board.on('ready', function() {
 
     // Setting the routes
     require('./lib/routes')(server.app);
-});
+//});
 
 /**
  * Check if an update have to be done

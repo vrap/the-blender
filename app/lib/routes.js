@@ -1,12 +1,18 @@
+var mongoose  	= require('mongoose'),
+	RecipeModel = require('./model/recipe.js');
+
 /**
  * Routes for the application
  */
-
 module.exports = function(app) {
 	// The API to communicate with the Angular app
 	app.get('/api/blender/recipes', function(req, res) {
+		
 		// Get every recipes available in the blender
-		res.send('These are my recipes.');
+		recipes = RecipeModel.find(function(err, data){
+			res.send(data);
+		});
+
 	});
 
 	app.get('/api/blender/recipes/:recipe_uid', function(req, res) {
