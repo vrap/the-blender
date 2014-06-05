@@ -13,6 +13,6 @@ module.exports = {
         port: 5555
     },
     board: {
-        port: '/dev/ttyACM0'
+        port: 'COM3'
     }
 };
