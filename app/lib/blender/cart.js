@@ -11,6 +11,9 @@ var util   = require('util'),
     maxSpeed = 200,
     minSpeed = 20;*/
 
+    var moduleWidth  = 70, 
+        cartPosition = 0;
+
 /**
  * Cart Module prototype
  * @type {Cart}
