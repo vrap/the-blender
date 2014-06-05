@@ -25,10 +25,10 @@ util.inherits(Plateau, Module);
  * Initializing the position of the plateau
  */
 Plateau.prototype.init = function() { 
-    var pwmA    = new Five.Pin(3).high();
-    var pwmB    = new Five.Pin(11).high();
-    var brakeA  = new Five.Pin(9).low();
-    var brakeB  = new Five.Pin(8).low();
+    var pwmA   = new Five.Pin(3).high();
+    var pwmB   = new Five.Pin(11).high();
+    var brakeA = new Five.Pin(9).low();
+    var brakeB = new Five.Pin(8).low();
 
     // Récupérer le 1er module dans MongoDB
     // moveTo ce module pour RAZ
