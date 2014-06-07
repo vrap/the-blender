@@ -1,10 +1,15 @@
 /**
  * Each services for the Blender application
  */
-var bs = angular.module('blenderService', []);
+angular.module('blenderService', [])
+.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+])
 
 // Service for blender management
-bs.factory('Blender', ['$http', function($http) {
+.factory('Blender', ['$http', function($http) {
 	return {
         Recipes: {
             getAll: function() {
@@ -32,10 +37,10 @@ bs.factory('Blender', ['$http', function($http) {
 
         }
     }
-}]);
+}])
 
 // Service for community management
-bs.factory('Community', ['$http', function($http) {
+.factory('Community', ['$http', function($http) {
     return {
         Recipes: {
             getAll: function(communityUri, token) {
@@ -45,12 +50,16 @@ bs.factory('Community', ['$http', function($http) {
                 return $http.get(communityUri + '/recipes/' + uuid);
             }
         },
-        Users: {
-            connect: function(communityUri, user, pwd) {
+        User: {
+            connect: function(user, password) {
                 return $http({
                     method: 'POST',
-                    url: communityUri + '/login',
-                    data: 'username='+ user +'&password=' + pwd,
+                    url: user.getCommunity() + '/login',
+                    data: 
+                        {
+                            username : user.getUserName(),
+                            password : password
+                        }, 
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 });
             },

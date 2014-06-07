@@ -11,13 +11,52 @@ var communityUri = 'http://localhost:9999',
 /**
 * Connection
 */
-bc.controller('connectionController', ['$scope', '$http', '$location', function($scope, $http, $location){
+bc.controller('connectionController', ['$scope', '$http', '$location', 'Community', 'User',
+    function($scope, $http, $location, Community, User){
 
+    /*
+    * Login without account
+    * => Redirect to the route home with param "master"
+    */
     $scope.LoginWithOutAccount = function(){
         $location.path("/home/master");
     }
-    $scope.loginWithAccount = function(){
-        $location.path("/home/community");
+
+    /*
+    * Login with account
+    * [ Check the form
+    *   Get the Response of api
+    *   Redirect to the route home with param "community" ]
+    * @param {bool} Angular validation
+    */
+    $scope.loginWithAccount = function(isValid){
+
+        console.log(isValid);
+        if(isValid){
+            
+            // Créate new user
+            var user = User.build();
+            user.SetUserName($scope.user.userName);
+            user.setEmail($scope.user.email);
+            user.setCommunity($scope.user.community);
+
+            // Sed data to community api
+            Community.User.connect(user, $scope.user.password)
+                .success(function(response){
+                    console.log(response);
+                })
+                .error(function(response){
+                    console.log(response);
+                });
+
+
+        }else{
+            $scope.noValid = true;
+        }
+
+        console.log($scope.user);
+
+        //$location.path("/home/community");
     }
 
 }]);
@@ -25,8 +64,8 @@ bc.controller('connectionController', ['$scope', '$http', '$location', function(
 /**
 * Home
 */
-bc.controller('homeController', ['$scope', '$http', '$routeParams', 'Blender', 'Community',
-    function($scope, $http, $routeParams, Blender, Community){
+bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 'Blender', 'Community',
+    function($scope, $http, $routeParams, $cookies, Blender, Community){
 
     switch($routeParams.action){
         // Display local recipes
@@ -61,7 +100,9 @@ bc.controller('homeController', ['$scope', '$http', '$routeParams', 'Blender', '
 
 }]);
 
-// Recipe Controller to manage interactions between the view and the service
+/**
+* Recipe Controller
+*/
 bc.controller('recipeController', ['$scope', '$http','Blender', 'Community',
     function ($scope, $http, $routeParams, Blender, Community){
     
@@ -88,7 +129,9 @@ bc.controller('recipeController', ['$scope', '$http','Blender', 'Community',
 
 }]);
 
-// Admin Controller to manage interactions between the view and the service
+/**
+* Admin Controller
+*/
 bc.controller('adminController', ['$scope', '$http', 'Modules', function ($scope, $http, Modules){
 
 }]);
