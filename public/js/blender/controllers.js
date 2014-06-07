@@ -8,25 +8,62 @@ var communityUri = 'http://localhost:9999',
     communityPwd = 'test2',
     token;
 
-// Home controller
+/**
+* Connection
+*/
 bc.controller('connectionController', ['$scope', '$http', '$location', function($scope, $http, $location){
 
     $scope.LoginWithOutAccount = function(){
-        $location.path("/home");
+        $location.path("/home/master");
+    }
+    $scope.loginWithAccount = function(){
+        $location.path("/home/community");
     }
 
 }]);
 
-// Home controller
-bc.controller('homeController', ['$scope', '$http', 'Blender', function($scope, $http, Blender){
+/**
+* Home
+*/
+bc.controller('homeController', ['$scope', '$http', '$routeParams', 'Blender', 'Community',
+    function($scope, $http, $routeParams, Blender, Community){
 
-    $scope.recipeCommunity = false;
-    $scope.recipeMaster = true;
+    switch($routeParams.action){
+        // Display local recipes
+        case 'master':
+
+            $scope.recipeCommunity = false;
+            $scope.recipeMaster = true;
+            Blender.Recipes.getAll()
+                .success(function(data) {
+                    $scope.recipes = data;
+                })
+                .error(function(data) {
+                    console.log('Error :' + data);
+                });
+
+        break;
+        // Display community recipes
+        case 'community':
+
+            $scope.recipeCommunity = true;
+            $scope.recipeMaster = false;
+            Community.Recipes.getAll()
+                .success(function(){
+                    $scope.recipe = data;
+                })
+                .error(function(data){
+                    console.log('Error :' +  data);
+                })
+
+        break;
+    }  
 
 }]);
 
 // Recipe Controller to manage interactions between the view and the service
-bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', function ($scope, $http, Blender, Community){
+bc.controller('recipeController', ['$scope', '$http','Blender', 'Community',
+    function ($scope, $http, $routeParams, Blender, Community){
     
     $scope.recipeList = true;
 
@@ -48,15 +85,6 @@ bc.controller('recipeController', ['$scope', '$http', 'Blender', 'Community', fu
     $scope.BackListRecipe = function(){
         $scope.recipeList = true;
     };
-
-    // Display local recipes
-    Blender.Recipes.getAll()
-        .success(function(data) {
-            $scope.recipes = data;
-        })
-        .error(function(data) {
-            console.log('Error :' + data);
-        });
 
 }]);
 

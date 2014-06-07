@@ -31,6 +31,9 @@ body {
 .panel-heading h3 {
   margin: 0;
 }
+.vrap-btn-return {
+  font-size: 1.8em;
+}
 .navbar-nav {
   width: 202px;
   margin: 0 auto;

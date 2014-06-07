@@ -1,12 +1,12 @@
 <div class="form-signin">
-  <form role="form">
+  <form role="form" ng-submit="loginWithAccount()">
     <h2 class="heading text-center">Blend with account</h2>
     <div class="form-group">
-      <input type="text" class="form-control" placeholder="Comunity">
+      <input type="text" class="form-control" placeholder="Comunity" ng-model="user.community">
     </div>
     <div class="form-group">
-      <input type="email" class="form-control" placeholder="Email address">
-      <input type="password" class="form-control" placeholder="Password">
+      <input type="email" class="form-control" placeholder="Email address" ng-model="user.email">
+      <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
     </div>
     <!-- <label class="checkbox">
     <input type="checkbox" value="remember-me"> Remember me

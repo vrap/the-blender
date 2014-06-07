@@ -40,7 +40,7 @@ Blender.prototype.execute = function(steps) {
                 }
 
                 ModuleModel.findOne({content: ingrUuid}, function(err, data) {
-                   pourer.init(data.order);
+                   //pourer.init(data.order);
                 });
 
                 break;

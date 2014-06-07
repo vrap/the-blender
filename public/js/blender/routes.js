@@ -7,6 +7,6 @@ var br = angular.module('blenderRoute', ['blenderController', 'ngRoute']);
 br.config(['$routeProvider', function($routeProvider) {
 	$routeProvider
 		.when('/connection', { templateUrl: 'view/connection.html', controller: 'connectionController' })
-		.when('/home', { templateUrl: 'view/home.html', controller: 'homeController' })
+		.when('/home/:action', { templateUrl: 'view/home.html', controller: 'homeController' })
 		.otherwise({ redirectTo: '/connection' });
 }]);
