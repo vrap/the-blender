@@ -2,6 +2,9 @@
  * Each services for the Blender application
  */
 angular.module('blenderDirective', [])
+/**
+* Tint score for nb dose for each ingredients
+*/
 .directive('vrapScore', function() {
 
 	var template = '<i ng-repeat="tint in tints" class="glyphicon glyphicon-tint margin-right"></i>';
