@@ -2,11 +2,6 @@
  * Each services for the Blender application
  */
 angular.module('blenderService', [])
-.config(['$httpProvider', function($httpProvider) {
-        $httpProvider.defaults.useXDomain = true;
-        delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }
-])
 
 // Service for blender management
 .factory('Blender', ['$http', function($http) {
@@ -52,16 +47,13 @@ angular.module('blenderService', [])
         },
         User: {
             connect: function(user, password) {
-                return $http({
-                    method: 'POST',
-                    url: user.getCommunity() + '/login',
-                    data: 
-                        {
-                            username : user.getUserName(),
-                            password : password
-                        }, 
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                });
+                return $http.post(
+                    user.getCommunity() + '/login',
+                    'username=' + user.getUserName() + '&password=' + password, 
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                );
             },
             getAll: function(communityUri, token) {
                 return $http.get(communityUri + '/users');

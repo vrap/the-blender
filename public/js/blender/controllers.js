@@ -3,10 +3,7 @@
  */
 var bc = angular.module('blenderController', []);
 
-var communityUri = 'http://localhost:9999',
-    communityUser = 'test2',
-    communityPwd = 'test2',
-    token;
+var token;
 
 /**
 * Connection
@@ -31,7 +28,6 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
     */
     $scope.loginWithAccount = function(isValid){
 
-        console.log(isValid);
         if(isValid){
             
             // Créate new user
@@ -40,23 +36,33 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
             user.setEmail($scope.user.email);
             user.setCommunity($scope.user.community);
 
-            // Sed data to community api
+            // Send data to community api
             Community.User.connect(user, $scope.user.password)
                 .success(function(response){
+
                     console.log(response);
+
+                    if(response.status == false){
+                        $scope.noValid = true;
+                        $scope.errorMessage = 'User Name or Password are invalide';
+                    }else{
+                        $location.path("/home/community");
+                    }
+
                 })
                 .error(function(response){
                     console.log(response);
+                    $scope.noValid = true;
+                    $scope.errorMessage = 'Connection to community fail';
                 });
 
 
         }else{
             $scope.noValid = true;
+            $scope.errorMessage = 'The form is incomplete';
         }
 
-        console.log($scope.user);
-
-        //$location.path("/home/community");
+        
     }
 
 }]);
