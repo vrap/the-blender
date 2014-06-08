@@ -12,12 +12,9 @@ angular.module('blenderModel', [])
     * Constructor, with class name
     */
     function User() {
-    	console.log('new user');
-        // Public properties, assigned to the instance ('this')
         this.userName;
         this.email;
         this.community;
-
     }
 
     /**

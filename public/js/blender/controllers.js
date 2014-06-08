@@ -8,8 +8,8 @@ var token;
 /**
 * Connection
 */
-bc.controller('connectionController', ['$scope', '$http', '$location', 'Community', 'User',
-    function($scope, $http, $location, Community, User){
+bc.controller('connectionController', ['$scope', '$http', '$location', 'Community', 'User', 'Session',
+    function($scope, $http, $location, Community, User, Session){
 
     /*
     * Login without account
@@ -21,9 +21,9 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
 
     /*
     * Login with account
-    * [ Check the form
-    *   Get the Response of api
-    *   Redirect to the route home with param "community" ]
+    * -> check the form
+    * -> get the Response of api
+    * -> redirect to the route home with param "community"
     * @param {bool} Angular validation
     */
     $scope.loginWithAccount = function(isValid){
@@ -40,12 +40,11 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
             Community.User.connect(user, $scope.user.password)
                 .success(function(response){
 
-                    console.log(response);
-
                     if(response.status == false){
                         $scope.noValid = true;
                         $scope.errorMessage = 'User Name or Password are invalide';
                     }else{
+                        Session.Users.set(user);
                         $location.path("/home/community");
                     }
 
@@ -70,8 +69,8 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
 /**
 * Home
 */
-bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 'Blender', 'Community',
-    function($scope, $http, $routeParams, $cookies, Blender, Community){
+bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 'Blender', 'Community', 'Session',
+    function($scope, $http, $routeParams, $cookies, Blender, Community, Session){
 
     switch($routeParams.action){
         // Display local recipes
@@ -93,7 +92,10 @@ bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 
 
             $scope.recipeCommunity = true;
             $scope.recipeMaster = false;
-            Community.Recipes.getAll()
+
+            var user = Session.Users.get();
+
+            Community.Recipes.getAll(user.getCommunity())
                 .success(function(){
                     $scope.recipe = data;
                 })

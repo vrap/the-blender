@@ -3,6 +3,53 @@
  */
 angular.module('blenderService', [])
 
+/**
+* Service for Session Html5 storage
+*/
+.factory('Session', ['User', function(User){
+    return {
+
+        /**
+        * User Session
+        */
+        Users : {
+
+            /*
+            * Set User to session storage
+            * -> strigify objet and save it with key 'user'
+            * @param {user} user
+            */
+            set: function(user){
+                sessionStorage.setItem('user', JSON.stringify(user));
+            },
+            /*
+            * get User to session storage
+            * -> get key 'user' and JsonParse the string
+            * -> create a new user
+            * @return {user} user
+            */
+            get: function(){
+
+                var SessionUser = JSON.parse(sessionStorage.getItem('user'));
+                user = User.build();
+                if(SessionUser.userName){
+                    user.SetUserName(SessionUser.userName);
+                }
+                if(SessionUser.email){
+                    user.SetEmail(SessionUser.email);
+                }
+                 if(SessionUser.community){
+                    user.setCommunity(SessionUser.community);
+                }
+
+                return user;
+
+            },
+        }
+       
+    }
+}])
+
 // Service for blender management
 .factory('Blender', ['$http', function($http) {
 	return {
@@ -35,11 +82,19 @@ angular.module('blenderService', [])
 }])
 
 // Service for community management
-.factory('Community', ['$http', function($http) {
+.factory('Community', ['$http', '$cookies', function($http, $cookies) {
     return {
         Recipes: {
-            getAll: function(communityUri, token) {
-                return $http.get(communityUri + '/recipes');
+            getAll: function(communityUri) {
+                return $http.get(
+                    communityUri + '/recipes',
+                    {},
+                    {
+                        headers: {
+                            'Cookie' : $cookies.token
+                        }
+                    }
+                    );
             },
             get: function(communityUri, token, uuid) {
                 return $http.get(communityUri + '/recipes/' + uuid);
