@@ -32,6 +32,7 @@ angular.module('blenderService', [])
 
                 var SessionUser = JSON.parse(sessionStorage.getItem('user'));
                 user = User.build();
+                // Voir avec l'ami romain pour fair un truc plus propre :)
                 if(SessionUser.userName){
                     user.SetUserName(SessionUser.userName);
                 }
