@@ -51,6 +51,22 @@ angular.module('blenderService', [])
     }
 }])
 
+.factory('Recipes', ['$resource', function($resource){
+    return {
+        api: function(communityUri){
+            return $resource(
+                communityUri + '/recipes/:uuid',
+                {uuid:'@id'},
+                {
+                    query: {
+                        isArray: false,
+                        method: 'GET'
+                    }
+                });
+            }
+        }
+}])
+
 // Service for blender management
 .factory('Blender', ['$http', function($http) {
 	return {
@@ -83,7 +99,7 @@ angular.module('blenderService', [])
 }])
 
 // Service for community management
-.factory('Community', ['$http', '$cookies', function($http, $cookies) {
+.factory('Community', ['$http', '$cookies', function($http, $cookies, $resource) {
     return {
         Recipes: {
             getAll: function(communityUri) {
