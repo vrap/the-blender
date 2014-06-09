@@ -6,14 +6,13 @@ angular.module('blenderService', [])
 /**
 * Service for Session Html5 storage
 */
-.factory('Session', ['User', function(User){
+.factory('SessionService', ['UserModel', function(UserModel){
     return {
 
         /**
         * User Session
         */
         Users : {
-
             /*
             * Set User to session storage
             * -> strigify objet and save it with key 'user'
@@ -31,7 +30,7 @@ angular.module('blenderService', [])
             get: function(){
 
                 var SessionUser = JSON.parse(sessionStorage.getItem('user'));
-                user = User.build();
+                user = UserModel.build();
                 // Voir avec l'ami romain pour fair un truc plus propre :)
                 if(SessionUser.userName){
                     user.SetUserName(SessionUser.userName);
@@ -51,8 +50,14 @@ angular.module('blenderService', [])
     }
 }])
 
-.factory('Recipes', ['$resource', function($resource){
+/**
+* Service for Resourse to call api
+*/
+.factory('RecipeService', ['$resource', function($resource){
     return {
+        /**
+        * Recipe Api
+        */
         api: function(communityUri){
             return $resource(
                 communityUri + '/recipes/:uuid',
@@ -63,70 +68,17 @@ angular.module('blenderService', [])
                         method: 'GET'
                     }
                 });
-            }
-        }
-}])
-
-// Service for blender management
-.factory('Blender', ['$http', function($http) {
-	return {
-        Recipes: {
-            getAll: function() {
-                // Some code to get the recipes
-                return $http.get('/api/blender/recipes');
-            },
-            get: function(uuid) {
-                // Some code to get the recipes
-                return $http.get('/api/blender/recipes/' + uuid);
-            },
-            execute: function(recipe) {
-                // Some code to create a recipe
-                return $http.post('/api/blender/execute', recipe);
-            },
-            save: function(uuid) {
-                // Some code to save a recipe in The Blender
-                return $http.post('/api/blender/recipes/' + uuid);
-            },
-            delete: function(uuid) {
-                // Some code to delete a recipe
-                return $http.delete('/api/blender/recipes/' + uuid);
-            }
-	    },
-        Modules: {
-
         }
     }
 }])
 
-// Service for community management
-.factory('Community', ['$http', '$cookies', function($http, $cookies, $resource) {
-    return {
-        Recipes: {
-            getAll: function(communityUri) {
-                return $http.get(
-                    communityUri + '/recipes',
-                    {},
-                    {
-                        headers: {
-                            'Cookie' : $cookies.token
-                        }
-                    }
-                    );
-            },
-            get: function(communityUri, token, uuid) {
-                return $http.get(communityUri + '/recipes/' + uuid);
-            }
-        },
-        User: {
-            connect: function(user, password) {
-                return $http.post(
-                    user.getCommunity() + '/login',
-                    'username=' + user.getUserName() + '&password=' + password, 
-                    {
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                    }
-                );
-            },
+/**
+* Service for user
+*/
+.factory('UserService', ['$http', function($http){
+
+    return{
+        api : {
             getAll: function(communityUri, token) {
                 return $http.get(communityUri + '/users');
             },
@@ -135,4 +87,6 @@ angular.module('blenderService', [])
             }
         }
     }
-}]);
+
+}])
+

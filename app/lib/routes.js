@@ -7,6 +7,7 @@ var mongoose  	= require('mongoose'),
  * Routes for the application
  */
 module.exports = function(app) {
+
 	// The API to communicate with the Angular app
 	app.get('/api/blender/recipes', function(req, res) {
 		

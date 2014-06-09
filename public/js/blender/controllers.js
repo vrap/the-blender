@@ -2,21 +2,32 @@
  *
  */
 var bc = angular.module('blenderController', []);
-
 var token;
 
 /**
 * Connection
 */
-bc.controller('connectionController', ['$scope', '$http', '$location', 'Community', 'User', 'Session',
-    function($scope, $http, $location, Community, User, Session){
+bc.controller('connectionController', ['$scope', '$http', '$location', '$rootScope', 'UserModel', 'SessionService',
+    function($scope, $http, $location, $rootScope , UserModel, SessionService){
 
     /*
     * Login without account
     * => Redirect to the route home with param "master"
     */
     $scope.LoginWithOutAccount = function(){
-        $location.path("/home/master");
+
+        // Créate new user
+        var user = UserModel.build();
+        // Set path for master blender api
+        user.setCommunity('/api/blender');
+        // Set User in session storage
+        SessionService.Users.set(user);
+        // Set RootScope Api variable to switch api button in view
+        $rootScope.api = 'master'
+        // Redirect to the home
+        $location.path("/home");
+        
+
     }
 
     /*
@@ -31,21 +42,22 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
         if(isValid){
             
             // Créate new user
-            var user = User.build();
+            var user = UserModel.build();
             user.SetUserName($scope.user.userName);
             user.setEmail($scope.user.email);
             user.setCommunity($scope.user.community);
 
             // Send data to community api
-            Community.User.connect(user, $scope.user.password)
+            user.auth($scope.user.password)
                 .success(function(response){
 
                     if(response.status == false){
                         $scope.noValid = true;
                         $scope.errorMessage = 'User Name or Password are invalide';
                     }else{
-                        Session.Users.set(user);
-                        $location.path("/home/community");
+                        SessionService.Users.set(user);
+                        $rootScope.api = 'community'
+                        $location.path("/home");
                     }
 
                 })
@@ -69,63 +81,58 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
 /**
 * Home
 */
-bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 'Blender', 'Community', 'Session', 'Recipes',
-    function($scope, $http, $routeParams, $cookies, Blender, Community, Session, Recipes){
+bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 'SessionService', 'RecipeService',
+    function($scope, $http, $routeParams, $cookies, SessionService, RecipeService){
 
-    switch($routeParams.action){
-        // Display local recipes
-        case 'master':
+        var user = SessionService.Users.get();
+        // Set Resource for recipes.
+        var RecipesResources = RecipeService.api(user.getCommunity());
 
-            $scope.recipeCommunity = false;
-            $scope.recipeMaster = true;
-            Blender.Recipes.getAll()
-                .success(function(data) {
-                    $scope.recipes = data;
-                })
-                .error(function(data) {
-                    console.log('Error :' + data);
-                });
-
-        break;
-        // Display community recipes
-        case 'community':
-
-            $scope.recipeCommunity = true;
-            $scope.recipeMaster = false;
-
-            var user = Session.Users.get();
-
-            // Set Resource for recipes.
-            var RecipesResources = Recipes.api(user.getCommunity());
-
-            // Get all recipes
-            RecipesResources
-                .query()
-                .$promise
-                .then(function(result) {
+        // Get all recipes
+        RecipesResources
+            .query()
+            .$promise
+            .then(
+                function(result) {
                     $scope.recipes = result.data;
-                });
-
-        break;
-    }  
+                },
+                function(result){
+                    console.log('Error : ' + result.data);
+                }
+            );
 
 }]);
 
 /**
 * Recipe Controller
 */
-bc.controller('recipeController', ['$scope', '$http','Blender', 'Community',
-    function ($scope, $http, $routeParams, Blender, Community){
+bc.controller('recipeController', ['$scope', '$http',
+    function ($scope, $http, $routeParams){
     
     $scope.recipeList = true;
 
-    // Open Panel for the recipe details
+    /*
+    * Ui function
+    * Open panel to show detail of recipe
+    */
     $scope.openRecipe = function(recipe){
         $scope.cocktailRecipe = recipe;
         console.log(recipe);
         $scope.recipeList = false;
     };
 
+    /*
+    * Ui function
+    * Close panel to show detail of recipe
+    */
+    $scope.BackListRecipe = function(){
+        $scope.recipeList = true;
+    };
+
+    /*
+    * Ui function
+    * Send the recipe to the master to make it !
+    */
     $scope.blend = function(recipe) {
         Blender.Recipes.execute(recipe)
             .success(function(data) {
@@ -133,11 +140,7 @@ bc.controller('recipeController', ['$scope', '$http','Blender', 'Community',
             });
     };
 
-    // Close Panel for the recipe details
-    $scope.BackListRecipe = function(){
-        $scope.recipeList = true;
-    };
-
+    
 }]);
 
 /**
