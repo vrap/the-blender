@@ -69,8 +69,8 @@ bc.controller('connectionController', ['$scope', '$http', '$location', 'Communit
 /**
 * Home
 */
-bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 'Blender', 'Community', 'Session',
-    function($scope, $http, $routeParams, $cookies, Blender, Community, Session){
+bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 'Blender', 'Community', 'Session', 'Recipes',
+    function($scope, $http, $routeParams, $cookies, Blender, Community, Session, Recipes){
 
     switch($routeParams.action){
         // Display local recipes
@@ -95,13 +95,16 @@ bc.controller('homeController', ['$scope', '$http', '$routeParams', '$cookies', 
 
             var user = Session.Users.get();
 
-            Community.Recipes.getAll(user.getCommunity())
-                .success(function(){
-                    $scope.recipe = data;
-                })
-                .error(function(data){
-                    console.log('Error :' +  data);
-                })
+            // Set Resource for recipes.
+            var RecipesResources = Recipes.api(user.getCommunity());
+
+            // Get all recipes
+            RecipesResources
+                .query()
+                .$promise
+                .then(function(result) {
+                    $scope.recipes = result.data;
+                });
 
         break;
     }  
