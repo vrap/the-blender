@@ -10,5 +10,6 @@ var app = angular.module('the-blender',
 		'blenderRoute',
 		'blenderDirective',
 		'blenderModel',
-		'ngCookies'
+		'ngCookies',
+		'ngResource'
 	]);

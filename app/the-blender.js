@@ -38,6 +38,8 @@ var Five    = require('johnny-five'),
         console.log("Cannot update ingredients. Master url don't given.");
     }
 
+    return;
+
     // Setting the routes
     require('./lib/routes')(server.app);
 
