@@ -8,7 +8,8 @@
     "socket.io": "~0.9.16",
     "express": "~4.2.0",
     "winston": "~0.7.3",
-    "mongoose": "~3.8.12"
+    "mongoose": "~3.8.12",
+    "deferred": "^0.7.1"
   },
   "devDependencies": {},
   "scripts": {
