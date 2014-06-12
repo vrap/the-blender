@@ -11,6 +11,9 @@ var mongoose = require('mongoose'),
 mongoose.connect(config.database.url);
 console.log('Database ' + config.database.url + ' created.');
 
+// Dropping the database if already exist
+mongoose.connection.db.dropDatabase();
+
 // Version table
 var v = new Version({
     version: 0,
