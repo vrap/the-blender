@@ -85,37 +85,30 @@ console.log('Table Recipe created');
 // Module table
 var m1 = new Module({
     order: 1,
-    content: "b52d956f-e690-a7e3-ad38-dfb1db377f49",
-    components: [
-        {
-            type: "sensor",
-            pins: [1]
-        }
-    ]
+    type: "pourer",
+    content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
+    components: [{
+        class: "valve",
+        address: [4]
+    }]
 });
 var m2 = new Module({
     order: 2,
-    content: "b52d956f-e690-11e3-ad47-dfb1db377127",
-    components: [
-        {
-            type: "pourer",
-            pins: [2]
-        },
-        {
-            type: "sensor",
-            pins: [3]
-        }
-    ]
+    type: "pourer",
+    content: "b5df5bc6-1b26-4702-bcbe-73a2709c4e23",
+    components: [{
+        class: "valve",
+        address: [5]
+    }]
 });
 var m3 = new Module({
     order: 3,
+    type: "pourer",
     content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
-    components: [
-        {
-            type: "pourer",
-            pins: [4]
-        }
-    ]
+    components: [{
+        class: "valve",
+        address: [6]
+    }]
 });
 m1.save();
 m2.save();
