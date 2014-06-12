@@ -48,36 +48,27 @@ var r = new Recipe({
     created: new Date(),
     updated: null,
     forked: null,
-    steps: [
-        {
-            order: 1,
-            action: "poor",
-            parameters: [
-                {
-                    name: "ingredient",
-                    value: "b52d956f-e690-11e3-ad47-dfb1db377127"
-                },
-                {
-                    name: "dosage",
-                    value: 2
-                }
-            ]
-        },
-        {
-            order: 2,
-            action: "poor",
-            parameters: [
-                {
-                    name: "ingredient",
-                    value: "b52d956f-e690-a7e3-ad38-dfb1db377f49"
-                },
-                {
-                    name: "dosage",
-                    value: 1
-                }
-            ]
-        }
-    ]
+    steps: [{
+        order: 1,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe"
+        }, {
+            name: "dosage",
+            value: 2
+        }]
+    }, {
+        order: 2,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "b5df5bc6-1b26-4702-bcbe-73a2709c4e23"
+        }, {
+            name: "dosage",
+            value: 1
+        }]
+    }]
 });
 r.save();
 console.log('Table Recipe created');
