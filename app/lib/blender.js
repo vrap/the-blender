@@ -8,7 +8,7 @@ var config = require('../../config/config'),
     deferred = require('deferred');
 
 // Dynamically load existings modules with require
-fs.readdirSync('./lib/module').forEach(function(file) {
+fs.readdirSync('./app/lib/module').forEach(function(file) {
     require('./module/' + file);
 });
 
