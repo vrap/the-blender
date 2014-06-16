@@ -1,0 +1,68 @@
+<div class="panel panel-primary" ng-hide="manageBlender">
+	<div class="panel-heading">Community</div>
+	<div class="panel-body">
+		<ul class="list-unstyled">
+			<li>Connected to : <span class="label label-default">udfmozIEFmozeij</span></li>
+		</ul>
+	</div>
+</div>
+
+<div class="panel panel-primary vrap-manage-blender" ng-show="manageBlender" ng-controller="manageBlenderController">
+	<div class="panel-heading"><h3>Manage the blender</h3></div>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<div class="clearfix">
+				<h3 class="pull-left">1</h3>
+				<button class="btn btn-default pull-right">
+					<i class="glyphicon glyphicon-pencil"></i>
+				</button>
+			</div>
+			<ul class="list-unstyled">
+				<li>Pins : 1,2,3,4,5</li>
+				<li>Type : Master</li>
+				<li>Content : Electronique :)</li>
+			</ul>
+		</li>
+		<li class="list-group-item clearfix">
+			<form role="form" name="moduleForm" ng-submit="addNewModule(moduleForm.$valid)" novalidate>
+				<div class="form-group">
+					<input name="Pin" type="text" class="form-control" placeholder="Pin" ng-model="blender.pin" required >
+				</div>
+				<div class="form-group">
+					<input name="action" type="text" class="form-control" placeholder="Type" ng-model="blender.action" required >
+				</div>
+				<div class="form-group">
+					<select name="" id="" class="form-control" ng-model="blender.ingredient">
+						<option value="">lala</option>
+						<option value="">lala</option>
+					</select>
+				</div>
+				<div class="form-group" ng-show="noValid">
+					<div class="alert alert-danger">{{errorMessage}}</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-default">
+						<i class="glyphicon glyphicon-plus vrap-margin-right-sm"></i>
+						Add
+					</button>
+				</div>
+			</form>
+		</li>
+	</ul>
+	<div class="panel-footer">
+		<button class="btn btn-primary" ng-click="blend(cocktailRecipe)">Save</button>
+	</div>
+</div>
+
+<div class="panel panel-primary" ng-hide="manageBlender">
+	<div class="panel-heading">The blender</div>
+	<div class="panel-body">
+		<ul class="list-unstyled">
+			<li><span class="badge vrap-margin-right">2</span>Modules connected</li>
+			<li><span class="badge vrap-margin-right">78</span>Cocktails blended</li>
+		</ul>		
+	</div>
+	<div class="panel-footer">
+		<button class="btn btn-primary" ng-click="manage()">Manage it !</button>
+	</div>
+</div>

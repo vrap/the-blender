@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-body text-center">
+				<form>
+					<input 
+						type="text" 
+						class="form-control input-lg" 
+						placeholder="Cocktail name" 
+						ng-model="cocktail.name"
+						required
+					>
+				</form>
+			</div>
+		</div>
+		<div class="list-group" ng-hide="valid">
+			<a class="list-group-item vrap-padding" ng-click="chooseIngredient(ingredient)" ng-repeat="ingredient in ingredients">
+				{{ingredient.name}}					
+				<span class="pull-right vrap-big-tints" vrap-score score="ingredient.parameters" ng-click="RemoveIngredient(ingredient, $index)"></span>
+			</a>
+		</div>
+		<div class="form-group" ng-show="valid">
+			<div class="alert alert-success">
+				<h6>{{successMessage}}</h6>
+				<button class="btn btn-default" ng-click="moreCocktail()">One more</button>
+				<button class="btn btn-primary">Blend it !</button>
+			</div>
+			
+		</div>
+		<div class="form-group" ng-show="noValid">
+			<div class="alert alert-danger">{{errorMessage}}</div>
+		</div>
+		<div class="form-group" ng-hide="valid">
+			<button class="btn btn-default" ng-click="saveCocktail(ingredients)">Save</button>
+			<button class="btn btn-primary">Blend it !</button>
+		</div>
+	</div>
+</div>
