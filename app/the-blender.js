@@ -4,7 +4,7 @@
 
 var config = require('../config/config'),
     mongoose = require('mongoose'),
-    Blender = require('./lib/blender').Blender,
+    blender = require('./lib/blender').Blender,
     Server = require('./lib/server').Server,
     RecipeModel = require('./lib/model/recipe'),
     deferred = require('deferred');
@@ -16,7 +16,6 @@ mongoose.connect(config.database.url);
 var db = mongoose.connection;
 
 // Initialize Blender
-var blender = new Blender();
 blender.init().done(function() {
     // Instanciate the server
     var server = new Server();

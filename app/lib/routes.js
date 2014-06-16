@@ -1,5 +1,5 @@
 var mongoose = require('mongoose'),
-    Blender = require('./blender').Blender,
+    blender = require('./blender').Blender,
     ModuleModel = require('./model/module'),
     RecipeModel = require('./model/recipe');
 

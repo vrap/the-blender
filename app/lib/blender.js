@@ -16,7 +16,7 @@ fs.readdirSync('./lib/module').forEach(function(file) {
  * Blender prototype
  * @type {Blender}
  */
-exports.Blender = Blender = function() {};
+var Blender = function() {};
 
 /**
  * Initializes the Blender with its modules or set it as an object
@@ -304,3 +304,9 @@ Blender.prototype.convert = function(recipe) {
 
     return dfd.promise;
 };
+
+/**
+ * Export the blender instance
+ * @type {Blender}
+ */
+exports.Blender = new Blender();
