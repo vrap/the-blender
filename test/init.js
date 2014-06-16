@@ -11,6 +11,9 @@ var mongoose = require('mongoose'),
 mongoose.connect(config.database.url);
 console.log('Database ' + config.database.url + ' created.');
 
+// Dropping the database if already exist
+mongoose.connection.db.dropDatabase();
+
 // Version table
 var v = new Version({
     version: 0,
@@ -45,36 +48,27 @@ var r = new Recipe({
     created: new Date(),
     updated: null,
     forked: null,
-    steps: [
-        {
-            order: 1,
-            action: "poor",
-            parameters: [
-                {
-                    name: "ingredient",
-                    value: "b52d956f-e690-11e3-ad47-dfb1db377127"
-                },
-                {
-                    name: "dosage",
-                    value: 2
-                }
-            ]
-        },
-        {
-            order: 2,
-            action: "poor",
-            parameters: [
-                {
-                    name: "ingredient",
-                    value: "b52d956f-e690-a7e3-ad38-dfb1db377f49"
-                },
-                {
-                    name: "dosage",
-                    value: 1
-                }
-            ]
-        }
-    ]
+    steps: [{
+        order: 1,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe"
+        }, {
+            name: "dosage",
+            value: 2
+        }]
+    }, {
+        order: 2,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "b5df5bc6-1b26-4702-bcbe-73a2709c4e23"
+        }, {
+            name: "dosage",
+            value: 1
+        }]
+    }]
 });
 r.save();
 console.log('Table Recipe created');
@@ -82,37 +76,30 @@ console.log('Table Recipe created');
 // Module table
 var m1 = new Module({
     order: 1,
-    content: "b52d956f-e690-a7e3-ad38-dfb1db377f49",
-    components: [
-        {
-            type: "sensor",
-            pins: [1]
-        }
-    ]
+    type: "pourer",
+    content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
+    components: [{
+        class: "valve",
+        address: [4]
+    }]
 });
 var m2 = new Module({
     order: 2,
-    content: "b52d956f-e690-11e3-ad47-dfb1db377127",
-    components: [
-        {
-            type: "pourer",
-            pins: [2]
-        },
-        {
-            type: "sensor",
-            pins: [3]
-        }
-    ]
+    type: "pourer",
+    content: "b5df5bc6-1b26-4702-bcbe-73a2709c4e23",
+    components: [{
+        class: "valve",
+        address: [5]
+    }]
 });
 var m3 = new Module({
     order: 3,
+    type: "pourer",
     content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
-    components: [
-        {
-            type: "pourer",
-            pins: [4]
-        }
-    ]
+    components: [{
+        class: "valve",
+        address: [6]
+    }]
 });
 m1.save();
 m2.save();
