@@ -27,11 +27,4 @@ blender.init().done(function() {
     require('./lib/routes')(server.app);
 
     console.info('[Blender][infos] Blender is ready, visit http://localhost:' + config.server.port + '/');
-
-    RecipeModel.findOne(function(err, data) {
-        console.log('[Blender][Recipe] Starting "' + data.name + '"');
-        blender.run(data).done(function() {
-            console.log('[Blender][Recipe] Recipe over.');
-        });
-    });
 });
