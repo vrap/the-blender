@@ -54,6 +54,19 @@ module.exports = function(app) {
         res.send('Bye bye sweet recipe ...');
     });
 
+    app.get('/api/blender/availability', function(req, res) {
+        var message = {
+            status: false
+        }
+
+        try {
+            message.status = blender.isAvailable();
+        } catch (e) {
+            message.status = false;
+        }
+
+        res.send(message);
+    });
     app.post('/api/blender/execute', function(req, res) {
         // Ask the blender to create a recipe (already saved or created by user)
         if (blender.isAvailable()) {
