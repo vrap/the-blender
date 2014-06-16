@@ -1080,7 +1080,7 @@ blockquote {
   background-color: transparent;
 }
 .navbar-default .navbar-text, .navbar-default .navbar-nav > li > a {
-  color: #4FC1E9;
+  /*color: #4FC1E9;*/
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
   color: white;
@@ -1113,7 +1113,7 @@ blockquote {
 }
 @media (max-width: 767px) {
   .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-    background-color: #4FC1E9;
+    background-color: blue;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > .divider {
     background-color: #48cfad;
@@ -1123,7 +1123,7 @@ blockquote {
   }
   .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: white;
-    background-color: #48cfad;
+    background-color: blue;
   }
   .navbar-default .navbar-nav .open .dropdown-menu > .dropdown-header {
     color: #4FC1E9;

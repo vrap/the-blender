@@ -1,29 +1,22 @@
-<h1>Drink</h1>
-
-<div class="vrap-nav">
-	<div class="vrap-nav-title">
-	Recipes From :
-	</div>
-	<div class="btn-group btn-group-sm">
-		<button type="button" class="btn btn-default" ng-class="{active: api == 'community'}">Community</button>
-		<button type="button" class="btn btn-default" ng-class="{active: api == 'master'}">Master</button>
-	</div>
-</div>
-
 <div ng-controller="recipeController">
 
 	<div class="row" ng-hide="recipeList">
-		
 		<div class="col-xs-12">
 			
 			<div class="panel panel-primary">
 				<div class="panel-heading"><h3>{{cocktailRecipe.name}}</h3></div>
 				<div class="panel-body">
-					<i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>Guy
+					<i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>
+					<span ng-if="recipe.author == '' ">
+					    The Blender
+					</span>
+					<span ng-if="recipe.author != '' ">
+					    {{cocktailRecipe.username}}
+					</span>
 				</div>
 				<ul class="list-group">
 					<li class="list-group-item clearfix" ng-repeat="step in cocktailRecipe.steps">
-						{{step.parameters[0].name}}
+						<span class="{text-muted: muted}" vrap-Ingredient-Name uuid="step.parameters[0].value"></span>
 						<span class="pull-right"  vrap-score score="step.parameters[1].value"></span>
 					</li>
 				</ul>
@@ -54,10 +47,9 @@
 					    The Blender
 					</span>
 					<span ng-if="recipe.author != '' ">
-					    {{recipe.author}}
+					    {{recipe.username}}
 					</span>
 
-			  		
 			  	</span>
 			  </div>
 			</div>

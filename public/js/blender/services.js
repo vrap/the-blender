@@ -3,10 +3,45 @@
  */
 angular.module('blenderService', [])
 
+.factory('NavService', ['$rootScope', function($rootScope){
+
+    $rootScope.nav = {
+        home: false,
+        create: false,
+        setting: false
+    };
+
+    return{
+        active: function(page){
+            for(var i in $rootScope.nav){
+                if(i === page){
+                    $rootScope.nav[i] = true;
+                }else{
+                    $rootScope.nav[i] = false;
+                }
+            };
+            $rootScope.pageTitle = page;
+        },
+        hide: function(){
+            $rootScope.showNav = false;
+        },
+        show: function(){
+            $rootScope.showNav = true
+        },
+        setPageTitle: function(title){
+            $rootScope.pageTitle = title;
+        },
+        setNavCommunityItemTo : function(value, inverse){
+            $rootScope.server = value;
+            $rootScope.serverInverse = inverse
+        }
+    }
+
+}])
 /**
 * Service for Session Html5 storage
 */
-.factory('SessionService', ['UserModel', function(UserModel){
+.factory('SessionService', ['UserModel', 'NavService', function(UserModel, NavService){
     return {
 
         /**
@@ -32,19 +67,37 @@ angular.module('blenderService', [])
                 var SessionUser = JSON.parse(sessionStorage.getItem('user'));
                 user = UserModel.build();
                 // Voir avec l'ami romain pour fair un truc plus propre :)
+                if(SessionUser.uuid){
+                    user.setUuid(SessionUser.uuid);
+                }
                 if(SessionUser.userName){
-                    user.SetUserName(SessionUser.userName);
+                    user.setUserName(SessionUser.userName);
                 }
                 if(SessionUser.email){
-                    user.SetEmail(SessionUser.email);
+                    user.setEmail(SessionUser.email);
                 }
-                 if(SessionUser.community){
-                    user.setCommunity(SessionUser.community);
+                if(SessionUser.community){
+                    user.setCommunitys(SessionUser.community);
                 }
 
                 return user;
 
             },
+        },
+        Server : {
+            setCurrent: function(server){
+                sessionStorage.setItem('server/current', server);
+
+            },
+            getCurrent: function(){
+                server = sessionStorage.getItem('server/current');
+                if(server == 'master'){
+                    NavService.setNavCommunityItemTo('community', 'master');
+                }else{
+                    NavService.setNavCommunityItemTo('master', 'community');
+                }
+                return server;
+            }
         }
        
     }
@@ -53,24 +106,43 @@ angular.module('blenderService', [])
 /**
 * Service for Resourse to call api
 */
-.factory('RecipeService', ['$resource', function($resource){
-    return {
-        /**
-        * Recipe Api
-        */
-        api: function(communityUri){
-            return $resource(
-                communityUri + '/recipes/:uuid',
-                {uuid:'@id'},
-                {
-                    query: {
-                        isArray: false,
-                        method: 'GET'
-                    }
-                });
+.factory('ApiService', [
+    '$resource',
+    '$http',
+    '$q',
+    function($resource, $http, $q){
+        return {
+            recipes: function(server){
+
+                // var isArray = false;
+                // if(server.name == 'master'){
+                //     isArray = true;
+                // }
+
+                return $resource(
+                    server.uri + '/recipes/:uuid',
+                    {uuid:'@id'},
+                    {
+                        query: {
+                            isArray: false,
+                            method: 'GET'
+                        },
+                        save: {
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            method: 'POST'
+                        }
+                    });
+            },
+            ingredients: function(){
+                return $resource(
+                    '/api/blender/ingredients/:uuid',
+                    {uuid:'@id'}
+                    );
+            }
         }
     }
-}])
+])
+
 
 /**
 * Service for user

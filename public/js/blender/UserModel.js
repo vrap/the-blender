@@ -1,7 +1,7 @@
 /**
  * Each services for the Blender application
  */
-angular.module('blenderModel', [])
+angular.module('blenderModelUser', [])
 
 /**
 * Class User
@@ -12,9 +12,22 @@ angular.module('blenderModel', [])
     * Constructor, with class name
     */
     function User() {
+        this.uuid;
         this.userName;
         this.email;
-        this.community;
+        this.community = 
+            [{ 
+                name : 'master' ,
+                uri : '/api/blender' 
+            }];
+    }
+
+    /**
+    * Public method
+    * @return {int} uuid
+    */
+    User.prototype.getUuid = function(){
+        return this.uuid;
     }
 
     /**
@@ -35,19 +48,33 @@ angular.module('blenderModel', [])
 
     /**
     * Public method
-    * @return {string} url Community
+    * @return {string} type of server
     */
-    User.prototype.getCommunity = function () {
-        return this.community;
+    User.prototype.getCommunity = function (server) {
+
+        for(var key in this.community){
+            if(this.community[key].name == server){
+                return this.community[key];
+            }
+        }
+        return null;
     };
+
+    /**
+    * Public method
+    * @param {int} uuid
+    * @return {void}
+    */
+    User.prototype.setUuid = function(uuid){
+        this.uuid = uuid;
+    }
 
     /**
     * Public method
     * @param {string} username
     * @return {void}
     */
-    User.prototype.SetUserName = function (userName) {
-
+    User.prototype.setUserName = function (userName) {
         this.userName = userName;
     };
 
@@ -62,17 +89,23 @@ angular.module('blenderModel', [])
 
     /**
     * Public method
+    * @param {string} server (master/community)
     * @param {string} url Community
     */
-    User.prototype.setCommunity = function (community) {
-
+    User.prototype.setCommunity = function (server, community) {
     	// Delete '/' of uri if exxiste
     	if(community.slice(-1) === '/'){
     		community = community.substring(0, community.length - 1);
     	}
+        this.community.push({name : server, uri: community});
+    };
 
+    /**
+    * Public method
+    * @param {json}
+    */
+    User.prototype.setCommunitys = function(community){
         this.community = community;
-
     };
 
     /**
@@ -81,12 +114,21 @@ angular.module('blenderModel', [])
     */
     User.prototype.auth = function(password){
 		return $http.post(
-			this.getCommunity() + '/login',
+			this.getCommunity('community').uri + '/login',
 			'username=' + this.getUserName() + '&password=' + password, 
 			{
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			}
 		);
+    }
+
+    User.prototype.isAuth = function(){
+
+        if(this.getCommunity('community')){
+            return true;
+        }
+        return false;
+
     }
 
 

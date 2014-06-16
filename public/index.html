@@ -13,16 +13,45 @@
   <script src="js/angular/angular-cookies.min.js"></script>
   <script src="js/angular/angular-resource.min.js"></script>
 </head>
-<body ng-app="the-blender">
+<body ng-app="the-blender" class="{{serverInverse}}">
   
-  <div class="container" ng-view></div>
+  <nav ng-show="showNav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <h1>{{pageTitle}}</h1>
+    </div>
+  </nav>
 
-  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+  <div class="container" ng-view></div>
+  
+  <div ng-show="showNav" class="vrap-footer">{{serverInverse}}</div>
+
+  <nav ng-show="showNav" class="navbar navbar-default navbar-fixed-bottom" role="navigation" ng-controller="navController">
     <div class="container-fluid">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#"><i class="glyphicon glyphicon-glass vrap-nav-icon"></i><br>Drink</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-flash vrap-nav-icon"></i><br>Create</a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-cog vrap-nav-icon"></i><br>Setting</a></li>
+        <li ng-class='{active: nav.home}'>
+          <a href="#home">
+            <i class="glyphicon glyphicon-glass vrap-nav-icon"></i>
+            <br>Drink
+          </a>
+        </li>
+        <li ng-class='{active: nav.create}'>
+          <a href="#create">
+            <i class="glyphicon glyphicon-flash vrap-nav-icon"></i>
+            <br>Create
+          </a>
+        </li>
+        <li ng-class='{active: nav.setting}'>
+          <a href="#setting">
+            <i class="glyphicon glyphicon-cog vrap-nav-icon"></i>
+            <br>Setting
+          </a>
+        </li>
+        <li>
+          <a ng-click="switchServer(server)">
+            <i class="glyphicon glyphicon-transfer vrap-nav-icon"></i>
+            <br>Swith
+          </a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -32,6 +61,7 @@
   <script src="js/blender/services.js"></script>
   <script src="js/blender/routes.js"></script>
   <script src="js/blender/userModel.js"></script>
+  <script src="js/blender/RecipeModel.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

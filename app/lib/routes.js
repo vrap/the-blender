@@ -2,18 +2,27 @@ var mongoose  	= require('mongoose'),
     Blender     = require('./blender/blender').Blender,
     ModuleModel = require('./model/module'),
 	RecipeModel = require('./model/recipe');
+	IngredientModel = require('./model/ingredient');
 
 /**
  * Routes for the application
  */
 module.exports = function(app) {
 
+	app.get('/api/blender/ingredients', function(req, res){
+
+		IngredientModel.find(function(err, data){
+			res.send(data);
+		})
+
+	})
+
 	// The API to communicate with the Angular app
 	app.get('/api/blender/recipes', function(req, res) {
-		
 		// Get every recipes available in the blender
 		RecipeModel.find(function(err, data){
-			res.send(data);
+			var result = {data : data};
+			res.send(result);
 		});
 
 	});
@@ -23,8 +32,9 @@ module.exports = function(app) {
 		res.send('This is the recipe.');
 	});
 
-	app.post('/api/blender/recipes/:recipe_uid', function(req, res) {
+	app.post('/api/blender/recipes', function(req, res) {
 		// Save a new recipe in the blender
+		console.log(req.param("author"));
 		res.send('Oh a new recipe ! Thank you my lord');
 	});
 
