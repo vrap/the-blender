@@ -56,6 +56,22 @@ module.exports = function(app) {
 
     app.post('/api/blender/execute', function(req, res) {
         // Ask the blender to create a recipe (already saved or created by user)
-        res.send('Give my my cocktail please !');
+        if (blender.isAvailable()) {
+            try {
+                blender.run(req.param('recipe'));
+            } catch (e) {
+                res.send({
+                    status: false
+                });
+            }
+
+            res.send({
+                status: true
+            })
+        } else {
+            res.send({
+                status: false
+            });
+        }
     });
 };
