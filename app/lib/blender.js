@@ -18,6 +18,12 @@ fs.readdirSync('./lib/module').forEach(function(file) {
  */
 var Blender = function() {};
 
+Blender.prototype.available = false;
+
+Blender.prototype.isAvailable = function() {
+    return this.available;
+};
+
 /**
  * Initializes the Blender with its modules or set it as an object
  * @param {Array} modules
@@ -57,8 +63,10 @@ Blender.prototype.init = function() {
 
     deferred(pIngredient, pBoard, pModules.promise, pCart.promise)(function(result) {
         console.info('[Blender][infos] Initialisation ended.');
+        this.available = true;
+
         dfd.resolve();
-    });
+    }.bind(this));
 
     return dfd.promise;
 };
@@ -232,20 +240,29 @@ Blender.prototype.step = function(steps) {
 Blender.prototype.run = function(recipe) {
     var dfd = deferred();
 
-    this.convert(recipe).done(function(steps) {
-        this.step(steps).then(function self(value) {
-            if (value.length > 0) {
-                return this.step(value).then(self.bind(this));
-            }
+    if (this.isAvailable()) {
+        this.available = false;
 
-            return value;
-        }.bind(this)).done(function() {
-            this.cart.moveTo(0).done(function() {
-                console.log('Cart moved to initial position');
-                dfd.resolve();
-            });
+        this.convert(recipe).done(function(steps) {
+            this.step(steps).then(function self(value) {
+                if (value.length > 0) {
+                    return this.step(value).then(self.bind(this));
+                }
+
+                return value;
+            }.bind(this)).done(function() {
+                this.cart.moveTo(0).done(function() {
+                    console.log('Cart moved to initial position');
+
+                    this.available = true;
+
+                    dfd.resolve();
+                }.bind(this));
+            }.bind(this));
         }.bind(this));
-    }.bind(this));
+    } else {
+        dfd.reject();
+    }
 
     return dfd.promise;
 };
