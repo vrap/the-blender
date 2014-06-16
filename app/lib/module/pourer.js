@@ -72,13 +72,15 @@ Pourer.prototype.pour = function(pourTime, nbPour) {
         }, nbPour * pourTime);
     } else {
         // Actions to pour the liquid
-        var posBottom = 179;
+        var posBottom = 1;
 
         this.components.servo.to(posBottom);
         this.board.wait(nbPour * pourTime, function() {
             this.components.servo.center();
 
-            dfd.resolve();
+            this.board.wait(500, function() {
+                dfd.resolve();
+            });
         }.bind(this));
     }
 
