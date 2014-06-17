@@ -431,6 +431,7 @@ angular.module('blenderController', [])
                 }
 
                 $scope.modules = modules;
+                $scope.nbModules = modules.length;
             },
             function(result){
                 console.log('Error : ' + result);
