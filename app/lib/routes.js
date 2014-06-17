@@ -10,13 +10,24 @@ var mongoose = require('mongoose'),
  */
 module.exports = function(app) {
 
+    app.get('/api/blender/modules', function(req, res) {
+
+        ModuleModel
+            .find()
+            .sort('order')
+            .exec(function(err, data) {
+                res.send(data);
+            });
+
+    });
+
     app.get('/api/blender/ingredients', function(req, res) {
 
         IngredientModel.find(function(err, data) {
             res.send(data);
         })
 
-    })
+    });
 
     // The API to communicate with the Angular app
     app.get('/api/blender/recipes', function(req, res) {

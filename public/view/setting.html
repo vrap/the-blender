@@ -2,7 +2,7 @@
 	<div class="panel-heading">Community</div>
 	<div class="panel-body">
 		<ul class="list-unstyled">
-			<li>Connected to : <span class="label label-default">udfmozIEFmozeij</span></li>
+			<li>Connected to : <span class="label label-default">{{ connectedServer }}</span></li>
 		</ul>
 	</div>
 </div>
@@ -10,17 +10,17 @@
 <div class="panel panel-primary vrap-manage-blender" ng-show="manageBlender" ng-controller="manageBlenderController">
 	<div class="panel-heading"><h3>Manage the blender</h3></div>
 	<ul class="list-group">
-		<li class="list-group-item">
+		<li class="list-group-item" ng-repeat="module in modules">
 			<div class="clearfix">
-				<h3 class="pull-left">1</h3>
+				<h3 class="pull-left">{{ module.order }}</h3>
 				<button class="btn btn-default pull-right">
 					<i class="glyphicon glyphicon-pencil"></i>
 				</button>
 			</div>
 			<ul class="list-unstyled">
-				<li>Pins : 1,2,3,4,5</li>
-				<li>Type : Master</li>
-				<li>Content : Electronique :)</li>
+				<li>Pins : {{ module.pins }}</li>
+				<li>Type : {{ module.type }}</li>
+				<li>Content : {{ module.content }}</li>
 			</ul>
 		</li>
 		<li class="list-group-item clearfix">

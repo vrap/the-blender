@@ -383,13 +383,54 @@ angular.module('blenderController', [])
 
 }])
 
-.controller('settingController', ['$scope', 'NavService', 'SessionService', function($scope, NavService, SessionService){
+.controller('settingController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
 
     NavService.show();
     NavService.active('setting');
     NavService.setPageTitle('Settings');
     var server = SessionService.Server.getCurrent();
+    $scope.connectedServer = server;
+
     $scope.manageBlender = false;
+
+    /**
+     * Get all modules
+     */
+    var ModuleResources = ApiService.modules();
+
+    // Get all modules
+    ModuleResources
+        .query()
+        .$promise
+        .then(
+            function(result) {
+                var modules = [];
+                // Add parameters for each recipes
+
+                for(var i in result) {
+                    if(undefined !== result[i]._id) {
+                        var pins = '';
+                        for(var j in result[i].components) {
+                            for(var k in result[i].components[j].address) {
+                                pins += result[i].components[j].address[k] + ', ';
+                            }
+                        }
+
+                        modules.push({
+                            order: result[i].order,
+                            pins: pins.slice(0, -2),
+                            type: result[i].type,
+                            content: result[i].content
+                        });
+                    }
+                }
+
+                $scope.modules = modules;
+            },
+            function(result){
+                console.log('Error : ' + result);
+            }
+        );
 
     $scope.manage = function(){
         $scope.manageBlender = true;

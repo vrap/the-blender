@@ -153,6 +153,11 @@ angular.module('blenderService', [])
                     '/api/blender/ingredients/:uuid',
                     {uuid:'@id'}
                     );
+            },
+            modules: function(){
+                return $resource(
+                    '/api/blender/modules'
+                );
             }
         }
     }
