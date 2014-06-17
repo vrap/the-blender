@@ -18,8 +18,7 @@ angular.module('blenderController', [])
                 var user = SessionService.Users.get();
 
                 if(!user.isAuth()){
-                    $rootScope.backPath = $location.path();
-                    $location.path('/connection/community');
+                    $rootScope.connectionCommunity = true;
                     return;
                 }else{
                      SessionService.Server.setCurrent(server);
@@ -40,15 +39,16 @@ angular.module('blenderController', [])
     '$http',
     '$location',
     '$rootScope',
+    '$route',
     'UserModel',
     'SessionService',
     'NavService',
-    function($scope, $http, $location, $rootScope , UserModel, SessionService, NavService){
+    function($scope, $http, $location, $rootScope, $route, UserModel, SessionService, NavService){
 
         NavService.hide();
 
         $scope.cancel = function(){
-            window.history.back();
+            $rootScope.connectionCommunity = false;
         }
 
         /*
@@ -78,7 +78,7 @@ angular.module('blenderController', [])
         * @param {bool} Angular validation
         * @param {string} Path where the good connection go
         */
-        $scope.loginWithAccount = function(isValid, path){
+        $scope.loginWithAccount = function(isValid, reload){
 
             $scope.noValid = false;
 
@@ -101,8 +101,13 @@ angular.module('blenderController', [])
                         }else{
                             user.setUuid(response.user.uuid);
                             SessionService.Users.set(user);
-                            $rootScope.api = 'community'
-                            $location.path(path);
+                            $rootScope.api = 'community';
+
+                            if(reload){
+                                $route.reload();
+                                $rootScope.connectionCommunity = false;
+                            }
+
                         }
 
                     })
