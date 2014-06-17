@@ -48,13 +48,17 @@ module.exports = function(app) {
 
         // SAve in mongo
         var r = new RecipeModel(recipe);
-        r.save(function(err){
-            if(null != err){
-                res.send({status : false});
+        r.save(function(err) {
+            if (null != err) {
+                res.send({
+                    status: false
+                });
             }
         });
 
-        res.send({status : true});
+        res.send({
+            status: true
+        });
 
     });
 
@@ -85,7 +89,7 @@ module.exports = function(app) {
         // Ask the blender to create a recipe (already saved or created by user)
         if (blender.isAvailable()) {
             try {
-                blender.run(req.param('recipe'));
+                blender.run(JSON.parse(req.param('recipe')));
             } catch (e) {
                 res.send({
                     status: false
