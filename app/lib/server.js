@@ -6,7 +6,7 @@ var express = require('express'),
     app = express(),
     io = require('socket.io'),
     winston = require('winston'),
-    bodyParser = require('body-parser')
+    bodyParser = require('body-parser');
 
 /**
  * Server prototype.
@@ -30,9 +30,9 @@ Server.prototype.init = function(port) {
     app.use(bodyParser.urlencoded())
 
     // Initialize http server.
-	app.listen(port);
+    app.listen(port);
     this.app = app;
-	this.server = http.createServer(app);
+    this.server = http.createServer(app);
     this.socket = io.listen(
         this.server, {
             logger: {
