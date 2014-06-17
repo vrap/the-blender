@@ -48,13 +48,17 @@ module.exports = function(app) {
 
         // SAve in mongo
         var r = new RecipeModel(recipe);
-        r.save(function(err){
-            if(null != err){
-                res.send({status : false});
+        r.save(function(err) {
+            if (null != err) {
+                res.send({
+                    status: false
+                });
             }
         });
 
-        res.send({status : true});
+        res.send({
+            status: true
+        });
 
     });
 
