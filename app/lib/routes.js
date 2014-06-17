@@ -63,11 +63,6 @@ module.exports = function(app) {
         res.send('This is the recipe.');
     });
 
-    app.post('/api/blender/recipes/:recipe_uid', function(req, res) {
-        // Save a new recipe in the blender
-        res.send('Oh a new recipe ! Thank you my lord');
-    });
-
     app.delete('/api/blender/recipes/:recipe_uid', function(req, res) {
         // Delete a recipe in the blender
         res.send('Bye bye sweet recipe ...');
