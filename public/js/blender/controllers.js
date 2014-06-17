@@ -136,7 +136,8 @@ angular.module('blenderController', [])
     'SessionService',
     'ApiService',
     'NavService',
-    function($scope, $rootScope, $http, $routeParams, $cookies, SessionService, ApiService, NavService){
+    'RecipeModel',
+    function($scope, $rootScope, $http, $routeParams, $cookies, SessionService, ApiService, NavService, RecipeModel){
 
         NavService.show();
         NavService.active('home');
@@ -168,12 +169,29 @@ angular.module('blenderController', [])
                 }
             );
 
+        /**
+        * Ui function
+        * Send the recipe to the master to make it !
+        */
+        $scope.blendIt = function(recipe) {
+        
+
+            ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(e){
+                console.log(e);
+            })
+            
+
+        };
+
 }])
 
 /**
 * Recipe Controller
 */
-.controller('recipeController', ['$scope', '$http', 'SessionService',
+.controller('recipeController', [
+    '$scope',
+    '$http',
+    'SessionService',
     function ($scope, $http, $routeParams, SessionService){
     
     $scope.recipeList = true;
@@ -195,16 +213,7 @@ angular.module('blenderController', [])
         $scope.recipeList = true;
     };
 
-    /**
-    * Ui function
-    * Send the recipe to the master to make it !
-    */
-    $scope.blend = function(recipe) {
-        Blender.Recipes.execute(recipe)
-            .success(function(data) {
-               console.log(data);
-            });
-    };
+    
 
     
 }])

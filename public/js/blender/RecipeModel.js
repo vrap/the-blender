@@ -6,7 +6,7 @@ angular.module('blenderModelRecipe', [])
 /**
 * Class User
 */
-.factory('RecipeModel', [function () {
+.factory('RecipeModel', ['$q', '$http', function ($q, $http) {
  
     /**
     * Constructor, with class name
@@ -63,7 +63,7 @@ angular.module('blenderModelRecipe', [])
     * Public method
     * @param {json} all steps
     */
-    Recipe.prototype.setSteps = function (step) {
+    Recipe.prototype.setSteps = function (steps) {
         this.steps = steps;
     };
 
@@ -77,6 +77,7 @@ angular.module('blenderModelRecipe', [])
         this.steps.push({order: order, action: action, value: value});
     };
 
+
     /**
      * Public mehod
      * Format data to post in string format
@@ -86,7 +87,10 @@ angular.module('blenderModelRecipe', [])
 
         // Create data
         var data = {}
-        data.author = this.getAuthor().getUuid();
+        data.author = '';
+        if(this.getAuthor() != undefined){
+            data.author = this.getAuthor().getUuid();
+        }
         data.name = this.getName();
         data.steps = [];
 
@@ -112,7 +116,6 @@ angular.module('blenderModelRecipe', [])
             data.steps.push(step);
         }
 
-        console.log(data);
         return 'data=' + JSON.stringify(data);
 
     }

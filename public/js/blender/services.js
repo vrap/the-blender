@@ -128,9 +128,24 @@ angular.module('blenderService', [])
                         }
                     });
             },
-            blendeIt: function(recipe){
+            blendIt: function(masterUri, recipe){
 
-                
+                var defered = $q.defer();
+                $http.post(
+                    masterUri + '/execute',
+                    'data=' + JSON.stringify(recipe),
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                    )
+                    .success(function(response){
+                        defered.resolve(response);
+                    })
+                    .error(function(response){
+                        defered.fail(response);
+                    });
+
+                return defered.promise;
 
             },
             ingredients: function(){
