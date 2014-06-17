@@ -133,7 +133,7 @@ angular.module('blenderService', [])
                 var defered = $q.defer();
                 $http.post(
                     masterUri + '/execute',
-                    'data=' + JSON.stringify(recipe),
+                    'recipe=' + JSON.stringify(recipe),
                     {
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                     }
