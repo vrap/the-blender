@@ -13,16 +13,16 @@
 				</form>
 			</div>
 		</div>
-		<div class="list-group" ng-hide="valid">
+		<div class="list-group" ng-hide="created">
 			<a class="list-group-item vrap-padding" ng-click="chooseIngredient(ingredient)" ng-repeat="ingredient in ingredients">
 				{{ingredient.name}}					
-				<span class="pull-right vrap-big-tints" vrap-score score="ingredient.parameters" ng-click="RemoveIngredient(ingredient, $index)"></span>
+				<span class="pull-right vrap-big-tints" vrap-score score="ingredient.parameters" ng-click="removeIngredient(ingredient, $index)"></span>
 			</a>
 		</div>
 		<div class="form-group" ng-show="valid">
 			<div class="alert alert-success">
 				<h6>{{successMessage}}</h6>
-				<button class="btn btn-default" ng-click="moreCocktail()">One more</button>
+				<button class="btn btn-default" ng-click="moreCocktail(ingredients)">One more</button>
 				<button class="btn btn-primary">Blend it !</button>
 			</div>
 			
@@ -32,7 +32,7 @@
 		</div>
 		<div class="form-group" ng-hide="valid">
 			<button class="btn btn-default" ng-click="saveCocktail(ingredients)">Save</button>
-			<button class="btn btn-primary">Blend it !</button>
+			<button class="btn btn-primary" ng-click="blendIt(ingredients)">Blend it !</button>
 		</div>
 	</div>
 </div>

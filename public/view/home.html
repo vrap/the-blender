@@ -1,5 +1,4 @@
 <div ng-controller="recipeController">
-
 	<div class="row" ng-hide="recipeList">
 		<div class="col-xs-12">
 			
@@ -7,7 +6,7 @@
 				<div class="panel-heading"><h3>{{cocktailRecipe.name}}</h3></div>
 				<div class="panel-body">
 					<i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>
-					<span ng-if="recipe.author == '' ">
+					<span ng-if="!recipe.author">
 					    The Blender
 					</span>
 					<span ng-if="recipe.author != '' ">
@@ -24,7 +23,7 @@
 					<a class="vrap-btn-return pull-left" ng-click="BackListRecipe()"><i class="glyphicon glyphicon-chevron-left"></i></a>
 					<div class="pull-right">
 						<button class="btn btn-primary" ng-click="blend(cocktailRecipe)">Blend it !</button>
-						<button class="btn btn-default">Modify</button>
+						<!-- <button class="btn btn-default">Modify</button> -->
 					</div>
 				</div>
 			</div>
@@ -32,7 +31,7 @@
 	</div>
 	<div class="row" ng-show="recipeList">
 	
-		<div class="col-xs-12" ng-repeat="recipe in recipes">
+		<div class="col-xs-12" ng-repeat="recipe in recipes | orderBy:created">
 			<div class="panel panel-primary panel-clickable" ng-click="openRecipe(recipe)">
 			  <div class="panel-heading">{{recipe.name}}</div>
 			  <div class="panel-body">
@@ -41,12 +40,11 @@
 			  		20
 			  	</span> -->
 			  	<i class="glyphicon glyphicon glyphicon-tint vrap-margin-right-sm"></i>{{recipe.steps.length}}
-			  	<span class="pull-right"><i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>
-			  		
-					<span ng-if="recipe.author == '' ">
+			  		<span class="pull-right"><i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>
+					<span ng-if="!recipe.username">
 					    The Blender
 					</span>
-					<span ng-if="recipe.author != '' ">
+					<span ng-if="recipe.username != ''">
 					    {{recipe.username}}
 					</span>
 

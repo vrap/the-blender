@@ -2,12 +2,14 @@ var mongoose = require('mongoose'),
     blender = require('./blender').Blender,
     ModuleModel = require('./model/module'),
     RecipeModel = require('./model/recipe'),
-    IngredientModel = require('./model/ingredient');
+    IngredientModel = require('./model/ingredient'),
+    Helper = require('./helper').Helper;
 
 /**
  * Routes for the application
  */
 module.exports = function(app) {
+
     app.get('/api/blender/ingredients', function(req, res) {
 
         IngredientModel.find(function(err, data) {
@@ -34,9 +36,26 @@ module.exports = function(app) {
     });
 
     app.post('/api/blender/recipes', function(req, res) {
+
+        var helper = new Helper();
+
         // Save a new recipe in the blender
-        console.log(req.param("author"));
-        res.send('Oh a new recipe ! Thank you my lord');
+        var recipe = JSON.parse(req.body.data);
+        recipe.uuid = helper.generateUuid();
+        recipe.created = new Date();
+        recipe.updated = null;
+        recipe.forked = null;
+
+        // SAve in mongo
+        var r = new RecipeModel(recipe);
+        r.save(function(err){
+            if(null != err){
+                res.send({status : false});
+            }
+        });
+
+        res.send({status : true});
+
     });
 
     app.get('/api/blender/recipes/:recipe_uid', function(req, res) {

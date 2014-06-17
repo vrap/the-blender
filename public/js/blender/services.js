@@ -114,11 +114,6 @@ angular.module('blenderService', [])
         return {
             recipes: function(server){
 
-                // var isArray = false;
-                // if(server.name == 'master'){
-                //     isArray = true;
-                // }
-
                 return $resource(
                     server.uri + '/recipes/:uuid',
                     {uuid:'@id'},
@@ -132,6 +127,11 @@ angular.module('blenderService', [])
                             method: 'POST'
                         }
                     });
+            },
+            blendeIt: function(recipe){
+
+                
+
             },
             ingredients: function(){
                 return $resource(

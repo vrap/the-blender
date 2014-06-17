@@ -67,7 +67,7 @@ Blender.prototype.init = function() {
 
         dfd.resolve();
     }.bind(this));
-
+    
     return dfd.promise;
 };
 

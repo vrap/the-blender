@@ -26,4 +26,5 @@ blender.init().done(function() {
     require('./lib/routes')(server.app);
 
     console.info('[Blender][infos] Blender is ready, visit http://localhost:' + config.server.port + '/');
+    
 });

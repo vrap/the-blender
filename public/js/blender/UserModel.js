@@ -93,11 +93,21 @@ angular.module('blenderModelUser', [])
     * @param {string} url Community
     */
     User.prototype.setCommunity = function (server, community) {
-    	// Delete '/' of uri if exxiste
-    	if(community.slice(-1) === '/'){
-    		community = community.substring(0, community.length - 1);
-    	}
+
+        // Delete '/' of uri if existe
+        if(community.slice(-1) === '/'){
+            community = community.substring(0, community.length - 1);
+        }
+
+        for(var key in this.community){
+            if(this.community[key].name == server){
+                this.community[key].uri = community
+                return;
+            }
+        }
         this.community.push({name : server, uri: community});
+        return;
+
     };
 
     /**

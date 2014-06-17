@@ -5,8 +5,8 @@ var express = require('express'),
     http = require('http'),
     app = express(),
     io = require('socket.io'),
-    winston = require('winston');
-
+    winston = require('winston'),
+    bodyParser = require('body-parser')
 
 /**
  * Server prototype.
@@ -26,6 +26,8 @@ exports.Server = Server = function() {};
 Server.prototype.init = function(port) {
     // Define static ressources from express.
     app.use(express.static(__dirname + '/../../public'));
+    // parse application/x-www-form-urlencoded
+    app.use(bodyParser.urlencoded())
 
     // Initialize http server.
 	app.listen(port);

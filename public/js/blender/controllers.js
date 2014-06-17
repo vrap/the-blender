@@ -80,6 +80,8 @@ angular.module('blenderController', [])
         */
         $scope.loginWithAccount = function(isValid, path){
 
+            $scope.noValid = false;
+
             if(isValid){
                 
                 // Créate new user
@@ -88,12 +90,11 @@ angular.module('blenderController', [])
                 user.setEmail($scope.user.email);
                 user.setCommunity('community', $scope.user.community);
 
-                SessionService.Server.setCurrent('community');
-
                 // Send data to community api
                 user.auth($scope.user.password)
                     .success(function(response){
 
+                        SessionService.Server.setCurrent('community');
                         if(response.status == false){
                             $scope.noValid = true;
                             $scope.errorMessage = 'User Name or Password are invalide';
@@ -109,6 +110,7 @@ angular.module('blenderController', [])
                         console.log(response);
                         $scope.noValid = true;
                         $scope.errorMessage = 'Connection to community fail';
+                        user.setCommunity('community', '');
                     });
 
 
@@ -143,6 +145,8 @@ angular.module('blenderController', [])
         var server = SessionService.Server.getCurrent();
 
         var user = SessionService.Users.get();
+
+        console.log(user.getCommunity(server));
 
         // Set Resource for recipes.
         var RecipesResources = ApiService.recipes(user.getCommunity(server));
@@ -216,11 +220,12 @@ angular.module('blenderController', [])
  */
 .controller('createController', [
     '$scope',
+    '$route',
     'NavService',
     'ApiService',
     'RecipeModel',
     'SessionService',
-    function($scope, NavService, ApiService, RecipeModel, SessionService){
+    function($scope, $route,NavService, ApiService, RecipeModel, SessionService){
 
         NavService.show();
         NavService.active('create');
@@ -265,8 +270,48 @@ angular.module('blenderController', [])
          * @param  {object} ingredient
          * @return {void}
          */
-        $scope.RemoveIngredient = function(ingredient){
+        $scope.removeIngredient = function(ingredient){
             ingredient.parameters = ingredient.parameters - 2;
+        }
+
+        /**
+         * More Cocktail : hide pannel succes, show liste of ingredient
+         * @return {void}
+         */
+        $scope.moreCocktail = function(ingredients){
+            $route.reload();
+        }
+
+        $scope.blendIt = function(ingredients){
+
+            var user = SessionService.Users.get();
+            
+            // create recipe cocktail
+            var recipe = RecipeModel.build();
+
+            var name = 'No name'
+            if($scope.cocktail != undefined){
+                name = $scope.cocktail.name;
+            }
+            recipe.setName(name)
+            recipe.setAuthor(user);
+
+            var order = 0;
+            for(key in ingredients){
+                if(ingredients[key].parameters > 0){
+                    order++;
+                    recipe.pushStep(order, 'poor', ingredients[key]);
+                }
+            }
+
+            if(order == 0){
+                $scope.noValid = true;
+                $scope.errorMessage = 'The recipe have no ingredients';
+            }else{
+                
+            }
+
+
         }
 
         /**
@@ -275,11 +320,14 @@ angular.module('blenderController', [])
          */
         $scope.saveCocktail = function(ingredients){
 
+            $scope.noValid = false;
+
             // check name is not empty
             if($scope.cocktail === undefined){
                 $scope.noValid = true;
                 $scope.errorMessage = 'The name of this awsome cocktail is empty !';
             }else{
+
                 var user = SessionService.Users.get();
                 // create recipe cocktail
                 var recipe = RecipeModel.build();
@@ -301,6 +349,7 @@ angular.module('blenderController', [])
                         function(result) {
                             if(result.status){
                                 $scope.valid = true;
+                                $scope.created = true;
                                 $scope.successMessage = 'Great a new cocktail saved !';
                             }
                         },
