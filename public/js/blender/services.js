@@ -158,6 +158,25 @@ angular.module('blenderService', [])
                 return $resource(
                     '/api/blender/modules'
                 );
+            },
+            addModule: function(module){
+
+                var defered = $q.defer();
+                $http.post(
+                    '/api/blender/modules',
+                    'module=' + JSON.stringify(module),
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                )
+                    .success(function(response){
+                        defered.resolve(response);
+                    })
+                    .error(function(response){
+                        defered.fail(response);
+                    });
+
+                return defered.promise;
             }
         }
     }

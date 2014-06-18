@@ -21,6 +21,29 @@ module.exports = function(app) {
 
     });
 
+    app.post('/api/blender/modules', function(req, res) {
+        // Save a new module
+        try {
+            var module = JSON.parse(req.param('module'));
+            var m = new ModuleModel(module);
+            m.save(function(err) {
+                if (null != err) {
+                    res.send({
+                        status: false
+                    });
+                }
+            });
+        } catch (e) {
+            res.send({
+                status: false
+            });
+        }
+
+        res.send({
+            status: true
+        })
+    });
+
     app.get('/api/blender/ingredients', function(req, res) {
 
         IngredientModel.find(function(err, data) {
