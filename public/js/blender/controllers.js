@@ -147,12 +147,8 @@ angular.module('blenderController', [])
         NavService.show();
         NavService.active('home');
         NavService.setPageTitle('Drink a cocktail');
-
         var server = SessionService.Server.getCurrent();
-
         var user = SessionService.Users.get();
-
-        console.log(user.getCommunity(server));
 
         // Set Resource for recipes.
         var RecipesResources = ApiService.recipes(user.getCommunity(server));
@@ -163,11 +159,7 @@ angular.module('blenderController', [])
             .$promise
             .then(
                 function(result) {
-
-                    console.log(result);
                     $scope.recipes = result.data;
-                    console.log(result.data);
-
                 },
                 function(result){
                     console.log('Error : ' + result.data);
@@ -179,14 +171,65 @@ angular.module('blenderController', [])
         * Send the recipe to the master to make it !
         */
         $scope.blendIt = function(recipe) {
-        
-
             ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(e){
                 console.log(e);
             })
-            
+        };
+
+        /**
+         * Ui function
+         * @param  {json} recipe
+         * @param  {string} type of community server
+         * @return {void}
+         */
+        $scope.saveOn = function(recipe, server){
+
+            $rootScope.valid = false;
+            $rootScope.noValid = false;
+
+             // Set Resource for recipes.
+            var RecipeResources = ApiService.recipes(user.getCommunity(server));
+            RecipeResources.save('data=' + JSON.stringify(recipe))
+                    .$promise
+                    .then(
+                        function(result) {
+                            if(result.status){
+                                $rootScope.valid = true;
+                                $scope.successMessage = result.data.msg;
+                            }else{
+                                $rootScope.noValid = true;
+                                $scope.errorMessage = result.data.msg;
+                            }
+                        },
+                        function(result){
+                            $rootScope.noValid = true;
+                            $scope.errorMessage = 'Connection to server fail';
+                        }
+                    );
 
         };
+
+         $scope.recipeList = true;
+
+        /**
+        * Ui function
+        * Open panel to show detail of recipe
+        */
+        $scope.openRecipe = function(recipe){
+            $rootScope.valid = false;
+            $rootScope.noValid = false;
+            $scope.cocktailRecipe = recipe;
+            $scope.recipeList = false;
+        };
+
+        /**
+        * Ui function
+        * Close panel to show detail of recipe
+        */
+        $scope.BackListRecipe = function(){
+            $scope.recipeList = true;
+        };
+
 
 }])
 
@@ -196,27 +239,11 @@ angular.module('blenderController', [])
 .controller('recipeController', [
     '$scope',
     '$http',
+    '$rootScope',
     'SessionService',
-    function ($scope, $http, $routeParams, SessionService){
+    function ($scope, $http, $routeParams, $rootScope, SessionService){
     
-    $scope.recipeList = true;
-
-    /**
-    * Ui function
-    * Open panel to show detail of recipe
-    */
-    $scope.openRecipe = function(recipe){
-        $scope.cocktailRecipe = recipe;
-        $scope.recipeList = false;
-    };
-
-    /**
-    * Ui function
-    * Close panel to show detail of recipe
-    */
-    $scope.BackListRecipe = function(){
-        $scope.recipeList = true;
-    };
+   
 
     
 
@@ -357,20 +384,24 @@ angular.module('blenderController', [])
                 }
 
                 var RecipeResources = ApiService.recipes(user.getCommunity(server));
-                RecipeResources.save(recipe.formatToSend())
+                RecipeResources.save('data=' + recipe.formatToSend())
                     .$promise
                     .then(
                         function(result) {
+
                             if(result.status){
                                 $scope.valid = true;
                                 $scope.created = true;
-                                $scope.successMessage = 'Great a new cocktail saved !';
+                                $scope.successMessage = result.data.msg;
+                            }else{
+                                $scope.noValid = true;
+                                $scope.errorMessage = result.data.msg;
                             }
+
                         },
                         function(result){
                             $scope.noValid = true;
                             $scope.errorMessage = 'Connection to server fail';
-                            console.log('Error : ' + result);
                         }
                     );
                 

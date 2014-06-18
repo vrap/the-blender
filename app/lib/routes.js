@@ -51,13 +51,16 @@ module.exports = function(app) {
         r.save(function(err) {
             if (null != err) {
                 res.send({
-                    status: false
+                    status: false,
+                    data : { msg : 'Somthing wrong append.' }
                 });
             }
         });
 
         res.send({
-            status: true
+            status: true,
+            data: { msg : 'Great a new cocktail saved !' }
+
         });
 
     });
