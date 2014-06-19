@@ -15,6 +15,24 @@ exports.Cart = Cart = function(board) {
 
     this.board = board;
     this.position = 0;
+
+    this.parameters = {
+        counterClockwise: {
+            rpm: 100,
+            accel: 1600,
+            decel: 1600
+        },
+        clockWise: {
+            rpm: 100,
+            accel: 1600,
+            decel: 1600
+        },
+        end: {
+            rpm: 100,
+            accel: 1600,
+            decel: 1600
+        }
+    };
 };
 
 /**
@@ -45,7 +63,7 @@ Cart.prototype.init = function() {
 
         this.stepper = new Five.Stepper({
             type: Five.Stepper.TYPE.TWO_WIRE,
-            stepsPerRev: 200,
+            stepsPerRev: cartConfig.stepsPerRev,
             pins: {
                 motor1: cartConfig.A.dir,
                 motor2: cartConfig.B.dir
@@ -80,26 +98,31 @@ Cart.prototype.moveTo = function(step) {
         console.log('Cart is already at the good position');
     } else if (diff > 0) {
         if (!config.board.debug) {
-            this.stepper.direction(Five.Stepper.DIRECTION.CW);
+            this.stepper
+                .rpm(this.parameters.clockwise.rpm)
+                .accel(this.parameters.clockwise.accel)
+                .decel(this.parameters.clockwise.devel)
+                .cw();
         }
         console.log('Cart direction : Clockwise');
     } else {
         if (!config.board.debug) {
-            this.stepper.direction(Five.Stepper.DIRECTION.CCW);
+            this.stepper
+                .rpm(this.parameters.counterClockwise.rpm)
+                .accel(this.parameters.counterClockwise.accel)
+                .decel(this.parameters.counterClockwise.devel)
+                .ccw();
         }
         console.log('Cart direction : Counter clockwise');
     }
 
     if (!config.board.debug) {
-        this.stepper.rpm(50).step(10, function() {
-            this.stepper
-                .rpm(100)
-                .step(Math.abs(diff), function() {
-                    this.position += diff;
+        this.stepper
+            .step(Math.abs(diff), function() {
+                this.position += diff;
 
-                    dfd.resolve();
-                }.bind(this));
-        }.bind(this));
+                dfd.resolve();
+            }.bind(this));
     } else {
         this.position += diff;
         dfd.resolve();
@@ -133,15 +156,31 @@ Cart.prototype.moveToMaster = function(dfd) {
         dfd = deferred();
     }
 
-    this.stepper.rpm(100).step(100, function() {
-        if (this.sensorState == 1) {
-            this.position = 0;
+    var diff = 0 - this.position;
 
-            dfd.resolve();
-        } else {
-            this.moveToMaster(dfd);
-        }
-    }.bind(this));
+    if (diff == 0) {
+        dfd.resolve();
+    } else if (diff > 0) {
+        this.stepper.cw();
+    } else {
+        this.stepper.ccw();
+    }
+
+    this.stepper
+        .accel(this.parameters.end.accel)
+        .decel(this.parameters.end.devel)
+        .rpm(rpm)
+        .step(ModuleClass.SIZE, function() {
+            if (this.sensorState == 1) {
+                this.position = 0;
+
+                dfd.resolve();
+            } else {
+                setTimeout(function() {
+                    this.moveToMaster(dfd);
+                }, 0);
+            }
+        }.bind(this));
 
     return dfd.promise;
 };
