@@ -67,7 +67,7 @@ Blender.prototype.init = function() {
 
         dfd.resolve();
     }.bind(this));
-    
+
     return dfd.promise;
 };
 
@@ -251,7 +251,8 @@ Blender.prototype.run = function(recipe) {
 
                 return value;
             }.bind(this)).done(function() {
-                this.cart.moveTo(0).done(function() {
+                console.log('Back to master ...');
+                this.cart.moveToMaster().done(function() {
                     console.log('Cart moved to initial position');
 
                     this.available = true;

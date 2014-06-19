@@ -33,7 +33,8 @@ Cart.prototype.init = function() {
             B: {
                 pwm: new Five.Pin(cartConfig.B.pwm),
                 brake: new Five.Pin(cartConfig.B.brake),
-            }
+            },
+            sensor: config.board.sensor
         }
 
         this.pins.A.pwm.high();
@@ -51,6 +52,18 @@ Cart.prototype.init = function() {
             }
         });
 
+        this.sensor = new Five.Button({
+            pin: this.pins.sensor,
+            isPullup: true
+        });
+
+        this.sensor.on('up', function() {
+            this.sensorState = 0;
+        }.bind(this));
+
+        this.sensor.on('down', function() {
+            this.sensorState = 1;
+        }.bind(this));
     }
 
     dfd.resolve();
@@ -78,13 +91,15 @@ Cart.prototype.moveTo = function(step) {
     }
 
     if (!config.board.debug) {
-        this.stepper
-            .rpm(180)
-            .step(Math.abs(diff), function() {
-                this.position += diff;
+        this.stepper.rpm(50).step(10, function() {
+            this.stepper
+                .rpm(100)
+                .step(Math.abs(diff), function() {
+                    this.position += diff;
 
-                dfd.resolve();
-            }.bind(this));
+                    dfd.resolve();
+                }.bind(this));
+        }.bind(this));
     } else {
         this.position += diff;
         dfd.resolve();
@@ -109,6 +124,24 @@ Cart.prototype.moveToModule = function(module) {
     this.moveTo((module.order * ModuleClass.SIZE)).done(function() {
         dfd.resolve();
     });
+
+    return dfd.promise;
+};
+
+Cart.prototype.moveToMaster = function(dfd) {
+    if (!dfd) {
+        dfd = deferred();
+    }
+
+    this.stepper.rpm(100).step(100, function() {
+        if (this.sensorState == 1) {
+            this.position = 0;
+
+            dfd.resolve();
+        } else {
+            this.moveToMaster(dfd);
+        }
+    }.bind(this));
 
     return dfd.promise;
 };
