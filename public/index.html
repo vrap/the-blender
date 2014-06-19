@@ -31,7 +31,7 @@
     <div class="form-group" ng-show="noValid">
       <div class="alert alert-danger">{{errorMessage}}</div>
     </div>
-    <form role="form" name="connectForm" ng-submit="loginWithAccount(connectForm.$valid, true)" novalidate>
+    <form role="form" name="connectForm" ng-submit="loginWithAccount(connectForm.$valid, reload)" novalidate>
       <div class="row">
         <div class="col-xs-9">
           <div class="form-group">

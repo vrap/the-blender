@@ -92,14 +92,13 @@ angular.module('blenderService', [])
         Server : {
             setCurrent: function(server){
                 sessionStorage.setItem('server/current', server);
-
             },
             getCurrent: function(){
                 server = sessionStorage.getItem('server/current');
-                if(server == 'master'){
-                    NavService.setNavCommunityItemTo('community', 'master');
-                }else{
+                if( server == 'community' ){
                     NavService.setNavCommunityItemTo('master', 'community');
+                }else{
+                    NavService.setNavCommunityItemTo('community', 'master');
                 }
                 return server;
             }

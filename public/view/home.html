@@ -38,10 +38,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="alert alert-success"  ng-show="valid">
+			<div class="alert alert-success"  ng-show="saveOnValid">
 				<h6>{{successMessage}}</h6>
 			</div>
-			<div ng-show="noValid" class="alert alert-danger">{{errorMessage}}</div>
+			<div ng-show="saveOnNoValid" class="alert alert-danger">{{errorMessage}}</div>
 		</div>
 	</div>
 	<div class="row" ng-show="recipeList">

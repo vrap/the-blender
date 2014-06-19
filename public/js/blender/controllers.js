@@ -18,7 +18,9 @@ angular.module('blenderController', [])
 
                 var user = SessionService.Users.get();
 
+                // Display form to connect
                 if(!user.isAuth()){
+                    $rootScope.reload = true;
                     $rootScope.connectionCommunity = true;
                     return;
                 }else{
@@ -107,6 +109,8 @@ angular.module('blenderController', [])
                             if(reload){
                                 $route.reload();
                                 $rootScope.connectionCommunity = false;
+                            }else{
+                                $rootScope.connectionCommunity = false;
                             }
 
                         }
@@ -153,6 +157,7 @@ angular.module('blenderController', [])
         var user = SessionService.Users.get();
 
         if(!user){
+            console.log('lala');
             var user = UserModel.build();
             SessionService.Users.set(user);
             $rootScope.api = 'master'
@@ -161,6 +166,7 @@ angular.module('blenderController', [])
         var server = SessionService.Server.getCurrent();
          // first connect
         if(!server){
+            console.log(server);
             SessionService.Server.setCurrent('master');
             server = 'master';
         }
@@ -207,12 +213,13 @@ angular.module('blenderController', [])
 
             console.log(recipe, server);
 
-            $rootScope.valid = false;
-            $rootScope.noValid = false;
+            $rootScope.saveOnValid = false;
+            $rootScope.saveOnValidNoValid = false;
 
             var community = user.getCommunity(server)
             if(!community){
                 $rootScope.connectionCommunity = true;
+                $rootScope.reload = false;
                 return;
             }
 
@@ -223,15 +230,15 @@ angular.module('blenderController', [])
                     .then(
                         function(result) {
                             if(result.status){
-                                $rootScope.valid = true;
+                                $rootScope.saveOnValid = true;
                                 $scope.successMessage = result.data.msg;
                             }else{
-                                $rootScope.noValid = true;
+                                $rootScope.saveOnValidNoValid = true;
                                 $scope.errorMessage = result.data.msg;
                             }
                         },
                         function(result){
-                            $rootScope.noValid = true;
+                            $rootScope.saveOnValidNoValid = true;
                             $scope.errorMessage = 'Connection to server fail';
                         }
                     );
