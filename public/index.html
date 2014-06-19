@@ -28,10 +28,12 @@
 <div class="container-connection-embended" ng-controller="connectionController" ng-class="{active: connectionCommunity}">
   <h2 class="heading text-center">Connect to a community !</h2>
   <div class="form-signin">
+
     <div class="form-group" ng-show="noValid">
       <div class="alert alert-danger">{{errorMessage}}</div>
     </div>
-    <form role="form" name="connectForm" ng-submit="loginWithAccount(connectForm.$valid, reload)" novalidate>
+    
+    <form role="form" name="connectForm" ng-submit="login(connectForm.$valid, reload)" novalidate>
       <div class="row">
         <div class="col-xs-9">
           <div class="form-group">
@@ -40,9 +42,6 @@
             <input type="password" class="form-control input-sm " placeholder="Password" ng-model="user.password" required>
           </div>
         </div>
-        <!-- <label class="checkbox">
-        <input type="checkbox" value="remember-me"> Remember me
-        </label> -->
         <div class="col-xs-3">
           <div class="form-group">
             <button class="btn btn-primary btn-block" type="submit">Connection</button>
