@@ -16,8 +16,6 @@ angular.module('blenderController', [])
 
             if(server == 'community'){
 
-                console.log('switch community');
-
                 var user = SessionService.Users.get();
 
                 if(!user.isAuth()){
@@ -164,7 +162,7 @@ angular.module('blenderController', [])
          // first connect
         if(!server){
             SessionService.Server.setCurrent('master');
-            server = master;
+            server = 'master';
         }
 
         // Set Resource for recipes.
@@ -188,8 +186,14 @@ angular.module('blenderController', [])
         * Send the recipe to the master to make it !
         */
         $scope.blendIt = function(recipe) {
-            ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(e){
-                console.log(e);
+            ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(result){
+                console.log(result.status);
+                if(result.status == true){
+                    $scope.loadCocktail = true;
+                }else{
+                    $scope.loadCocktailNoValid = true;
+                    $scope.loadCocktailErrorMessage = "Houtch !The blender is in trouble."
+                }
             })
         };
 
@@ -201,8 +205,16 @@ angular.module('blenderController', [])
          */
         $scope.saveOn = function(recipe, server){
 
+            console.log(recipe, server);
+
             $rootScope.valid = false;
             $rootScope.noValid = false;
+
+            var community = user.getCommunity(server)
+            if(!community){
+                $rootScope.connectionCommunity = true;
+                return;
+            }
 
              // Set Resource for recipes.
             var RecipeResources = ApiService.recipes(user.getCommunity(server));
@@ -244,6 +256,8 @@ angular.module('blenderController', [])
         * Close panel to show detail of recipe
         */
         $scope.BackListRecipe = function(){
+            $scope.loadCocktailNoValid = false;
+            $scope.loadCocktailErrorMessage = false
             $scope.recipeList = true;
         };
 

@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>The Blender</title>
   
+  <meta name="viewport" content="width=device-width, user-scalable=no">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/bootflat.css">
@@ -25,7 +26,7 @@
   <div class="container" ng-view></div>
 
 <div class="container-connection-embended" ng-controller="connectionController" ng-class="{active: connectionCommunity}">
-  <h2 class="heading text-center">Connect to a community ! {{connectionCommunity}}</h2>
+  <h2 class="heading text-center">Connect to a community !</h2>
   <div class="form-signin">
     <div class="form-group" ng-show="noValid">
       <div class="alert alert-danger">{{errorMessage}}</div>
