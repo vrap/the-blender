@@ -436,13 +436,76 @@ angular.module('blenderController', [])
 
 }])
 
-.controller('settingController', ['$scope', 'NavService', 'SessionService', function($scope, NavService, SessionService){
+.controller('settingController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
 
     NavService.show();
     NavService.active('setting');
     NavService.setPageTitle('Settings');
     var server = SessionService.Server.getCurrent();
+    $scope.connectedServer = server;
+
     $scope.manageBlender = false;
+
+    /**
+     * Get all modules
+     */
+    var ModuleResources = ApiService.modules();
+    ModuleResources
+        .query()
+        .$promise
+        .then(
+            function(result) {
+                var modules = [];
+                // Add parameters for each recipes
+
+                for(var i in result) {
+                    if(undefined !== result[i]._id) {
+                        var pins = '';
+                        for(var j in result[i].components) {
+                            for(var k in result[i].components[j].address) {
+                                pins += result[i].components[j].address[k] + ', ';
+                            }
+                        }
+
+                        modules.push({
+                            order: result[i].order,
+                            pins: pins.slice(0, -2),
+                            type: result[i].type,
+                            content: result[i].content
+                        });
+                    }
+                }
+
+                $scope.modules = modules;
+                $scope.nbModules = modules.length;
+            },
+            function(result){
+                console.log('Error : ' + result);
+            }
+        );
+
+    /**
+     * Get all ingredients
+     */
+    var IngredientResources = ApiService.ingredients();
+    IngredientResources
+        .query()
+        .$promise
+        .then(
+        function(result) {
+            // Add parameters for each recipes
+            var ing = [];
+            for(var key in result){
+                if(undefined !== result[key]._id) {
+                    ing.push(result[key]);
+                }
+            }
+            $scope.ingredients = ing;
+        },
+        function(result){
+            console.log('Error : ' + result);
+        }
+    );
 
     $scope.manage = function(){
         $scope.manageBlender = true;
@@ -451,18 +514,44 @@ angular.module('blenderController', [])
 
 }])
 
-.controller('manageBlenderController', ['$scope', 'NavService', 'SessionService', function($scope, NavService, SessionService){
+.controller('manageBlenderController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
 
     $scope.addNewModule = function(isValid){
 
         if(isValid){
+            var t = $scope.blender.pin.split(','),
+                address = [];
 
+            for(var i in t) {
+                address.push(parseInt(t[i]));
+            }
+
+            var m = {
+                order: $scope.nbModules + 1,
+                type: $scope.blender.action,
+                content: $scope.blender.ingredient,
+                components: [{
+                    class: "valve",
+                    address: address
+                }]
+            };
+
+            ApiService.addModule(m)
+                .then(function(result) {
+                        console.log(result);
+                    },
+                    function(result){
+                        console.log('Error : ' + result);
+                    }
+                )
         }else{
 
             $scope.noValid = true;
             $scope.errorMessage = 'The form is incomplete';
 
         }
+
+
 
     }
 
