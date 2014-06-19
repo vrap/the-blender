@@ -135,6 +135,8 @@ Cart.prototype.moveToMaster = function(dfd) {
 
     this.stepper.rpm(100).step(100, function() {
         if (this.sensorState == 1) {
+            this.position = 0;
+
             dfd.resolve();
         } else {
             this.moveToMaster(dfd);
