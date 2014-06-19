@@ -18,7 +18,9 @@ angular.module('blenderController', [])
 
                 var user = SessionService.Users.get();
 
+                // Display form to connect
                 if(!user.isAuth()){
+                    $rootScope.reload = true;
                     $rootScope.connectionCommunity = true;
                     return;
                 }else{
@@ -53,33 +55,11 @@ angular.module('blenderController', [])
         }
 
         /*
-        * Login without account
-        * => Redirect to the route home with param "master"
-        */
-        $scope.LoginWithOutAccount = function(){
-
-            // Créate new user
-            var user = UserModel.build();
-            // Set path for master blender api
-            //user.setCommunity('master', '/api/blender');
-            // Set User in session storage
-            SessionService.Users.set(user);
-            SessionService.Server.setCurrent('master');
-            
-            // Set RootScope Api variable to switch api button in view
-            $rootScope.api = 'master'
-            // Redirect to the home
-            $location.path("/home");
-            
-
-        }
-
-        /*
         * Login with account
         * @param {bool} Angular validation
         * @param {string} Path where the good connection go
         */
-        $scope.loginWithAccount = function(isValid, reload){
+        $scope.login = function(isValid, reload){
 
             $scope.noValid = false;
 
@@ -107,6 +87,8 @@ angular.module('blenderController', [])
                             if(reload){
                                 $route.reload();
                                 $rootScope.connectionCommunity = false;
+                            }else{
+                                $rootScope.connectionCommunity = false;
                             }
 
                         }
@@ -124,7 +106,6 @@ angular.module('blenderController', [])
                 $scope.noValid = true;
                 $scope.errorMessage = 'The form is incomplete';
             }
-
             
         }
 
@@ -153,6 +134,7 @@ angular.module('blenderController', [])
         var user = SessionService.Users.get();
 
         if(!user){
+            console.log('lala');
             var user = UserModel.build();
             SessionService.Users.set(user);
             $rootScope.api = 'master'
@@ -161,6 +143,7 @@ angular.module('blenderController', [])
         var server = SessionService.Server.getCurrent();
          // first connect
         if(!server){
+            console.log(server);
             SessionService.Server.setCurrent('master');
             server = 'master';
         }
@@ -186,12 +169,16 @@ angular.module('blenderController', [])
         * Send the recipe to the master to make it !
         */
         $scope.blendIt = function(recipe) {
+
+            $rootScope.saveOnValid = false;
+            $rootScope.saveOnNoValid = false;
+
             ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(result){
                 console.log(result.status);
                 if(result.status == true){
                     $scope.loadCocktail = true;
                 }else{
-                    $scope.loadCocktailNoValid = true;
+                    $rootScope.loadCocktailNoValid = true;
                     $scope.loadCocktailErrorMessage = "Houtch !The blender is in trouble."
                 }
             })
@@ -205,14 +192,15 @@ angular.module('blenderController', [])
          */
         $scope.saveOn = function(recipe, server){
 
-            console.log(recipe, server);
-
-            $rootScope.valid = false;
-            $rootScope.noValid = false;
+            $rootScope.saveOnValid = false;
+            $rootScope.saveOnNoValid = false;
+            $rootScope.loadCocktailNoValid = false;
 
             var community = user.getCommunity(server)
+
             if(!community){
                 $rootScope.connectionCommunity = true;
+                $rootScope.reload = false;
                 return;
             }
 
@@ -222,16 +210,17 @@ angular.module('blenderController', [])
                     .$promise
                     .then(
                         function(result) {
+
                             if(result.status){
-                                $rootScope.valid = true;
-                                $scope.successMessage = result.data.msg;
+                                $rootScope.saveOnValid = true;
+                                $scope.successMessage = result.data.msg + ' on the ' + server;
                             }else{
-                                $rootScope.noValid = true;
-                                $scope.errorMessage = result.data.msg;
+                                $rootScope.saveOnNoValid = true;
+                                $scope.errorMessage = result.data.msg + ' on the ' + server;;
                             }
                         },
                         function(result){
-                            $rootScope.noValid = true;
+                            $rootScope.saveOnNoValid = true;
                             $scope.errorMessage = 'Connection to server fail';
                         }
                     );
@@ -245,6 +234,8 @@ angular.module('blenderController', [])
         * Open panel to show detail of recipe
         */
         $scope.openRecipe = function(recipe){
+            $rootScope.saveOnValid = false;
+            $rootScope.saveOnNoValid = false;
             $rootScope.valid = false;
             $rootScope.noValid = false;
             $scope.cocktailRecipe = recipe;
@@ -256,6 +247,8 @@ angular.module('blenderController', [])
         * Close panel to show detail of recipe
         */
         $scope.BackListRecipe = function(){
+            $rootScope.saveOnValid = false;
+            $rootScope.saveOnNoValid = false;
             $scope.loadCocktailNoValid = false;
             $scope.loadCocktailErrorMessage = false
             $scope.recipeList = true;
@@ -293,11 +286,12 @@ angular.module('blenderController', [])
 .controller('createController', [
     '$scope',
     '$route',
+    '$rootScope',
     'NavService',
     'ApiService',
     'RecipeModel',
     'SessionService',
-    function($scope, $route,NavService, ApiService, RecipeModel, SessionService){
+    function($scope, $route, $rootScope, NavService, ApiService, RecipeModel, SessionService){
 
         NavService.show();
         NavService.active('create');
@@ -356,6 +350,9 @@ angular.module('blenderController', [])
 
         $scope.blendIt = function(ingredients){
 
+            $rootScope.saveOnValid = false;
+            $rootScope.saveOnNoValid = false;
+
             var user = SessionService.Users.get();
             
             // create recipe cocktail
@@ -380,7 +377,17 @@ angular.module('blenderController', [])
                 $scope.noValid = true;
                 $scope.errorMessage = 'The recipe have no ingredients';
             }else{
-                
+                    
+                ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(result){
+                    console.log(result.status);
+                    if(result.status == true){
+                        $scope.loadCocktail = true;
+                    }else{
+                        $rootScope.loadCocktailNoValid = true;
+                        $scope.loadCocktailErrorMessage = "Houtch !The blender is in trouble."
+                    }
+                })
+
             }
 
 
@@ -391,6 +398,9 @@ angular.module('blenderController', [])
          * @return {void}
          */
         $scope.saveCocktail = function(ingredients){
+
+            $rootScope.saveOnValid = false;
+            $rootScope.saveOnNoValid = false;
 
             $scope.noValid = false;
 
