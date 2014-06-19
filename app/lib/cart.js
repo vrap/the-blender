@@ -58,11 +58,11 @@ Cart.prototype.init = function() {
         });
 
         this.sensor.on('up', function() {
-            this.sensorState = 0;
+            this.sensorState = 1;
         }.bind(this));
 
         this.sensor.on('down', function() {
-            this.sensorState = 1;
+            this.sensorState = 0;
         }.bind(this));
     }
 
