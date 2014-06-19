@@ -22,8 +22,11 @@ exports.Pourer = Pourer = function(model, board) {
 
     this.model = model;
     this.board = board;
+
 };
 util.inherits(Pourer, Module);
+
+Pourer.pourTime = 6000;
 
 /**
  * Initialization of the pourer
@@ -52,7 +55,7 @@ Pourer.prototype.execute = function(params) {
         return (data.name == 'dosage');
     })[0];
 
-    this.pour(1000, dosage.value).done(function() {
+    this.pour(Pourer.pourTime, dosage.value).done(function() {
         dfd.resolve();
     });
 
