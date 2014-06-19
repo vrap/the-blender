@@ -1,6 +1,7 @@
 <div class="container-connection">
+  <h1 class="heading text-center">The blender</h1>
   <div class="form-signin">
-    <form role="form" name="connectForm" ng-submit="loginWithAccount(connectForm.$valid, '/home')" novalidate>
+    <form role="form" name="connectForm" ng-submit="loginWithAccount(connectForm.$valid)" novalidate>
       <h2 class="heading text-center">Blend with account</h2>
       <div class="form-group">
         <input name="community" value="http://localhost:9999" type="text" class="form-control" placeholder="Comunity" ng-model="user.community" required >

@@ -89,7 +89,13 @@ angular.module('blenderModelRecipe', [])
         var data = {}
         data.author = '';
         if(this.getAuthor() != undefined){
-            data.author = this.getAuthor().getUuid();
+
+            if(typeof this.getAuthor() == 'string'){
+                data.author = this.getAuthor();
+            }else{
+                data.author = this.getAuthor().getUuid();
+            }
+            
         }
         data.name = this.getName();
         data.steps = [];
@@ -116,7 +122,7 @@ angular.module('blenderModelRecipe', [])
             data.steps.push(step);
         }
 
-        return 'data=' + JSON.stringify(data);
+        return JSON.stringify(data);
 
     }
 

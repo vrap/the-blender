@@ -1,7 +1,6 @@
 <div ng-controller="recipeController">
 	<div class="row" ng-hide="recipeList">
 		<div class="col-xs-12">
-			
 			<div class="panel panel-primary">
 				<div class="panel-heading"><h3>{{cocktailRecipe.name}}</h3></div>
 				<div class="panel-body">
@@ -23,14 +22,20 @@
 					<a class="vrap-btn-return pull-left" ng-click="BackListRecipe()"><i class="glyphicon glyphicon-chevron-left"></i></a>
 					<div class="pull-right">
 						<button class="btn btn-primary" ng-click="blendIt(cocktailRecipe)">Blend it !</button>
-						<!-- <button class="btn btn-default">Modify</button> -->
+						<button class="btn btn-default" ng-click="saveOn(cocktailRecipe, server)">
+							<i class="glyphicon glyphicon-share"></i>
+							Save on {{server}}
+						</button>
 					</div>
 				</div>
 			</div>
+			<div class="alert alert-success"  ng-show="valid">
+				<h6>{{successMessage}}</h6>
+			</div>
+			<div ng-show="noValid" class="alert alert-danger">{{errorMessage}}</div>
 		</div>
 	</div>
 	<div class="row" ng-show="recipeList">
-	
 		<div class="col-xs-12" ng-repeat="recipe in recipes | orderBy:created">
 			<div class="panel panel-primary panel-clickable" ng-click="openRecipe(recipe)">
 			  <div class="panel-heading">{{recipe.name}}</div>

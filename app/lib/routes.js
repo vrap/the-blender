@@ -10,13 +10,47 @@ var mongoose = require('mongoose'),
  */
 module.exports = function(app) {
 
+    app.get('/api/blender/modules', function(req, res) {
+
+        ModuleModel
+            .find()
+            .sort('order')
+            .exec(function(err, data) {
+                res.send(data);
+            });
+
+    });
+
+    app.post('/api/blender/modules', function(req, res) {
+        // Save a new module
+        try {
+            var module = JSON.parse(req.param('module'));
+            var m = new ModuleModel(module);
+            m.save(function(err) {
+                if (null != err) {
+                    res.send({
+                        status: false
+                    });
+                }
+            });
+        } catch (e) {
+            res.send({
+                status: false
+            });
+        }
+
+        res.send({
+            status: true
+        })
+    });
+
     app.get('/api/blender/ingredients', function(req, res) {
 
         IngredientModel.find(function(err, data) {
             res.send(data);
         })
 
-    })
+    });
 
     // The API to communicate with the Angular app
     app.get('/api/blender/recipes', function(req, res) {
@@ -41,6 +75,12 @@ module.exports = function(app) {
 
         // Save a new recipe in the blender
         var recipe = JSON.parse(req.body.data);
+
+        recipeExiste = RecipeModel.find({uuid : recipe.uuid}, function(err, data){
+            console.log(err, data);
+        })
+
+
         recipe.uuid = helper.generateUuid();
         recipe.created = new Date();
         recipe.updated = null;
@@ -51,14 +91,18 @@ module.exports = function(app) {
         r.save(function(err) {
             if (null != err) {
                 res.send({
-                    status: false
+                    status: false,
+                    data : { msg : 'Somthing wrong append.' }
                 });
+                return;
             }
         });
 
         res.send({
-            status: true
+            status: true,
+            data: { msg : 'Great a new cocktail saved !' }
         });
+        return;
 
     });
 

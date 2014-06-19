@@ -15,11 +15,13 @@ angular.module('blenderController', [])
         $scope.switchServer = function(server){
 
             if(server == 'community'){
+
+                console.log('switch community');
+
                 var user = SessionService.Users.get();
 
                 if(!user.isAuth()){
-                    $rootScope.backPath = $location.path();
-                    $location.path('/connection/community');
+                    $rootScope.connectionCommunity = true;
                     return;
                 }else{
                      SessionService.Server.setCurrent(server);
@@ -40,15 +42,16 @@ angular.module('blenderController', [])
     '$http',
     '$location',
     '$rootScope',
+    '$route',
     'UserModel',
     'SessionService',
     'NavService',
-    function($scope, $http, $location, $rootScope , UserModel, SessionService, NavService){
+    function($scope, $http, $location, $rootScope, $route, UserModel, SessionService, NavService){
 
         NavService.hide();
 
         $scope.cancel = function(){
-            window.history.back();
+            $rootScope.connectionCommunity = false;
         }
 
         /*
@@ -78,7 +81,7 @@ angular.module('blenderController', [])
         * @param {bool} Angular validation
         * @param {string} Path where the good connection go
         */
-        $scope.loginWithAccount = function(isValid, path){
+        $scope.loginWithAccount = function(isValid, reload){
 
             $scope.noValid = false;
 
@@ -101,8 +104,13 @@ angular.module('blenderController', [])
                         }else{
                             user.setUuid(response.user.uuid);
                             SessionService.Users.set(user);
-                            $rootScope.api = 'community'
-                            $location.path(path);
+                            $rootScope.api = 'community';
+
+                            if(reload){
+                                $route.reload();
+                                $rootScope.connectionCommunity = false;
+                            }
+
                         }
 
                     })
@@ -137,17 +145,27 @@ angular.module('blenderController', [])
     'ApiService',
     'NavService',
     'RecipeModel',
-    function($scope, $rootScope, $http, $routeParams, $cookies, SessionService, ApiService, NavService, RecipeModel){
+    'UserModel',
+    function($scope, $rootScope, $http, $routeParams, $cookies, SessionService, ApiService, NavService, RecipeModel, UserModel){
 
         NavService.show();
         NavService.active('home');
         NavService.setPageTitle('Drink a cocktail');
 
-        var server = SessionService.Server.getCurrent();
-
         var user = SessionService.Users.get();
 
-        console.log(user.getCommunity(server));
+        if(!user){
+            var user = UserModel.build();
+            SessionService.Users.set(user);
+            $rootScope.api = 'master'
+        }
+
+        var server = SessionService.Server.getCurrent();
+         // first connect
+        if(!server){
+            SessionService.Server.setCurrent('master');
+            server = master;
+        }
 
         // Set Resource for recipes.
         var RecipesResources = ApiService.recipes(user.getCommunity(server));
@@ -158,11 +176,7 @@ angular.module('blenderController', [])
             .$promise
             .then(
                 function(result) {
-
-                    console.log(result);
                     $scope.recipes = result.data;
-                    console.log(result.data);
-
                 },
                 function(result){
                     console.log('Error : ' + result.data);
@@ -174,14 +188,65 @@ angular.module('blenderController', [])
         * Send the recipe to the master to make it !
         */
         $scope.blendIt = function(recipe) {
-        
-
             ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(e){
                 console.log(e);
             })
-            
+        };
+
+        /**
+         * Ui function
+         * @param  {json} recipe
+         * @param  {string} type of community server
+         * @return {void}
+         */
+        $scope.saveOn = function(recipe, server){
+
+            $rootScope.valid = false;
+            $rootScope.noValid = false;
+
+             // Set Resource for recipes.
+            var RecipeResources = ApiService.recipes(user.getCommunity(server));
+            RecipeResources.save('data=' + JSON.stringify(recipe))
+                    .$promise
+                    .then(
+                        function(result) {
+                            if(result.status){
+                                $rootScope.valid = true;
+                                $scope.successMessage = result.data.msg;
+                            }else{
+                                $rootScope.noValid = true;
+                                $scope.errorMessage = result.data.msg;
+                            }
+                        },
+                        function(result){
+                            $rootScope.noValid = true;
+                            $scope.errorMessage = 'Connection to server fail';
+                        }
+                    );
 
         };
+
+         $scope.recipeList = true;
+
+        /**
+        * Ui function
+        * Open panel to show detail of recipe
+        */
+        $scope.openRecipe = function(recipe){
+            $rootScope.valid = false;
+            $rootScope.noValid = false;
+            $scope.cocktailRecipe = recipe;
+            $scope.recipeList = false;
+        };
+
+        /**
+        * Ui function
+        * Close panel to show detail of recipe
+        */
+        $scope.BackListRecipe = function(){
+            $scope.recipeList = true;
+        };
+
 
 }])
 
@@ -191,27 +256,11 @@ angular.module('blenderController', [])
 .controller('recipeController', [
     '$scope',
     '$http',
+    '$rootScope',
     'SessionService',
-    function ($scope, $http, $routeParams, SessionService){
+    function ($scope, $http, $routeParams, $rootScope, SessionService){
     
-    $scope.recipeList = true;
-
-    /**
-    * Ui function
-    * Open panel to show detail of recipe
-    */
-    $scope.openRecipe = function(recipe){
-        $scope.cocktailRecipe = recipe;
-        $scope.recipeList = false;
-    };
-
-    /**
-    * Ui function
-    * Close panel to show detail of recipe
-    */
-    $scope.BackListRecipe = function(){
-        $scope.recipeList = true;
-    };
+   
 
     
 
@@ -352,20 +401,24 @@ angular.module('blenderController', [])
                 }
 
                 var RecipeResources = ApiService.recipes(user.getCommunity(server));
-                RecipeResources.save(recipe.formatToSend())
+                RecipeResources.save('data=' + recipe.formatToSend())
                     .$promise
                     .then(
                         function(result) {
+
                             if(result.status){
                                 $scope.valid = true;
                                 $scope.created = true;
-                                $scope.successMessage = 'Great a new cocktail saved !';
+                                $scope.successMessage = result.data.msg;
+                            }else{
+                                $scope.noValid = true;
+                                $scope.errorMessage = result.data.msg;
                             }
+
                         },
                         function(result){
                             $scope.noValid = true;
                             $scope.errorMessage = 'Connection to server fail';
-                            console.log('Error : ' + result);
                         }
                     );
                 
@@ -383,13 +436,76 @@ angular.module('blenderController', [])
 
 }])
 
-.controller('settingController', ['$scope', 'NavService', 'SessionService', function($scope, NavService, SessionService){
+.controller('settingController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
 
     NavService.show();
     NavService.active('setting');
     NavService.setPageTitle('Settings');
     var server = SessionService.Server.getCurrent();
+    $scope.connectedServer = server;
+
     $scope.manageBlender = false;
+
+    /**
+     * Get all modules
+     */
+    var ModuleResources = ApiService.modules();
+    ModuleResources
+        .query()
+        .$promise
+        .then(
+            function(result) {
+                var modules = [];
+                // Add parameters for each recipes
+
+                for(var i in result) {
+                    if(undefined !== result[i]._id) {
+                        var pins = '';
+                        for(var j in result[i].components) {
+                            for(var k in result[i].components[j].address) {
+                                pins += result[i].components[j].address[k] + ', ';
+                            }
+                        }
+
+                        modules.push({
+                            order: result[i].order,
+                            pins: pins.slice(0, -2),
+                            type: result[i].type,
+                            content: result[i].content
+                        });
+                    }
+                }
+
+                $scope.modules = modules;
+                $scope.nbModules = modules.length;
+            },
+            function(result){
+                console.log('Error : ' + result);
+            }
+        );
+
+    /**
+     * Get all ingredients
+     */
+    var IngredientResources = ApiService.ingredients();
+    IngredientResources
+        .query()
+        .$promise
+        .then(
+        function(result) {
+            // Add parameters for each recipes
+            var ing = [];
+            for(var key in result){
+                if(undefined !== result[key]._id) {
+                    ing.push(result[key]);
+                }
+            }
+            $scope.ingredients = ing;
+        },
+        function(result){
+            console.log('Error : ' + result);
+        }
+    );
 
     $scope.manage = function(){
         $scope.manageBlender = true;
@@ -398,18 +514,44 @@ angular.module('blenderController', [])
 
 }])
 
-.controller('manageBlenderController', ['$scope', 'NavService', 'SessionService', function($scope, NavService, SessionService){
+.controller('manageBlenderController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
 
     $scope.addNewModule = function(isValid){
 
         if(isValid){
+            var t = $scope.blender.pin.split(','),
+                address = [];
 
+            for(var i in t) {
+                address.push(parseInt(t[i]));
+            }
+
+            var m = {
+                order: $scope.nbModules + 1,
+                type: $scope.blender.action,
+                content: $scope.blender.ingredient,
+                components: [{
+                    class: "valve",
+                    address: address
+                }]
+            };
+
+            ApiService.addModule(m)
+                .then(function(result) {
+                        console.log(result);
+                    },
+                    function(result){
+                        console.log('Error : ' + result);
+                    }
+                )
         }else{
 
             $scope.noValid = true;
             $scope.errorMessage = 'The form is incomplete';
 
         }
+
+
 
     }
 

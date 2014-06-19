@@ -65,6 +65,11 @@ angular.module('blenderService', [])
             get: function(){
 
                 var SessionUser = JSON.parse(sessionStorage.getItem('user'));
+
+                if(SessionUser == undefined){
+                    return false;
+                }
+
                 user = UserModel.build();
                 // Voir avec l'ami romain pour fair un truc plus propre :)
                 if(SessionUser.uuid){
@@ -153,6 +158,30 @@ angular.module('blenderService', [])
                     '/api/blender/ingredients/:uuid',
                     {uuid:'@id'}
                     );
+            },
+            modules: function(){
+                return $resource(
+                    '/api/blender/modules'
+                );
+            },
+            addModule: function(module){
+
+                var defered = $q.defer();
+                $http.post(
+                    '/api/blender/modules',
+                    'module=' + JSON.stringify(module),
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                )
+                    .success(function(response){
+                        defered.resolve(response);
+                    })
+                    .error(function(response){
+                        defered.fail(response);
+                    });
+
+                return defered.promise;
             }
         }
     }
