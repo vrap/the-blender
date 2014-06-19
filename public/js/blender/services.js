@@ -65,6 +65,11 @@ angular.module('blenderService', [])
             get: function(){
 
                 var SessionUser = JSON.parse(sessionStorage.getItem('user'));
+
+                if(SessionUser == undefined){
+                    return false;
+                }
+
                 user = UserModel.build();
                 // Voir avec l'ami romain pour fair un truc plus propre :)
                 if(SessionUser.uuid){

@@ -15,6 +15,9 @@ angular.module('blenderController', [])
         $scope.switchServer = function(server){
 
             if(server == 'community'){
+
+                console.log('switch community');
+
                 var user = SessionService.Users.get();
 
                 if(!user.isAuth()){
@@ -142,13 +145,27 @@ angular.module('blenderController', [])
     'ApiService',
     'NavService',
     'RecipeModel',
-    function($scope, $rootScope, $http, $routeParams, $cookies, SessionService, ApiService, NavService, RecipeModel){
+    'UserModel',
+    function($scope, $rootScope, $http, $routeParams, $cookies, SessionService, ApiService, NavService, RecipeModel, UserModel){
 
         NavService.show();
         NavService.active('home');
         NavService.setPageTitle('Drink a cocktail');
-        var server = SessionService.Server.getCurrent();
+
         var user = SessionService.Users.get();
+
+        if(!user){
+            var user = UserModel.build();
+            SessionService.Users.set(user);
+            $rootScope.api = 'master'
+        }
+
+        var server = SessionService.Server.getCurrent();
+         // first connect
+        if(!server){
+            SessionService.Server.setCurrent('master');
+            server = master;
+        }
 
         // Set Resource for recipes.
         var RecipesResources = ApiService.recipes(user.getCommunity(server));

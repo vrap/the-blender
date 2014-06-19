@@ -41,6 +41,12 @@ module.exports = function(app) {
 
         // Save a new recipe in the blender
         var recipe = JSON.parse(req.body.data);
+
+        recipeExiste = RecipeModel.find({uuid : recipe.uuid}, function(err, data){
+            console.log(err, data);
+        })
+
+
         recipe.uuid = helper.generateUuid();
         recipe.created = new Date();
         recipe.updated = null;
@@ -54,14 +60,15 @@ module.exports = function(app) {
                     status: false,
                     data : { msg : 'Somthing wrong append.' }
                 });
+                return;
             }
         });
 
         res.send({
             status: true,
             data: { msg : 'Great a new cocktail saved !' }
-
         });
+        return;
 
     });
 
