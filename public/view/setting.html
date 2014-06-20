@@ -37,6 +37,9 @@
 						<option value="{{ ingredient.uuid }}" ng-repeat="ingredient in ingredients">{{ ingredient.name }}</option>
 					</select>
 				</div>
+                <div class="form-group" ng-show="valid">
+                    <div class="alert alert-success">{{validMessage}}</div>
+                </div>
 				<div class="form-group" ng-show="noValid">
 					<div class="alert alert-danger">{{errorMessage}}</div>
 				</div>
