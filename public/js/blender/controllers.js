@@ -130,6 +130,7 @@ angular.module('blenderController', [])
         NavService.show();
         NavService.active('home');
         NavService.setPageTitle('Drink a cocktail');
+        $rootScope.loadCocktailNoValid = false;
 
         var user = SessionService.Users.get();
 
@@ -229,6 +230,10 @@ angular.module('blenderController', [])
 
          $scope.recipeList = true;
 
+         $scope.backCocktail = function(){
+            $scope.loadCocktail = false;
+         }
+
         /**
         * Ui function
         * Open panel to show detail of recipe
@@ -249,7 +254,7 @@ angular.module('blenderController', [])
         $scope.BackListRecipe = function(){
             $rootScope.saveOnValid = false;
             $rootScope.saveOnNoValid = false;
-            $scope.loadCocktailNoValid = false;
+            $rootScope.loadCocktailNoValid = false;
             $scope.loadCocktailErrorMessage = false
             $scope.recipeList = true;
         };
@@ -352,6 +357,8 @@ angular.module('blenderController', [])
 
             $rootScope.saveOnValid = false;
             $rootScope.saveOnNoValid = false;
+            $rootScope.loadCocktailNoValid = false;
+            $scope.loadCocktail = false;
 
             var user = SessionService.Users.get();
             
