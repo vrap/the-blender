@@ -569,7 +569,12 @@ angular.module('blenderController', [])
 
             ApiService.addModule(m)
                 .then(function(result) {
-                        console.log(result);
+                        if(true === result.status) {
+                            m.pins = $scope.blender.pin;
+                            $scope.modules.push(m);
+                            $scope.valid = true;
+                            $scope.validMessage = 'Module added !';
+                        }
                     },
                     function(result){
                         console.log('Error : ' + result);
