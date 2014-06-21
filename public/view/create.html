@@ -19,13 +19,18 @@
 				<span class="pull-right vrap-big-tints" vrap-score score="ingredient.parameters" ng-click="removeIngredient(ingredient, $index)"></span>
 			</a>
 		</div>
+		<div ng-show="loadCocktail">
+			Send to the machine...
+		</div>
+		<div ng-show="loadCocktailNoValid">
+		     <div class="alert alert-danger">{{loadCocktailErrorMessage}}</div>
+		</div>
 		<div class="form-group" ng-show="valid">
 			<div class="alert alert-success">
 				<h6>{{successMessage}}</h6>
 				<button class="btn btn-default" ng-click="moreCocktail(ingredients)">One more</button>
 				<button class="btn btn-primary" ng-click="blendIt(ingredients)">Blend it !</button>
 			</div>
-			
 		</div>
 		<div class="form-group" ng-show="noValid">
 			<div class="alert alert-danger">{{errorMessage}}</div>

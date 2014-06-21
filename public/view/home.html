@@ -21,6 +21,11 @@
 				<div class="panel-body" ng-show="loadCocktail">
 					Send to the machine...
 				</div>
+				<div class="panel-footer clearfix" ng-show="loadCocktail">
+					<div class="pull-right">
+						<button class="btn btn-primary" ng-click="backCocktail()"><i class=""></i></button>
+					</div>
+				</div>
 				<ul class="list-group" ng-hide="loadCocktail">
 					<li class="list-group-item clearfix" ng-repeat="step in cocktailRecipe.steps">
 						<span class="{text-muted: muted}" vrap-Ingredient-Name uuid="step.parameters[0].value"></span>
