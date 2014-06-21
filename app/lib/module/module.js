@@ -8,4 +8,4 @@ exports.Module = Module = function() {
     this.components = {};
 };
 
-Module.SIZE = 300;
+Module.SIZE = 520;
