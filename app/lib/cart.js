@@ -169,9 +169,9 @@ Cart.prototype.moveToMaster = function(dfd) {
 
     this.stepper
         .accel(this.parameters.end.accel)
-        .decel(this.parameters.end.devel)
-        .rpm(rpm)
-        .step(ModuleClass.SIZE, function() {
+        .decel(this.parameters.end.decel)
+        .rpm(this.parameters.end.rpm)
+        .step(100, function() {
             if (this.sensorState == 1) {
                 this.position = 0;
 
