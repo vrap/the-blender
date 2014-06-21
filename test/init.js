@@ -22,28 +22,68 @@ var v = new Version({
 v.save();
 console.log('Table Version created');
 
-// Ingredient table
-var ing1 = new Ingredient({
-    uuid: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
-    name: "Tequila"
-});
-var ing2 = new Ingredient({
-    uuid: "9705e725-b777-41b6-b957-ce762dec8e3d",
-    name: "Brown rum"
-});
-var ing3 = new Ingredient({
-    uuid: "b5df5bc6-1b26-4702-bcbe-73a2709c4e23",
-    name: "White rum"
-});
-ing1.save();
-ing2.save();
-ing3.save();
-console.log('Table Ingredient created');
-
 // Recipe table
-var r = new Recipe({
+var r1 = new Recipe({
     uuid: "b52d956f-e690-11e3-ad38-dfb1db377fd7",
-    name: "Mojito",
+    name: "Diabolo grenadine",
+    author: "",
+    created: new Date(),
+    updated: null,
+    forked: null,
+    steps: [{
+        order: 1,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "53d9525f-61ac-4990-a045-aa4f17503ce7"
+        }, {
+            name: "dosage",
+            value: 3
+        }]
+    }, {
+        order: 2,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe"
+        }, {
+            name: "dosage",
+            value: 8
+        }]
+    }]
+});
+var r2 = new Recipe({
+    uuid: "b52d956f-e690-11e3-ad38-dfb1db377fd7",
+    name: "Vrap grenarhum",
+    author: "",
+    created: new Date(),
+    updated: null,
+    forked: null,
+    steps: [{
+        order: 1,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "53d9525f-61ac-4990-a045-aa4f17503ce7"
+        }, {
+            name: "dosage",
+            value: 5
+        }]
+    }, {
+        order: 2,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "9146eaeb-32fd-4810-8954-9f396958bdde"
+        }, {
+            name: "dosage",
+            value: 9
+        }]
+    }]
+});
+var r3 = new Recipe({
+    uuid: "b52d956f-e690-11e3-ad38-dfb1db377fd7",
+    name: "Purge",
     author: "",
     created: new Date(),
     updated: null,
@@ -56,28 +96,70 @@ var r = new Recipe({
             value: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe"
         }, {
             name: "dosage",
-            value: 2
+            value: 1
         }]
     }, {
         order: 2,
         action: "pour",
         parameters: [{
             name: "ingredient",
-            value: "b5df5bc6-1b26-4702-bcbe-73a2709c4e23"
+            value: "9146eaeb-32fd-4810-8954-9f396958bdde"
+        }, {
+            name: "dosage",
+            value: 1
+        }]
+    }, {
+        order: 3,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "53d9525f-61ac-4990-a045-aa4f17503ce7"
         }, {
             name: "dosage",
             value: 1
         }]
     }]
 });
-r.save();
+var r4 = new Recipe({
+    uuid: "b52d956f-e690-11e3-ad38-dfb1db377fd7",
+    name: "Vrap Mojito",
+    author: "",
+    created: new Date(),
+    updated: null,
+    forked: null,
+    steps: [{
+        order: 1,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "9146eaeb-32fd-4810-8954-9f396958bdde"
+        }, {
+            name: "dosage",
+            value: 3
+        }]
+    }, {
+        order: 2,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe"
+        }, {
+            name: "dosage",
+            value: 12
+        }]
+    }]
+});
+r4.save();
+r3.save();
+r2.save();
+r1.save();
 console.log('Table Recipe created');
 
 // Module table
 var m1 = new Module({
     order: 1,
     type: "pourer",
-    content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
+    content: "9146eaeb-32fd-4810-8954-9f396958bdde",
     components: [{
         class: "valve",
         address: [4]
@@ -86,7 +168,7 @@ var m1 = new Module({
 var m2 = new Module({
     order: 2,
     type: "pourer",
-    content: "b5df5bc6-1b26-4702-bcbe-73a2709c4e23",
+    content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
     components: [{
         class: "valve",
         address: [5]
@@ -95,7 +177,7 @@ var m2 = new Module({
 var m3 = new Module({
     order: 3,
     type: "pourer",
-    content: "3e2d0d40-05e8-4e23-8c71-f0f62c1f49fe",
+    content: "53d9525f-61ac-4990-a045-aa4f17503ce7",
     components: [{
         class: "valve",
         address: [6]
