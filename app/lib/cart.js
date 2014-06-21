@@ -22,7 +22,7 @@ exports.Cart = Cart = function(board) {
             accel: 1600,
             decel: 1600
         },
-        clockWise: {
+        clockwise: {
             rpm: 100,
             accel: 1600,
             decel: 1600
