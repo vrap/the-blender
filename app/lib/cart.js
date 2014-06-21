@@ -30,7 +30,7 @@ exports.Cart = Cart = function(board) {
         end: {
             rpm: 100,
             accel: 1600,
-            decel: 1600
+            decel: 0
         }
     };
 };
@@ -101,7 +101,7 @@ Cart.prototype.moveTo = function(step) {
             this.stepper
                 .rpm(this.parameters.clockwise.rpm)
                 .accel(this.parameters.clockwise.accel)
-                .decel(this.parameters.clockwise.devel)
+                .decel(this.parameters.clockwise.decel)
                 .cw();
         }
         console.log('Cart direction : Clockwise');
@@ -110,13 +110,14 @@ Cart.prototype.moveTo = function(step) {
             this.stepper
                 .rpm(this.parameters.counterClockwise.rpm)
                 .accel(this.parameters.counterClockwise.accel)
-                .decel(this.parameters.counterClockwise.devel)
+                .decel(this.parameters.counterClockwise.decel)
                 .ccw();
         }
         console.log('Cart direction : Counter clockwise');
     }
 
     if (!config.board.debug) {
+
         this.stepper
             .step(Math.abs(diff), function() {
                 this.position += diff;
