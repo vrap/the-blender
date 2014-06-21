@@ -178,7 +178,7 @@ Cart.prototype.moveToMaster = function(dfd) {
             } else {
                 setTimeout(function() {
                     this.moveToMaster(dfd);
-                }, 0);
+                }.bind(this), 0);
             }
         }.bind(this));
 
