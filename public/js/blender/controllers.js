@@ -502,7 +502,8 @@ angular.module('blenderController', [])
                             order: result[i].order,
                             pins: pins.slice(0, -2),
                             type: result[i].type,
-                            content: result[i].content
+                            content: result[i].content,
+                            edit: false
                         });
                     }
                 }
@@ -537,6 +538,9 @@ angular.module('blenderController', [])
             console.log('Error : ' + result);
         }
     );
+    $scope.types = [
+        'pourer'
+    ];
 
     $scope.manage = function(){
         $scope.manageBlender = true;
@@ -546,6 +550,7 @@ angular.module('blenderController', [])
 }])
 
 .controller('manageBlenderController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
+    $scope.edit = false;
 
     $scope.addNewModule = function(isValid){
 
@@ -571,6 +576,7 @@ angular.module('blenderController', [])
                 .then(function(result) {
                         if(true === result.status) {
                             m.pins = $scope.blender.pin;
+                            m.edit = false;
                             $scope.modules.push(m);
                             $scope.valid = true;
                             $scope.validMessage = 'Module added !';
@@ -586,9 +592,55 @@ angular.module('blenderController', [])
             $scope.errorMessage = 'The form is incomplete';
 
         }
+    };
 
+    $scope.toggleEditModule = function(module) {
+        (true === module.edit) ? module.edit = false : module.edit = true;
+    };
 
+    $scope.editModule = function(isValid, module){
+        if(isValid){
+            var t = module.pins.split(','),
+                address = [];
 
-    }
+            for(var i in t) {
+                address.push(parseInt(t[i]));
+            }
 
-}])
+            var m = {
+                order: module.order,
+                type: module.type,
+                content: module.content,
+                components: [{
+                    class: "valve",
+                    address: address
+                }]
+            };
+
+            ApiService.editModule(m)
+                .then(function(result) {
+                    console.log(result);
+                    if(true === result.status) {
+                        m.edit = false;
+                        $scope.valid = true;
+                        $scope.validMessage = 'Module updated!';
+                    }
+                },
+                function(result){
+                    console.log('Error : ' + result);
+                }
+            )
+
+        }else{
+
+            $scope.noValid = true;
+            $scope.errorMessage = 'The form is incomplete';
+
+        }
+    };
+
+    $scope.deleteModule = function(module) {
+
+    };
+
+}]);

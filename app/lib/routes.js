@@ -44,6 +44,37 @@ module.exports = function(app) {
         })
     });
 
+    app.put('/api/blender/modules', function(req, res) {
+        // Edit a module
+        try {
+            var module = JSON.parse(req.param('module'));
+            console.log(module);
+            ModuleModel.update(
+                {order: module.order},
+                {
+                    type: module.type,
+                    content: module.content,
+                    components: module.components
+                },
+                function (err, numberAffected, raw) {
+                    if (null != err) {
+                        res.send({
+                            status: false
+                        });
+                    }
+                }
+            );
+        } catch (e) {
+            res.send({
+                status: false
+            });
+        }
+
+        res.send({
+            status: true
+        })
+    });
+
     app.get('/api/blender/ingredients', function(req, res) {
 
         IngredientModel.find(function(err, data) {

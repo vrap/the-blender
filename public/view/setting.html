@@ -9,27 +9,65 @@
 
 <div class="panel panel-primary vrap-manage-blender" ng-show="manageBlender" ng-controller="manageBlenderController">
 	<div class="panel-heading"><h3>Manage the blender</h3></div>
+    <div class="form-group" ng-show="valid">
+        <div class="alert alert-success">{{validMessage}}</div>
+    </div>
 	<ul class="list-group">
 		<li class="list-group-item" ng-repeat="module in modules">
 			<div class="clearfix">
 				<h3 class="pull-left">{{ module.order }}</h3>
-				<button class="btn btn-default pull-right">
-					<i class="glyphicon glyphicon-pencil"></i>
+				<button class="btn btn-default pull-right" ng-click="toggleEditModule(module)">
+					<i class="glyphicon glyphicon-pencil" title="Edit the module"></i>
 				</button>
 			</div>
-			<ul class="list-unstyled">
+
+			<ul class="list-unstyled" ng-hide="module.edit">
 				<li>Pins : {{ module.pins }}</li>
 				<li>Type : {{ module.type }}</li>
 				<li>Content : <span vrap-Ingredient-Name uuid="module.content"></span></li>
 			</ul>
+            <form role="form" name="moduleEditForm" ng-submit="editModule(moduleEditForm.$valid, module)" ng-show="module.edit" novalidate>
+                <div class="form-group">
+                    <input name="Pin" type="text" class="form-control" placeholder="Pin" ng-model="module.pins" required >
+                </div>
+                <div class="form-group">
+                    <select name="action" class="form-control" ng-model="module.type" required >
+                        <option value="" disabled selected>Type</option>
+                        <option value="{{ type }}" ng-repeat="type in types">{{ type }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select name="" class="form-control" ng-model="module.content">
+                        <option value="" disabled>Ingredient</option>
+                        <option value="{{ module.content }}" vrap-Ingredient-Name uuid="module.content" selected></option>
+                        <option value="{{ ingredient.uuid }}" ng-repeat="ingredient in ingredients">{{ ingredient.name }}</option>
+                    </select>
+                </div>
+                <div class="form-group" ng-show="noValid">
+                    <div class="alert alert-danger">{{errorMessage}}</div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-plus vrap-margin-right-sm"></i>
+                        Save
+                    </button>
+                    <button ng-click="deleteModule(module)" class="btn btn-default">
+                        <i class="glyphicon glyphicon-remove vrap-margin-right-sm"></i>
+                        Delete
+                    </button>
+                </div>
+            </form>
 		</li>
-		<li class="list-group-item clearfix">
+		<li class="list-group-item panel-footer clearfix">
 			<form role="form" name="moduleForm" ng-submit="addNewModule(moduleForm.$valid)" novalidate>
 				<div class="form-group">
 					<input name="Pin" type="text" class="form-control" placeholder="Pin" ng-model="blender.pin" required >
 				</div>
 				<div class="form-group">
-					<input name="action" type="text" class="form-control" placeholder="Type" ng-model="blender.action" required >
+					<select name="action" class="form-control" ng-model="blender.action" required >
+                        <option value="" disabled selected>Type</option>
+                        <option value="{{ type }}" ng-repeat="type in types">{{ type }}</option>
+                    </select>
 				</div>
 				<div class="form-group">
 					<select name="" id="" class="form-control" ng-model="blender.ingredient">
@@ -44,18 +82,18 @@
 					<div class="alert alert-danger">{{errorMessage}}</div>
 				</div>
 				<div class="form-group">
-					<button type="submit" class="btn btn-default">
+					<button type="submit" class="btn btn-primary">
 						<i class="glyphicon glyphicon-plus vrap-margin-right-sm"></i>
 						Add
 					</button>
+                    <button type="reset" class="btn btn-default">
+                        <i class="glyphicon glyphicon-remove vrap-margin-right-sm"></i>
+                        Reset
+                    </button>
 				</div>
 			</form>
 		</li>
 	</ul>
-	<div class="panel-footer">
-		<button class="btn btn-primary" ng-click="blend(cocktailRecipe)">Save</button>
-		<button class="btn btn-default">Cancel</button>
-	</div>
 </div>
 
 <div class="panel panel-primary" ng-hide="manageBlender">
