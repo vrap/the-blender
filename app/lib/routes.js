@@ -44,6 +44,90 @@ module.exports = function(app) {
         })
     });
 
+    app.put('/api/blender/modules', function(req, res) {
+        // Edit a module
+        try {
+            var module = JSON.parse(req.param('module'));
+            ModuleModel.update(
+                {order: module.order},
+                {
+                    type: module.type,
+                    content: module.content,
+                    components: module.components
+                },
+                function (err, numberAffected, raw) {
+                    if (null != err) {
+                        res.send({
+                            status: false
+                        });
+                    }
+                }
+            );
+        } catch (e) {
+            res.send({
+                status: false
+            });
+        }
+
+        res.send({
+            status: true
+        })
+    });
+
+    app.delete('/api/blender/modules/:module_order', function(req, res) {
+        // Edit a module
+        try {
+            // Delete object
+            ModuleModel.remove(
+                {order: req.params.module_order},
+                function(err) {
+                    if(null != err) {
+                        res.send({
+                            status: false
+                        });
+                    }
+
+                    //Others modules have to be updated
+                    ModuleModel.find(
+                        {order: {$gt: req.params.module_order}},
+                        function (err, data) {
+                            if (null != err) {
+                                res.send({
+                                    status: false
+                                });
+                            }
+
+                            for(var i in data) {
+                               ModuleModel.update(
+                                   {order: data[i].order},
+                                   {order: data[i].order-1},
+                                   function (err, numberAffected, raw) {
+                                       if (null != err) {
+                                           res.send({
+                                               status: false
+                                           });
+                                       }
+                                   }
+                               )
+                            }
+                        }
+                    )
+
+
+                }
+            )
+        } catch (e) {
+            console.log(e);
+            res.send({
+                status: false
+            });
+        }
+
+        res.send({
+            status: true
+        })
+    });
+
     app.get('/api/blender/ingredients', function(req, res) {
 
         IngredientModel.find(function(err, data) {
