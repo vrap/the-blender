@@ -149,6 +149,26 @@ var r4 = new Recipe({
         }]
     }]
 });
+var r5 = new Recipe({
+    uuid: "b52d956f-e690-11e3-ad38-dfb1db377fd8",
+    name: "Vrap Test",
+    author: "",
+    created: new Date(),
+    updated: null,
+    forked: null,
+    steps: [{
+        order: 1,
+        action: "pour",
+        parameters: [{
+            name: "ingredient",
+            value: "9146eaeb-32fd-4810-8954-9f396958bdde"
+        }, {
+            name: "dosage",
+            value: 1
+        }]
+    }]
+});
+r5.save();
 r4.save();
 r3.save();
 r2.save();
