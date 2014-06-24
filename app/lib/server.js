@@ -35,4 +35,6 @@ Server.prototype.init = function(port) {
     this.socket = io.listen(
         this.server
     );
+
+    return this;
 };
