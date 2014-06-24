@@ -9,8 +9,6 @@ var express = require('express'),
 
 /**
  * Server prototype.
- *
- * @param {[type]} config [description]
  */
 exports.Server = Server = function() {};
 
