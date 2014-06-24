@@ -119,7 +119,7 @@ angular.module('blenderService', [])
             recipes: function(server){
 
                 return $resource(
-                    server.uri + '/recipes/:uuid',
+                    server.uri + '/recipes',
                     {uuid:'@id'},
                     {
                         query: {

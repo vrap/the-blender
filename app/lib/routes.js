@@ -142,15 +142,10 @@ module.exports = function(app) {
         RecipeModel.find(function(err, data) {
             var result = {
                 data: data
+
             };
             res.send(result);
         });
-
-    });
-
-    app.get('/api/blender/recipes/:recipe_uid', function(req, res) {
-        // Get a recipe available in the blender
-        res.send('This is the recipe.');
     });
 
     app.post('/api/blender/recipes', function(req, res) {
@@ -165,10 +160,10 @@ module.exports = function(app) {
         })
 
 
-        recipe.uuid = helper.generateUuid();
-        recipe.created = new Date();
-        recipe.updated = null;
-        recipe.forked = null;
+        recipe.uuid = recipe.uuid || helper.generateUuid();
+        recipe.created = recipe.created || new Date();
+        recipe.updated = recipe.updated || null;
+        recipe.forked = recipe.forked || null;
 
         // SAve in mongo
         var r = new RecipeModel(recipe);
@@ -176,9 +171,8 @@ module.exports = function(app) {
             if (null != err) {
                 res.send({
                     status: false,
-                    data : { msg : 'Somthing wrong append.' }
+                    data : { msg : 'Something wrong happened.' }
                 });
-                return;
             }
         });
 
@@ -186,13 +180,6 @@ module.exports = function(app) {
             status: true,
             data: { msg : 'Great a new cocktail saved !' }
         });
-        return;
-
-    });
-
-    app.get('/api/blender/recipes/:recipe_uid', function(req, res) {
-        // Get a recipe available in the blender
-        res.send('This is the recipe.');
     });
 
     app.delete('/api/blender/recipes/:recipe_uid', function(req, res) {

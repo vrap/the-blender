@@ -14,6 +14,7 @@ angular.module('blenderModelRecipe', [])
     function Recipe() {
         this.name;
         this.author;
+        this.forked;
         this.steps = [];
     }
 
@@ -31,6 +32,14 @@ angular.module('blenderModelRecipe', [])
     */
     Recipe.prototype.getAuthor = function () {
         return this.author;
+    };
+
+    /**
+     * Public method
+     * @return {object} author
+     */
+    Recipe.prototype.getForked = function () {
+        return this.forked;
     };
 
     /**
@@ -57,6 +66,15 @@ angular.module('blenderModelRecipe', [])
     */
     Recipe.prototype.setAuthor = function (author) {
         this.author = author;
+    };
+
+    /**
+     * Public method
+     * @param {String} uuid
+     * @return {void}
+     */
+    Recipe.prototype.setForked = function (uuid) {
+        this.forked = uuid;
     };
 
     /**
@@ -98,6 +116,7 @@ angular.module('blenderModelRecipe', [])
             
         }
         data.name = this.getName();
+        data.forked = this.getForked();
         data.steps = [];
 
         // Get all steps of recipe
