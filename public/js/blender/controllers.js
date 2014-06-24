@@ -619,9 +619,8 @@ angular.module('blenderController', [])
 
             ApiService.editModule(m)
                 .then(function(result) {
-                    console.log(result);
                     if(true === result.status) {
-                        m.edit = false;
+                        module.edit = false;
                         $scope.valid = true;
                         $scope.validMessage = 'Module updated!';
                     }
@@ -640,7 +639,41 @@ angular.module('blenderController', [])
     };
 
     $scope.deleteModule = function(module) {
+        var t = module.pins.split(','),
+            address = [];
 
+        for(var i in t) {
+            address.push(parseInt(t[i]));
+        }
+
+        var m = {
+            order: module.order,
+            type: module.type,
+            content: module.content,
+            components: [{
+                class: "valve",
+                address: address
+            }]
+        };
+
+        ApiService.deleteModule(m)
+            .then(function(result) {
+                if(true === result.status) {
+                    m.edit = false;
+                    $scope.valid = true;
+                    $scope.validMessage = 'Module delete!';
+                    $scope.modules.splice(m.order - 1, 1);
+                    for(var i in $scope.modules) {
+                        if($scope.modules[i].order > m.order) {
+                            $scope.modules[i].order--;
+                        }
+                    }
+                }
+            },
+            function(result){
+                console.log('Error : ' + result);
+            }
+        )
     };
 
 }]);

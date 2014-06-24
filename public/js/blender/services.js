@@ -200,6 +200,24 @@ angular.module('blenderService', [])
                 });
 
                 return defered.promise;
+            },
+            deleteModule: function(module){
+
+                var defered = $q.defer();
+                $http.delete(
+                    '/api/blender/modules/' + module.order,
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                )
+                    .success(function(response){
+                        defered.resolve(response);
+                    })
+                    .error(function(response){
+                        defered.fail(response);
+                    });
+
+                return defered.promise;
             }
         }
     }
