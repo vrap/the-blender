@@ -135,7 +135,6 @@ angular.module('blenderController', [])
         var user = SessionService.Users.get();
 
         if(!user){
-            console.log('lala');
             var user = UserModel.build();
             SessionService.Users.set(user);
             $rootScope.api = 'master'
@@ -144,7 +143,6 @@ angular.module('blenderController', [])
         var server = SessionService.Server.getCurrent();
          // first connect
         if(!server){
-            console.log(server);
             SessionService.Server.setCurrent('master');
             server = 'master';
         }
@@ -197,7 +195,7 @@ angular.module('blenderController', [])
             $rootScope.saveOnNoValid = false;
             $rootScope.loadCocktailNoValid = false;
 
-            var community = user.getCommunity(server)
+            var community = user.getCommunity(server);
 
             if(!community){
                 $rootScope.connectionCommunity = true;
@@ -270,13 +268,59 @@ angular.module('blenderController', [])
     '$http',
     '$rootScope',
     'SessionService',
-    function ($scope, $http, $routeParams, $rootScope, SessionService){
-    
-   
+    'ApiService',
+    'RecipeModel',
+    function ($scope, $http, $rootScope, SessionService, ApiService, RecipeModel){
 
-    
+        $scope.fork = function(cocktailRecipe){
+            console.log(cocktailRecipe);
+            var user = SessionService.Users.get();
+            // fork recipe cocktail
+            var recipe = RecipeModel.build();
+            recipe.setName(cocktailRecipe.name);
+            recipe.setAuthor(user);
+            recipe.setForked(cocktailRecipe.uuid);
 
-    
+            for(key in cocktailRecipe.steps){
+                var temp = {
+                    order: cocktailRecipe.steps[key].order,
+                    action: cocktailRecipe.steps[key].action
+                };
+
+                for(i in cocktailRecipe.steps[key].parameters) {
+                    if('ingredient' == cocktailRecipe.steps[key].parameters[i].name) {
+                        temp.value = {
+                            uuid: cocktailRecipe.steps[key].parameters[i].value
+                        };
+                    }
+                    if('dosage' == cocktailRecipe.steps[key].parameters[i].name) {
+                        temp.value.parameters = cocktailRecipe.steps[key].parameters[i].value;
+                    }
+                }
+                recipe.pushStep(temp.order, temp.action, temp.value);
+            }
+
+            var RecipeResources = ApiService.recipes(user.getCommunity(server));
+            RecipeResources.save('data=' + recipe.formatToSend())
+                .$promise
+                .then(
+                function(result) {
+                    if(result.status){
+                        /*$scope.valid = true;
+                        $scope.created = true;
+                        $scope.successMessage = result.data.msg;*/
+                        $scope.recipes.push(recipe);
+                    }else{
+                        //$scope.noValid = true;
+                        //$scope.errorMessage = result.data.msg;
+                    }
+                },
+                function(result){
+                    $scope.noValid = true;
+                    $scope.errorMessage = 'Connection to server fail';
+                }
+            );
+        }
 }])
 
 /**

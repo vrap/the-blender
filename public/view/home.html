@@ -3,7 +3,13 @@
 	<div class="row" ng-hide="recipeList">
 		<div class="col-xs-12">
 			<div class="panel panel-primary">
-				<div class="panel-heading"><h3>{{cocktailRecipe.name}}</h3></div>
+				<div class="panel-heading">
+                    <h3>{{cocktailRecipe.name}}
+                    <button class="btn btn-default pull-right" ng-click="toggleEditRecipe(module)">
+                        <i class="glyphicon glyphicon-pencil" title="Edit the recipe"></i>
+                    </button>
+                    </h3>
+                </div>
 				<div class="panel-body">
 					<i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>
 					<span ng-if="!recipe.author">
@@ -38,8 +44,12 @@
 						<button class="btn btn-primary" ng-click="blendIt(cocktailRecipe)">Blend it !</button>
 						<button class="btn btn-default" ng-click="saveOn(cocktailRecipe, server)">
 							<i class="glyphicon glyphicon-share"></i>
-							Save on {{server}}
+							Save to {{server}}
 						</button>
+                        <button class="btn btn-default" ng-click="fork(cocktailRecipe)">
+                            <i class="glyphicon glyphicon-random"></i>
+                            Fork
+                        </button>
 					</div>
 				</div>
 			</div>
@@ -52,7 +62,10 @@
 	<div class="row" ng-show="recipeList">
 		<div class="col-xs-12" ng-repeat="recipe in recipes | orderBy:created">
 			<div class="panel panel-primary panel-clickable" ng-click="openRecipe(recipe)">
-			  <div class="panel-heading">{{recipe.name}}</div>
+			  <div class="panel-heading">
+                  {{recipe.name}}
+                  <small ng-if="recipe.forked"><i>Forked from <span class="{text-muted: muted}" vrap-Recipe-Name uuid="recipe.forked"></span></i></small>
+              </div>
 			  <div class="panel-body">
 			  	<!-- <i class="glyphicon glyphicon-heart vrap-margin-right-sm"></i>
 			  	<span class="vrap-margin-right">
