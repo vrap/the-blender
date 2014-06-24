@@ -195,7 +195,7 @@ angular.module('blenderController', [])
             $rootScope.saveOnNoValid = false;
             $rootScope.loadCocktailNoValid = false;
 
-            var community = user.getCommunity(server)
+            var community = user.getCommunity(server);
 
             if(!community){
                 $rootScope.connectionCommunity = true;
