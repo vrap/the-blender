@@ -5,7 +5,6 @@ var express = require('express'),
     http = require('http'),
     app = express(),
     io = require('socket.io'),
-    winston = require('winston'),
     bodyParser = require('body-parser');
 
 /**
@@ -34,13 +33,6 @@ Server.prototype.init = function(port) {
     this.app = app;
     this.server = http.createServer(app);
     this.socket = io.listen(
-        this.server, {
-            logger: {
-                debug: winston.debug,
-                info: winston.info,
-                error: winston.error,
-                warn: winston.warn
-            }
-        }
+        this.server
     );
 };
