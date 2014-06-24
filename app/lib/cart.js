@@ -29,7 +29,7 @@ exports.Cart = Cart = function(board) {
         },
         end: {
             rpm: 100,
-            accel: 1600,
+            accel: 0,
             decel: 0
         }
     };
@@ -171,7 +171,7 @@ Cart.prototype.moveToMaster = function(dfd) {
         .accel(this.parameters.end.accel)
         .decel(this.parameters.end.decel)
         .rpm(this.parameters.end.rpm)
-        .step(100, function() {
+        .step(10, function() {
             if (this.sensorState == 1) {
                 this.position = 0;
 

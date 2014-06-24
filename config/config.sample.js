@@ -4,17 +4,17 @@
 
 module.exports = {
     database: {
-        url: 'mongodb://localhost:25486/the-blender'
+        url: 'mongodb://localhost:27017/the-blender'
     },
     master: {
-        url: 'http://localhost:8080/'
+        url: 'http://library.the-blender.io/'
     },
     server: {
-        port: 5555
+        port: 80
     },
     board: {
         port: '/dev/ttyACM0',
-        debug: true,
+        debug: false,
         cart: {
             A: {
                 pwm: 3,
