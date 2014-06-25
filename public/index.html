@@ -23,7 +23,11 @@
     </div>
   </nav>
 
-  <div class="container" ng-view></div>
+  <div class="container">
+      <div class="alert alert-success" ng-show="displayGlobalSuccessMessage">{{ globalSuccessMessage }}</div>
+      <div class="alert alert-danger" ng-show="displayGlobalErrorMessage">{{ globalErrorMessage }}</div>
+      <div ng-view></div>
+  </div>
 
 <div class="container-connection-embended" ng-controller="connectionController" ng-class="{active: connectionCommunity}">
   <h2 class="heading text-center">Connect to a community !</h2>

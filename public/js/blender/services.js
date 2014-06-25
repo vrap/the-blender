@@ -3,13 +3,16 @@
  */
 angular.module('blenderService', [])
 
-.factory('NavService', ['$rootScope', function($rootScope){
+.factory('NavService', ['$rootScope', '$timeout', function($rootScope, $timeout){
 
     $rootScope.nav = {
         home: false,
         create: false,
         setting: false
     };
+
+    $rootScope.displayGlobalSuccessMessage = false;
+    $rootScope.displayGlobalErrorMessage = false;
 
     return{
         active: function(page){
@@ -26,10 +29,30 @@ angular.module('blenderService', [])
             $rootScope.showNav = false;
         },
         show: function(){
-            $rootScope.showNav = true
+            $rootScope.showNav = true;
+        },
+        setSuccessMessage: function(msg) {
+            $rootScope.displayGlobalSuccessMessage = true;
+            $rootScope.displayGlobalErrorMessage = false;
+            $rootScope.globalSuccessMessage = msg;
+            $timeout(function () {
+                $rootScope.displayGlobalSuccessMessage = false;
+                $rootScope.globalSuccessMessage = '';
+            }, 5000);
+        },
+        setErrorMessage: function(msg) {
+            $rootScope.displayGlobalErrorMessage = true;
+            $rootScope.displayGlobalSuccessMessage = false;
+            $rootScope.globalErrorMessage = msg;
+            $timeout(function () {
+                $rootScope.displayGlobalErrorMessage = false;
+                $rootScope.globalErrorMessage = '';
+            }, 5000);
         },
         setPageTitle: function(title){
             $rootScope.pageTitle = title;
+            $rootScope.displayGlobalSuccessMessage = false;
+            $rootScope.displayGlobalErrorMessage = false;
         },
         setNavCommunityItemTo : function(value, inverse){
             $rootScope.server = value;

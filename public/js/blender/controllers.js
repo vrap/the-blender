@@ -10,7 +10,7 @@ angular.module('blenderController', [])
     '$location',
     '$rootScope',
     'SessionService',
-    function($scope, $route, $location, $rootScope,SessionService){
+    function($scope, $route, $location, $rootScope, SessionService){
 
         $scope.switchServer = function(server){
 
@@ -78,7 +78,7 @@ angular.module('blenderController', [])
                         SessionService.Server.setCurrent('community');
                         if(response.status == false){
                             $scope.noValid = true;
-                            $scope.errorMessage = 'User Name or Password are invalide';
+                            $scope.errorMessage = 'User Name or Password are invalid';
                         }else{
                             user.setUuid(response.user.uuid);
                             SessionService.Users.set(user);
@@ -106,9 +106,7 @@ angular.module('blenderController', [])
                 $scope.noValid = true;
                 $scope.errorMessage = 'The form is incomplete';
             }
-            
         }
-
 }])
 
 /**
@@ -177,8 +175,7 @@ angular.module('blenderController', [])
                 if(result.status == true){
                     $scope.loadCocktail = true;
                 }else{
-                    $rootScope.loadCocktailNoValid = true;
-                    $scope.loadCocktailErrorMessage = "Houtch !The blender is in trouble."
+                    NavService.setErrorMessage("Houtch !The blender is in trouble.");
                 }
             })
         };
@@ -210,16 +207,13 @@ angular.module('blenderController', [])
                     .then(
                         function(result) {
                             if(result.status){
-                                $rootScope.saveOnValid = true;
-                                $scope.successMessage = result.data.msg + ' on the ' + server;
+                                NavService.setSuccessMessage(result.data.msg);
                             }else{
-                                $rootScope.saveOnNoValid = true;
-                                $scope.errorMessage = result.data.msg + ' on the ' + server;;
+                                NavService.setErrorMessage(result.data.msg);
                             }
                         },
                         function(result){
-                            $rootScope.saveOnNoValid = true;
-                            $scope.errorMessage = 'Connection to server fail';
+                            NavService.setErrorMessage('Connection to server fail');
                         }
                     );
 
@@ -229,7 +223,7 @@ angular.module('blenderController', [])
 
          $scope.backCocktail = function(){
             $scope.loadCocktail = false;
-         }
+         };
 
         /**
         * Ui function
@@ -255,8 +249,6 @@ angular.module('blenderController', [])
             $scope.loadCocktailErrorMessage = false
             $scope.recipeList = true;
         };
-
-
 }])
 
 /**
@@ -349,18 +341,15 @@ angular.module('blenderController', [])
                 .then(
                 function(result) {
                     if(result.status){
-                        /*$scope.valid = true;
-                        $scope.created = true;
-                        $scope.successMessage = result.data.msg;*/
+                        console.log($rootScope.pageTitle);
                         $scope.recipes.push(recipe);
+                        NavService.setSuccessMessage(result.data.msg);
                     }else{
-                        //$scope.noValid = true;
-                        //$scope.errorMessage = result.data.msg;
+                        NavService.setErrorMessage(result.data.msg);
                     }
                 },
                 function(result){
-                    $scope.noValid = true;
-                    $scope.errorMessage = 'Connection to server fail';
+                    NavService.setErrorMessage('Connection to server fail');
                 }
             );
         };
@@ -390,18 +379,15 @@ angular.module('blenderController', [])
                 function(result) {
                     if(result.status){
                         cocktailRecipe.steps = JSON.parse(recipe.formatToSend()).steps;
-                        $scope.saveOnValid = true;
-                        $scope.successMessage = result.data.msg;
+                        NavService.setSuccessMessage(result.data.msg);
                         NavService.setPageTitle('Drink a cocktail');
                         $scope.editMode = false;
                     }else{
-                        $scope.saveOnNoValid = true;
-                        $scope.errorMessage = result.data.msg;
+                        NavService.setErrorMessage(result.data.msg);
                     }
                 },
                 function(result){
-                    $scope.saveOnNoValid = true;
-                    $scope.errorMessage = 'Connection to server fail';
+                    NavService.setErrorMessage('Connection to server fail');
                 }
             );
         };
@@ -412,17 +398,14 @@ angular.module('blenderController', [])
             ApiService.removeRecipe(user.getCommunity('master').uri, cocktailRecipe)
                 .then(function(result){
                     if(result.status){
-                        $scope.saveOnValid = true;
-                        $scope.successMessage = result.data.msg;
+                        NavService.setSuccessMessage(result.data.msg);
                         $route.reload();
                     }else{
-                        $scope.saveOnNoValid = true;
-                        $scope.errorMessage = result.data.msg;
+                        NavService.setErrorMessage(result.data.msg);
                     }
                 },
                 function(result){
-                    $scope.saveOnNoValid = true;
-                    $scope.errorMessage = 'Connection to server fail';
+                    NavService.setErrorMessage('Connection to server fail!');
                 }
             );
         };
@@ -516,7 +499,7 @@ angular.module('blenderController', [])
          * More Cocktail : hide pannel succes, show liste of ingredient
          * @return {void}
          */
-        $scope.moreCocktail = function(ingredients){
+        $scope.moreCocktail = function(){
             $route.reload();
         }
 
@@ -548,8 +531,7 @@ angular.module('blenderController', [])
             }
 
             if(order == 0){
-                $scope.noValid = true;
-                $scope.errorMessage = 'The recipe have no ingredients';
+                NavService.setErrorMessage('The recipe have no ingredients');
             }else{
                     
                 ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(result){
@@ -557,15 +539,12 @@ angular.module('blenderController', [])
                     if(result.status == true){
                         $scope.loadCocktail = true;
                     }else{
-                        $rootScope.loadCocktailNoValid = true;
-                        $scope.loadCocktailErrorMessage = "Houtch !The blender is in trouble."
+                        NavService.setErrorMessage("Houtch !The blender is in trouble.");
                     }
                 })
 
             }
-
-
-        }
+        };
 
         /**
          * Save cocktail
@@ -580,8 +559,7 @@ angular.module('blenderController', [])
 
             // check name is not empty
             if($scope.cocktail === undefined){
-                $scope.noValid = true;
-                $scope.errorMessage = 'The name of this awsome cocktail is empty !';
+                NavService.setErrorMessage('The name of this awesome cocktail is empty !');
             }else{
 
                 var user = SessionService.Users.get();
@@ -605,18 +583,15 @@ angular.module('blenderController', [])
                         function(result) {
 
                             if(result.status){
-                                $scope.valid = true;
                                 $scope.created = true;
-                                $scope.successMessage = result.data.msg;
+                                NavService.setSuccessMessage(result.data.msg);
                             }else{
-                                $scope.noValid = true;
-                                $scope.errorMessage = result.data.msg;
+                                NavService.setErrorMessage(result.data.msg);
                             }
 
                         },
                         function(result){
-                            $scope.noValid = true;
-                            $scope.errorMessage = 'Connection to server fail';
+                            NavService.setErrorMessage('Connection to server fail');
                         }
                     );
                 
@@ -627,139 +602,178 @@ angular.module('blenderController', [])
     }
 ])
 
-.controller('settingController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
+.controller('settingController', [
+    '$scope',
+    'NavService',
+    'SessionService',
+    'ApiService',
+    function($scope, NavService, SessionService, ApiService){
 
-    NavService.show();
-    NavService.active('setting');
-    NavService.setPageTitle('Settings');
-    var server = SessionService.Server.getCurrent();
-    $scope.connectedServer = server;
+        NavService.show();
+        NavService.active('setting');
+        NavService.setPageTitle('Settings');
+        var server = SessionService.Server.getCurrent();
+        $scope.connectedServer = server;
 
-    $scope.manageBlender = false;
+        $scope.manageBlender = false;
 
-    /**
-     * Get all modules
-     */
-    var ModuleResources = ApiService.modules();
-    ModuleResources
-        .query()
-        .$promise
-        .then(
-            function(result) {
-                var modules = [];
-                // Add parameters for each recipes
+        /**
+         * Get all modules
+         */
+        var ModuleResources = ApiService.modules();
+        ModuleResources
+            .query()
+            .$promise
+            .then(
+                function(result) {
+                    var modules = [];
+                    // Add parameters for each recipes
 
-                for(var i in result) {
-                    if(undefined !== result[i]._id) {
-                        var pins = '';
-                        for(var j in result[i].components) {
-                            for(var k in result[i].components[j].address) {
-                                pins += result[i].components[j].address[k] + ', ';
+                    for(var i in result) {
+                        if(undefined !== result[i]._id) {
+                            var pins = '';
+                            for(var j in result[i].components) {
+                                for(var k in result[i].components[j].address) {
+                                    pins += result[i].components[j].address[k] + ', ';
+                                }
                             }
-                        }
 
-                        modules.push({
-                            order: result[i].order,
-                            pins: pins.slice(0, -2),
-                            type: result[i].type,
-                            content: result[i].content,
-                            edit: false
-                        });
+                            modules.push({
+                                order: result[i].order,
+                                pins: pins.slice(0, -2),
+                                type: result[i].type,
+                                content: result[i].content,
+                                edit: false
+                            });
+                        }
+                    }
+
+                    $scope.modules = modules;
+                    $scope.nbModules = modules.length;
+                },
+                function(result){
+                    console.log('Error : ' + result);
+                }
+            );
+
+        /**
+         * Get all ingredients
+         */
+        var IngredientResources = ApiService.ingredients();
+        IngredientResources
+            .query()
+            .$promise
+            .then(
+            function(result) {
+                // Add parameters for each recipes
+                var ing = [];
+                for(var key in result){
+                    if(undefined !== result[key]._id) {
+                        ing.push(result[key]);
                     }
                 }
-
-                $scope.modules = modules;
-                $scope.nbModules = modules.length;
+                $scope.ingredients = ing;
             },
             function(result){
                 console.log('Error : ' + result);
             }
         );
+        $scope.types = [
+            'pourer'
+        ];
 
-    /**
-     * Get all ingredients
-     */
-    var IngredientResources = ApiService.ingredients();
-    IngredientResources
-        .query()
-        .$promise
-        .then(
-        function(result) {
-            // Add parameters for each recipes
-            var ing = [];
-            for(var key in result){
-                if(undefined !== result[key]._id) {
-                    ing.push(result[key]);
-                }
-            }
-            $scope.ingredients = ing;
-        },
-        function(result){
-            console.log('Error : ' + result);
+        $scope.manage = function(){
+            $scope.manageBlender = true;
         }
-    );
-    $scope.types = [
-        'pourer'
-    ];
-
-    $scope.manage = function(){
-        $scope.manageBlender = true;
-    }
-
-
 }])
 
-.controller('manageBlenderController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
-    $scope.edit = false;
+.controller('manageBlenderController', [
+    '$scope',
+    'NavService',
+    'SessionService',
+    'ApiService',
+    function($scope, NavService, SessionService, ApiService){
+        $scope.edit = false;
 
-    $scope.addNewModule = function(isValid){
+        $scope.addNewModule = function(isValid){
 
-        if(isValid){
-            var t = $scope.blender.pin.split(','),
-                address = [];
+            if(isValid){
+                var t = $scope.blender.pin.split(','),
+                    address = [];
 
-            for(var i in t) {
-                address.push(parseInt(t[i]));
+                for(var i in t) {
+                    address.push(parseInt(t[i]));
+                }
+
+                var m = {
+                    order: $scope.nbModules + 1,
+                    type: $scope.blender.action,
+                    content: $scope.blender.ingredient,
+                    components: [{
+                        class: "valve",
+                        address: address
+                    }]
+                };
+
+                ApiService.addModule(m)
+                    .then(function(result) {
+                            if(true === result.status) {
+                                m.pins = $scope.blender.pin;
+                                m.edit = false;
+                                $scope.modules.push(m);
+                                NavService.setSuccessMessage('Module added!');
+                            }
+                        },
+                        function(result){
+                            console.log('Error : ' + result);
+                        }
+                    )
+            }else{
+                NavService.setErrorMessage('The form is incomplete');
             }
+        };
 
-            var m = {
-                order: $scope.nbModules + 1,
-                type: $scope.blender.action,
-                content: $scope.blender.ingredient,
-                components: [{
-                    class: "valve",
-                    address: address
-                }]
-            };
+        $scope.toggleEditModule = function(module) {
+            (true === module.edit) ? module.edit = false : module.edit = true;
+        };
 
-            ApiService.addModule(m)
-                .then(function(result) {
+        $scope.editModule = function(isValid, module){
+            if(isValid){
+                var t = module.pins.split(','),
+                    address = [];
+
+                for(var i in t) {
+                    address.push(parseInt(t[i]));
+                }
+
+                var m = {
+                    order: module.order,
+                    type: module.type,
+                    content: module.content,
+                    components: [{
+                        class: "valve",
+                        address: address
+                    }]
+                };
+
+                ApiService.editModule(m)
+                    .then(function(result) {
                         if(true === result.status) {
-                            m.pins = $scope.blender.pin;
-                            m.edit = false;
-                            $scope.modules.push(m);
-                            $scope.valid = true;
-                            $scope.validMessage = 'Module added !';
+                            module.edit = false;
+                            NavService.setSuccessMessage('Module updated');
                         }
                     },
                     function(result){
                         console.log('Error : ' + result);
                     }
                 )
-        }else{
 
-            $scope.noValid = true;
-            $scope.errorMessage = 'The form is incomplete';
+            }else{
+                 NavService.setErrorMessage('The form is incomplete');
+            }
+        };
 
-        }
-    };
-
-    $scope.toggleEditModule = function(module) {
-        (true === module.edit) ? module.edit = false : module.edit = true;
-    };
-
-    $scope.editModule = function(isValid, module){
-        if(isValid){
+        $scope.deleteModule = function(module) {
             var t = module.pins.split(','),
                 address = [];
 
@@ -777,63 +791,22 @@ angular.module('blenderController', [])
                 }]
             };
 
-            ApiService.editModule(m)
+            ApiService.deleteModule(m)
                 .then(function(result) {
                     if(true === result.status) {
-                        module.edit = false;
-                        $scope.valid = true;
-                        $scope.validMessage = 'Module updated!';
+                        m.edit = false;
+                        $scope.modules.splice(m.order - 1, 1);
+                        for(var i in $scope.modules) {
+                            if($scope.modules[i].order > m.order) {
+                                $scope.modules[i].order--;
+                            }
+                        }
+                        NavService.setSuccessMessage('Module deleted!');
                     }
                 },
                 function(result){
                     console.log('Error : ' + result);
                 }
             )
-
-        }else{
-
-            $scope.noValid = true;
-            $scope.errorMessage = 'The form is incomplete';
-
-        }
-    };
-
-    $scope.deleteModule = function(module) {
-        var t = module.pins.split(','),
-            address = [];
-
-        for(var i in t) {
-            address.push(parseInt(t[i]));
-        }
-
-        var m = {
-            order: module.order,
-            type: module.type,
-            content: module.content,
-            components: [{
-                class: "valve",
-                address: address
-            }]
         };
-
-        ApiService.deleteModule(m)
-            .then(function(result) {
-                if(true === result.status) {
-                    m.edit = false;
-                    $scope.valid = true;
-                    $scope.validMessage = 'Module delete!';
-                    $scope.modules.splice(m.order - 1, 1);
-                    for(var i in $scope.modules) {
-                        if($scope.modules[i].order > m.order) {
-                            $scope.modules[i].order--;
-                        }
-                    }
-                }
-            },
-            function(result){
-                console.log('Error : ' + result);
-            }
-        )
-    };
-
 }]);
