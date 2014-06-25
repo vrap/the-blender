@@ -157,6 +157,7 @@ angular.module('blenderController', [])
             .then(
                 function(result) {
                     $scope.recipes = result.data;
+                    console.log(result.data);
                 },
                 function(result){
                     console.log('Error : ' + result.data);
@@ -376,7 +377,7 @@ angular.module('blenderController', [])
             var order = 1;
             for(key in $scope.ingredients){
                 if($scope.ingredients[key].parameters > 0){
-                    recipe.pushStep(order, 'poor', $scope.ingredients[key]);
+                    recipe.pushStep(order, 'pour', $scope.ingredients[key]);
                     order++;
                 }
             }
@@ -521,7 +522,7 @@ angular.module('blenderController', [])
             for(key in ingredients){
                 if(ingredients[key].parameters > 0){
                     order++;
-                    recipe.pushStep(order, 'poor', ingredients[key]);
+                    recipe.pushStep(order, 'pour', ingredients[key]);
                 }
             }
 
@@ -571,7 +572,7 @@ angular.module('blenderController', [])
                 var order = 1;
                 for(key in ingredients){
                     if(ingredients[key].parameters > 0){
-                        recipe.pushStep(order, 'poor', ingredients[key]);
+                        recipe.pushStep(order, 'pour', ingredients[key]);
                         order++;
                     }
                 }
