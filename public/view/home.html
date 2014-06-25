@@ -1,14 +1,24 @@
 <div ng-controller="recipeController">
-	
+	<!-- One cocktail only. Display and edition mode -->
 	<div class="row" ng-hide="recipeList">
 		<div class="col-xs-12">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-                    <h3>{{cocktailRecipe.name}}
-                    <button class="btn btn-default pull-right" ng-click="toggleEditRecipe(module)">
-                        <i class="glyphicon glyphicon-pencil" title="Edit the recipe"></i>
-                    </button>
+                    <h3 ng-hide="editMode">
+                        {{cocktailRecipe.name}}
+                        <button class="btn btn-default pull-right" ng-click="toggleEditRecipe(cocktailRecipe)">
+                            <i class="glyphicon glyphicon-pencil" title="Edit the recipe"></i>
+                        </button>
                     </h3>
+                    <form ng-show="editMode">
+                        <input
+                                type="text"
+                                class="form-control input-lg"
+                                placeholder="Cocktail name"
+                                ng-model="cocktailRecipe.name"
+                                required
+                                >
+                    </form>
                 </div>
 				<div class="panel-body">
 					<i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>
@@ -32,21 +42,29 @@
 						<button class="btn btn-primary" ng-click="backCocktail()"><i class=""></i></button>
 					</div>
 				</div>
-				<ul class="list-group" ng-hide="loadCocktail">
+				<ul class="list-group" ng-hide="loadCocktail || editMode">
 					<li class="list-group-item clearfix" ng-repeat="step in cocktailRecipe.steps">
 						<span class="{text-muted: muted}" vrap-Ingredient-Name uuid="step.parameters[0].value"></span>
 						<span class="pull-right"  vrap-score score="step.parameters[1].value"></span>
 					</li>
 				</ul>
+                <div class="list-group" ng-show="editMode">
+                    <a class="list-group-item vrap-padding" ng-click="chooseIngredient(ingredient)" ng-repeat="ingredient in ingredients">
+                        {{ingredient.name}}
+                        <span class="pull-right vrap-big-tints" vrap-score score="ingredient.parameters" ng-click="removeIngredient(ingredient, $index)"></span>
+                    </a>
+                </div>
 				<div class="panel-footer clearfix" ng-hide="loadCocktail">
-					<a class="vrap-btn-return pull-left" ng-click="BackListRecipe()"><i class="glyphicon glyphicon-chevron-left"></i></a>
+					<a class="vrap-btn-return pull-left" ng-click="BackListRecipe()" ng-hide="editMode"><i class="glyphicon glyphicon-chevron-left"></i></a>
+					<a class="vrap-btn-return pull-left" ng-click="toggleEditRecipe(cocktailRecipe)" ng-show="editMode"><i class="glyphicon glyphicon-chevron-left"></i></a>
 					<div class="pull-right">
-						<button class="btn btn-primary" ng-click="blendIt(cocktailRecipe)">Blend it !</button>
-						<button class="btn btn-default" ng-click="saveOn(cocktailRecipe, server)">
+						<button class="btn btn-primary" ng-click="blendIt(cocktailRecipe)" ng-hide="editMode">Blend it !</button>
+						<button class="btn btn-primary" ng-click="update(cocktailRecipe)" ng-show="editMode">Update</button>
+						<button class="btn btn-default" ng-click="saveOn(cocktailRecipe, server)" ng-hide="editMode">
 							<i class="glyphicon glyphicon-share"></i>
 							Save to {{server}}
 						</button>
-                        <button class="btn btn-default" ng-click="fork(cocktailRecipe)">
+                        <button class="btn btn-default" ng-click="fork(cocktailRecipe)" ng-hide="editMode">
                             <i class="glyphicon glyphicon-random"></i>
                             Fork
                         </button>
@@ -59,6 +77,8 @@
 			<div ng-show="saveOnNoValid" class="alert alert-danger">{{errorMessage}}</div>
 		</div>
 	</div>
+
+    <!-- list of coktails -->
 	<div class="row" ng-show="recipeList">
 		<div class="col-xs-12" ng-repeat="recipe in recipes | orderBy:created">
 			<div class="panel panel-primary panel-clickable" ng-click="openRecipe(recipe)">
@@ -67,10 +87,6 @@
                   <small ng-if="recipe.forked"><i>Forked from <span class="{text-muted: muted}" vrap-Recipe-Name uuid="recipe.forked"></span></i></small>
               </div>
 			  <div class="panel-body">
-			  	<!-- <i class="glyphicon glyphicon-heart vrap-margin-right-sm"></i>
-			  	<span class="vrap-margin-right">
-			  		20
-			  	</span> -->
 			  	<i class="glyphicon glyphicon glyphicon-tint vrap-margin-right-sm"></i>{{recipe.steps.length}}
 			  		<span class="pull-right"><i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>
 					<span ng-if="!recipe.username">
@@ -79,51 +95,9 @@
 					<span ng-if="recipe.username != ''">
 					    {{recipe.username}}
 					</span>
-
 			  	</span>
 			  </div>
 			</div>
 		</div>
-
-		<!-- <div class="col-xs-12">
-			<div class="panel panel-primary panel-clickable" ng-click="openRecipe()">
-			  <div class="panel-heading">Cocktail Navsfvefvefvme</div>
-			  <div class="panel-body">
-			  	<i class="glyphicon glyphicon-heart vrap-margin-right-sm"></i><span class="vrap-margin-right">20</span>
-			  	<i class="glyphicon glyphicon glyphicon-tint vrap-margin-right-sm"></i>3
-			  	<span class="pull-right"><i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>Uvaat</span>
-			  </div>
-			</div>
-		</div>
-		<div class="col-xs-12">
-			<div class="panel panel-primary panel-clickable" ng-click="openRecipe()">
-			  <div class="panel-heading">Cocktail Name</div>
-			  <div class="panel-body">
-			  	<i class="glyphicon glyphicon-heart vrap-margin-right-sm"></i><span class="vrap-margin-right">8</span>
-			  	<i class="glyphicon glyphicon glyphicon-tint vrap-margin-right-sm"></i>4
-			  	<span class="pull-right"><i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>Vrap Theam</span>
-			  </div>
-			</div>
-		</div>
-		<div class="col-xs-12">
-			<div class="panel panel-primary panel-clickable" ng-click="openRecipe()">
-			  <div class="panel-heading">Cocktail Name</div>
-			  <div class="panel-body">
-			  	<i class="glyphicon glyphicon-heart vrap-margin-right-sm"></i><span class="vrap-margin-right">7</span>
-			  	<i class="glyphicon glyphicon glyphicon-tint vrap-margin-right-sm"></i>4
-			  	<span class="pull-right"><i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>Guy</span>
-			  </div>
-			</div>
-		</div>
-		<div class="col-xs-12">
-			<div class="panel panel-primary panel-clickable" ng-click="openRecipe()">
-			  <div class="panel-heading">Cocktail Name</div>
-			  <div class="panel-body">
-			  	<i class="glyphicon glyphicon-heart vrap-margin-right-sm"></i><span class="vrap-margin-right">19</span>
-			  	<i class="glyphicon glyphicon glyphicon-tint vrap-margin-right-sm"></i>2
-			  	<span class="pull-right"><i class="glyphicon glyphicon-flash vrap-margin-right-sm"></i>Author</span>
-			  </div>
-			</div>
-		</div> -->
 	</div>
 </div>

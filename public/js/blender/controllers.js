@@ -209,7 +209,6 @@ angular.module('blenderController', [])
                     .$promise
                     .then(
                         function(result) {
-
                             if(result.status){
                                 $rootScope.saveOnValid = true;
                                 $scope.successMessage = result.data.msg + ' on the ' + server;
@@ -269,11 +268,54 @@ angular.module('blenderController', [])
     '$rootScope',
     'SessionService',
     'ApiService',
+    'NavService',
     'RecipeModel',
-    function ($scope, $http, $rootScope, SessionService, ApiService, RecipeModel){
+    function ($scope, $http, $rootScope, SessionService, ApiService, NavService, RecipeModel){
+
+        $scope.toggleEditRecipe = function(cocktailRecipe) {
+            if ($scope.editMode == true) {
+                NavService.setPageTitle('Drink a cocktail');
+                $scope.editMode = false;
+            } else {
+                NavService.setPageTitle('Edit your cocktail');
+                $scope.editMode = true;
+
+                var steps = [];
+                for(var i in cocktailRecipe.steps) {
+                    for(j in cocktailRecipe.steps[i].parameters) {
+                        if('dosage' == cocktailRecipe.steps[i].parameters[j].name) {
+                            var dose = cocktailRecipe.steps[i].parameters[j].value;
+                        }
+                        if('ingredient' == cocktailRecipe.steps[i].parameters[j].name) {
+                            var ing = cocktailRecipe.steps[i].parameters[j].value;
+                        }
+                    }
+                    steps[ing] = dose;
+                }
+
+                /**
+                 * Get all ingredients
+                 */
+                var IngredientResources = ApiService.ingredients();
+                IngredientResources
+                    .query()
+                    .$promise
+                    .then(
+                    function(result) {
+                        // Add parameters for each recipes
+                        for(var key in result){
+                            (steps[result[key].uuid]) ? result[key].parameters = steps[result[key].uuid] : result[key].parameters = 0;
+                        }
+                        $scope.ingredients = result;
+                    },
+                    function(result){
+                        console.log('Error : ' + result);
+                    }
+                );
+            }
+        };
 
         $scope.fork = function(cocktailRecipe){
-            console.log(cocktailRecipe);
             var user = SessionService.Users.get();
             // fork recipe cocktail
             var recipe = RecipeModel.build();
@@ -320,6 +362,24 @@ angular.module('blenderController', [])
                     $scope.errorMessage = 'Connection to server fail';
                 }
             );
+        };
+
+        /**
+         * UI function add ingredients to the recipe
+         * @param  {object} ingredient
+         * @return {void}
+         */
+        $scope.chooseIngredient = function(ingredient){
+            ingredient.parameters = ingredient.parameters + 1;
+        }
+
+        /**
+         * UI function remove ingredients to the recipe
+         * @param  {object} ingredient
+         * @return {void}
+         */
+        $scope.removeIngredient = function(ingredient){
+            ingredient.parameters = ingredient.parameters - 2;
         }
 }])
 
