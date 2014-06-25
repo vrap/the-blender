@@ -157,7 +157,6 @@ angular.module('blenderController', [])
             .then(
                 function(result) {
                     $scope.recipes = result.data;
-                    console.log(result.data);
                 },
                 function(result){
                     console.log('Error : ' + result.data);
@@ -267,11 +266,12 @@ angular.module('blenderController', [])
     '$scope',
     '$http',
     '$rootScope',
+    '$route',
     'SessionService',
     'ApiService',
     'NavService',
     'RecipeModel',
-    function ($scope, $http, $rootScope, SessionService, ApiService, NavService, RecipeModel){
+    function ($scope, $http, $rootScope, $route, SessionService, ApiService, NavService, RecipeModel){
 
         $scope.toggleEditRecipe = function(cocktailRecipe) {
             if ($scope.editMode == true) {
@@ -394,6 +394,27 @@ angular.module('blenderController', [])
                         $scope.successMessage = result.data.msg;
                         NavService.setPageTitle('Drink a cocktail');
                         $scope.editMode = false;
+                    }else{
+                        $scope.saveOnNoValid = true;
+                        $scope.errorMessage = result.data.msg;
+                    }
+                },
+                function(result){
+                    $scope.saveOnNoValid = true;
+                    $scope.errorMessage = 'Connection to server fail';
+                }
+            );
+        };
+
+        $scope.deleteRecipe = function(cocktailRecipe) {
+            var user = SessionService.Users.get();
+
+            ApiService.removeRecipe(user.getCommunity('master').uri, cocktailRecipe)
+                .then(function(result){
+                    if(result.status){
+                        $scope.saveOnValid = true;
+                        $scope.successMessage = result.data.msg;
+                        $route.reload();
                     }else{
                         $scope.saveOnNoValid = true;
                         $scope.errorMessage = result.data.msg;
@@ -605,13 +626,6 @@ angular.module('blenderController', [])
 
     }
 ])
-
-/**
-* Admin Controller
-*/
-.controller('adminController', ['$scope', '$http', 'Modules', function ($scope, $http, Modules){
-
-}])
 
 .controller('settingController', ['$scope', 'NavService', 'SessionService', 'ApiService', function($scope, NavService, SessionService, ApiService){
 

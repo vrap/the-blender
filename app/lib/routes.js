@@ -213,9 +213,26 @@ module.exports = function(app) {
         });
     });
 
-    app.delete('/api/blender/recipes/:recipe_uid', function(req, res) {
+    app.delete('/api/blender/recipes/:recipe_uuid', function(req, res) {
         // Delete a recipe in the blender
-        res.send('Bye bye sweet recipe ...');
+       RecipeModel.remove(
+            {uuid: req.params.recipe_uuid},
+            function(err) {
+                if(null != err) {
+                    res.send({
+                        status: false,
+                        data : { msg : 'Something wrong happened.' }
+                    });
+                }
+            }
+        );
+
+        res.send({
+            status: true,
+            data: {
+                msg: 'Recipe deleted.'
+            }
+        });
     });
 
     app.get('/api/blender/availability', function(req, res) {

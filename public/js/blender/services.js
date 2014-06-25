@@ -136,6 +136,23 @@ angular.module('blenderService', [])
                         }
                     });
             },
+            removeRecipe: function(masterUri, recipe) {
+                var defered = $q.defer();
+                $http.delete(
+                    masterUri + '/recipes/' + recipe.uuid,
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                )
+                .success(function(response){
+                    defered.resolve(response);
+                })
+                .error(function(response){
+                    defered.fail(response);
+                });
+
+                return defered.promise;
+            },
             blendIt: function(masterUri, recipe){
 
                 var defered = $q.defer();
