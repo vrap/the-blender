@@ -129,6 +129,10 @@ angular.module('blenderService', [])
                         save: {
                             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                             method: 'POST'
+                        },
+                        update: {
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            method: 'PUT'
                         }
                     });
             },

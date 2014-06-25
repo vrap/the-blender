@@ -364,6 +364,47 @@ angular.module('blenderController', [])
             );
         };
 
+        $scope.update = function(cocktailRecipe) {
+            var user = SessionService.Users.get();
+            var recipe = RecipeModel.build();
+
+            recipe.setUuid(cocktailRecipe.uuid);
+            recipe.setName(cocktailRecipe.name);
+            recipe.setAuthor(user);
+            recipe.setUpdated(new Date());
+            recipe.setForked(cocktailRecipe.forked);
+            var order = 1;
+            for(key in $scope.ingredients){
+                if($scope.ingredients[key].parameters > 0){
+                    recipe.pushStep(order, 'poor', $scope.ingredients[key]);
+                    order++;
+                }
+            }
+
+            var RecipeResources = ApiService.recipes(user.getCommunity(server));
+            RecipeResources
+                .update('data=' + recipe.formatToSend())
+                .$promise
+                .then(
+                function(result) {
+                    if(result.status){
+                        cocktailRecipe.steps = JSON.parse(recipe.formatToSend()).steps;
+                        $scope.saveOnValid = true;
+                        $scope.successMessage = result.data.msg;
+                        NavService.setPageTitle('Drink a cocktail');
+                        $scope.editMode = false;
+                    }else{
+                        $scope.saveOnNoValid = true;
+                        $scope.errorMessage = result.data.msg;
+                    }
+                },
+                function(result){
+                    $scope.saveOnNoValid = true;
+                    $scope.errorMessage = 'Connection to server fail';
+                }
+            );
+        };
+
         /**
          * UI function add ingredients to the recipe
          * @param  {object} ingredient
@@ -371,7 +412,7 @@ angular.module('blenderController', [])
          */
         $scope.chooseIngredient = function(ingredient){
             ingredient.parameters = ingredient.parameters + 1;
-        }
+        };
 
         /**
          * UI function remove ingredients to the recipe
@@ -380,7 +421,7 @@ angular.module('blenderController', [])
          */
         $scope.removeIngredient = function(ingredient){
             ingredient.parameters = ingredient.parameters - 2;
-        }
+        };
 }])
 
 /**
