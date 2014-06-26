@@ -29,11 +29,6 @@
 					    {{cocktailRecipe.username}}
 					</span>
 				</div>
-				<div class="panel-body" ng-show="loadCocktailNoValid">
-					<div class="form-group">
-				     	<div class="alert alert-danger">{{loadCocktailErrorMessage}}</div>
-				    </div>
-				</div>
 				<div class="panel-body" ng-show="loadCocktail">
 					Send to the machine...
 				</div>
@@ -74,10 +69,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="alert alert-success"  ng-show="saveOnValid">
-				<h6>{{successMessage}}</h6>
-			</div>
-			<div ng-show="saveOnNoValid" class="alert alert-danger">{{errorMessage}}</div>
 		</div>
 	</div>
 

@@ -1,9 +1,12 @@
 /**
- *
+ * Controllers of the application
  */
-var token;
 angular.module('blenderController', [])
 
+/**
+ * NavController
+ * Manage bottom bar
+ */
 .controller('navController', [
     '$scope',
     '$route',
@@ -35,7 +38,8 @@ angular.module('blenderController', [])
     }
 ])
 /**
-* Connection
+* ConnectionController
+ * Manage connection to the community
 */
 .controller('connectionController', [
     '$scope',
@@ -49,10 +53,12 @@ angular.module('blenderController', [])
     function($scope, $http, $location, $rootScope, $route, UserModel, SessionService, NavService){
 
         NavService.hide();
-
+        /**
+         * Cancel connection
+         */
         $scope.cancel = function(){
             $rootScope.connectionCommunity = false;
-        }
+        };
 
         /*
         * Login with account
@@ -110,7 +116,7 @@ angular.module('blenderController', [])
 }])
 
 /**
-* Home
+* HomeController
 */
 .controller('homeController', [
     '$scope',
@@ -128,12 +134,11 @@ angular.module('blenderController', [])
         NavService.show();
         NavService.active('home');
         NavService.setPageTitle('Drink a cocktail');
-        $rootScope.loadCocktailNoValid = false;
 
         var user = SessionService.Users.get();
 
         if(!user){
-            var user = UserModel.build();
+            user = UserModel.build();
             SessionService.Users.set(user);
             $rootScope.api = 'master'
         }
@@ -166,10 +171,6 @@ angular.module('blenderController', [])
         * Send the recipe to the master to make it !
         */
         $scope.blendIt = function(recipe) {
-
-            $rootScope.saveOnValid = false;
-            $rootScope.saveOnNoValid = false;
-
             ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(result){
                 console.log(result.status);
                 if(result.status == true){
@@ -183,14 +184,10 @@ angular.module('blenderController', [])
         /**
          * Ui function
          * @param  {json} recipe
-         * @param  {string} type of community server
+         * @param  {string} server type of community server
          * @return {void}
          */
         $scope.saveOn = function(recipe, server){
-
-            $rootScope.saveOnValid = false;
-            $rootScope.saveOnNoValid = false;
-            $rootScope.loadCocktailNoValid = false;
 
             var community = user.getCommunity(server);
 
@@ -220,7 +217,10 @@ angular.module('blenderController', [])
         };
 
          $scope.recipeList = true;
-
+        /**
+         * Ui function
+         * Back to cocktail list
+         */
          $scope.backCocktail = function(){
             $scope.loadCocktail = false;
          };
@@ -230,8 +230,6 @@ angular.module('blenderController', [])
         * Open panel to show detail of recipe
         */
         $scope.openRecipe = function(recipe){
-            $rootScope.saveOnValid = false;
-            $rootScope.saveOnNoValid = false;
             $rootScope.valid = false;
             $rootScope.noValid = false;
             $scope.cocktailRecipe = recipe;
@@ -243,10 +241,6 @@ angular.module('blenderController', [])
         * Close panel to show detail of recipe
         */
         $scope.BackListRecipe = function(){
-            $rootScope.saveOnValid = false;
-            $rootScope.saveOnNoValid = false;
-            $rootScope.loadCocktailNoValid = false;
-            $scope.loadCocktailErrorMessage = false
             $scope.recipeList = true;
         };
 }])
@@ -265,6 +259,11 @@ angular.module('blenderController', [])
     'RecipeModel',
     function ($scope, $http, $rootScope, $route, SessionService, ApiService, NavService, RecipeModel){
 
+        /**
+         * Ui function
+         * Display or hide form for editing a recipe
+         * @param {Recipe} cocktailRecipe
+         */
         $scope.toggleEditRecipe = function(cocktailRecipe) {
             if ($scope.editMode == true) {
                 NavService.setPageTitle('Drink a cocktail');
@@ -308,6 +307,10 @@ angular.module('blenderController', [])
             }
         };
 
+        /**
+         * Fork a recipe in the database
+         * @param {Recipe} cocktailRecipe
+         */
         $scope.fork = function(cocktailRecipe){
             var user = SessionService.Users.get();
             // fork recipe cocktail
@@ -354,6 +357,10 @@ angular.module('blenderController', [])
             );
         };
 
+        /**
+         * Save recipe modifications
+         * @param {Recipe} cocktailRecipe
+         */
         $scope.update = function(cocktailRecipe) {
             var user = SessionService.Users.get();
             var recipe = RecipeModel.build();
@@ -392,6 +399,10 @@ angular.module('blenderController', [])
             );
         };
 
+        /**
+         * Delete recipe in database
+         * @param {Recipe} cocktailRecipe
+         */
         $scope.deleteRecipe = function(cocktailRecipe) {
             var user = SessionService.Users.get();
 
@@ -436,7 +447,7 @@ angular.module('blenderController', [])
  * @param  {Vrap service} RecipeService
  * @param  {Vrap service model} RecipeModel
  * @param  {Vrap service} SessionService
- * @return {Void}
+ * @return {void}
  */
 .controller('createController', [
     '$scope',
@@ -484,7 +495,7 @@ angular.module('blenderController', [])
          */
         $scope.chooseIngredient = function(ingredient){
             ingredient.parameters = ingredient.parameters + 1;
-        }
+        };
 
         /**
          * UI function remove ingredients to the recipe
@@ -493,7 +504,7 @@ angular.module('blenderController', [])
          */
         $scope.removeIngredient = function(ingredient){
             ingredient.parameters = ingredient.parameters - 2;
-        }
+        };
 
         /**
          * More Cocktail : hide pannel succes, show liste of ingredient
@@ -501,13 +512,14 @@ angular.module('blenderController', [])
          */
         $scope.moreCocktail = function(){
             $route.reload();
-        }
+        };
 
+        /**
+         * Ask the Blender to make the recipe
+         * @param {Array} ingredients
+         */
         $scope.blendIt = function(ingredients){
 
-            $rootScope.saveOnValid = false;
-            $rootScope.saveOnNoValid = false;
-            $rootScope.loadCocktailNoValid = false;
             $scope.loadCocktail = false;
 
             var user = SessionService.Users.get();
@@ -515,11 +527,11 @@ angular.module('blenderController', [])
             // create recipe cocktail
             var recipe = RecipeModel.build();
 
-            var name = 'No name'
+            var name = 'No name';
             if($scope.cocktail != undefined){
                 name = $scope.cocktail.name;
             }
-            recipe.setName(name)
+            recipe.setName(name);
             recipe.setAuthor(user);
 
             var order = 0;
@@ -535,7 +547,6 @@ angular.module('blenderController', [])
             }else{
                     
                 ApiService.blendIt(user.getCommunity('master').uri, recipe).then(function(result){
-                    console.log(result.status);
                     if(result.status == true){
                         $scope.loadCocktail = true;
                     }else{
@@ -548,15 +559,10 @@ angular.module('blenderController', [])
 
         /**
          * Save cocktail
+         * @param {Array} ingredients
          * @return {void}
          */
         $scope.saveCocktail = function(ingredients){
-
-            $rootScope.saveOnValid = false;
-            $rootScope.saveOnNoValid = false;
-
-            $scope.noValid = false;
-
             // check name is not empty
             if($scope.cocktail === undefined){
                 NavService.setErrorMessage('The name of this awesome cocktail is empty !');
@@ -598,10 +604,13 @@ angular.module('blenderController', [])
             }
 
         }
-
     }
 ])
 
+/**
+ * SettingController
+ * Manages parameters of the application
+ */
 .controller('settingController', [
     '$scope',
     'NavService',
@@ -612,8 +621,7 @@ angular.module('blenderController', [])
         NavService.show();
         NavService.active('setting');
         NavService.setPageTitle('Settings');
-        var server = SessionService.Server.getCurrent();
-        $scope.connectedServer = server;
+        $scope.connectedServer = SessionService.Server.getCurrent();
 
         $scope.manageBlender = false;
 
@@ -682,11 +690,19 @@ angular.module('blenderController', [])
             'pourer'
         ];
 
+        /**
+         * UI function
+         * Display form to set parameters of the machine
+         */
         $scope.manage = function(){
             $scope.manageBlender = true;
         }
 }])
 
+/**
+ * ManageBlenderController
+ * Manages Blender-specific settings
+ */
 .controller('manageBlenderController', [
     '$scope',
     'NavService',
@@ -695,6 +711,10 @@ angular.module('blenderController', [])
     function($scope, NavService, SessionService, ApiService){
         $scope.edit = false;
 
+        /**
+         * Insert new module
+         * @param {Boolean} isValid
+         */
         $scope.addNewModule = function(isValid){
 
             if(isValid){
@@ -733,10 +753,20 @@ angular.module('blenderController', [])
             }
         };
 
+        /**
+         * UI function
+         * Display or hide form to edit a module
+         * @param {Module} module
+         */
         $scope.toggleEditModule = function(module) {
             (true === module.edit) ? module.edit = false : module.edit = true;
         };
 
+        /**
+         * Save modifications of the module
+         * @param {Boolean} isValid
+         * @param {Module} module
+         */
         $scope.editModule = function(isValid, module){
             if(isValid){
                 var t = module.pins.split(','),
@@ -773,6 +803,10 @@ angular.module('blenderController', [])
             }
         };
 
+        /**
+         * Delete a module
+         * @param {Module} module
+         */
         $scope.deleteModule = function(module) {
             var t = module.pins.split(','),
                 address = [];
