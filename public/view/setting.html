@@ -8,9 +8,8 @@
 </div>
 
 <div class="panel panel-primary vrap-manage-blender" ng-show="manageBlender" ng-controller="manageBlenderController">
-	<div class="panel-heading"><h3>Manage the blender</h3></div>
-    <div class="form-group" ng-show="valid">
-        <div class="alert alert-success">{{validMessage}}</div>
+	<div class="panel-heading">
+        <h3>Manage the blender</h3>
     </div>
 	<ul class="list-group">
 		<li class="list-group-item" ng-repeat="module in modules">
@@ -74,12 +73,6 @@
                         <option value="" disabled selected>Ingredient</option>
 						<option value="{{ ingredient.uuid }}" ng-repeat="ingredient in ingredients">{{ ingredient.name }}</option>
 					</select>
-				</div>
-                <div class="form-group" ng-show="valid">
-                    <div class="alert alert-success">{{validMessage}}</div>
-                </div>
-				<div class="form-group" ng-show="noValid">
-					<div class="alert alert-danger">{{errorMessage}}</div>
 				</div>
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary">

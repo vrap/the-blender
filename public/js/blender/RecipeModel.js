@@ -12,11 +12,21 @@ angular.module('blenderModelRecipe', [])
     * Constructor, with class name
     */
     function Recipe() {
+        this.uuid;
         this.name;
         this.author;
         this.forked;
+        this.updated;
         this.steps = [];
     }
+
+    /**
+     * Public method
+     * @return {string} uuid
+     */
+    Recipe.prototype.getUuid = function () {
+        return this.uuid;
+    };
 
     /**
     * Public method
@@ -36,10 +46,18 @@ angular.module('blenderModelRecipe', [])
 
     /**
      * Public method
-     * @return {object} author
+     * @return {object} forked
      */
     Recipe.prototype.getForked = function () {
         return this.forked;
+    };
+
+    /**
+     * Public method
+     * @return {object} updated
+     */
+    Recipe.prototype.getUpdated = function () {
+        return this.updated;
     };
 
     /**
@@ -49,6 +67,15 @@ angular.module('blenderModelRecipe', [])
     Recipe.prototype.getSteps = function () {
         return this.steps;
     };
+
+    /**
+     * Public method
+     * @param {int} uuid
+     * @return {void}
+     */
+    Recipe.prototype.setUuid = function(uuid){
+        this.uuid = uuid;
+    }
 
     /**
     * Public method
@@ -61,7 +88,7 @@ angular.module('blenderModelRecipe', [])
 
     /**
     * Public method
-    * @param {object} user
+    * @param {object} author
     * @return {void}
     */
     Recipe.prototype.setAuthor = function (author) {
@@ -78,8 +105,17 @@ angular.module('blenderModelRecipe', [])
     };
 
     /**
+     * Public method
+     * @param {Date} date
+     * @return {void}
+     */
+    Recipe.prototype.setUpdated = function (date) {
+        this.updated = date;
+    };
+
+    /**
     * Public method
-    * @param {json} all steps
+    * @param {json} steps
     */
     Recipe.prototype.setSteps = function (steps) {
         this.steps = steps;
@@ -105,6 +141,7 @@ angular.module('blenderModelRecipe', [])
 
         // Create data
         var data = {}
+        data.uuid = this.getUuid();
         data.author = '';
         if(this.getAuthor() != undefined){
 
@@ -117,6 +154,7 @@ angular.module('blenderModelRecipe', [])
         }
         data.name = this.getName();
         data.forked = this.getForked();
+        data.updated = this.getUpdated();
         data.steps = [];
 
         // Get all steps of recipe

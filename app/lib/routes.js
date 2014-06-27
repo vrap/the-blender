@@ -182,9 +182,57 @@ module.exports = function(app) {
         });
     });
 
-    app.delete('/api/blender/recipes/:recipe_uid', function(req, res) {
+    app.put('/api/blender/recipes', function(req, res) {
+        // Update a recipe in the blender
+        var recipe = JSON.parse(req.body.data);
+        recipe.created = recipe.created || new Date();
+        recipe.updated = recipe.updated || null;
+        recipe.forked = recipe.forked || null;
+
+        // SAve in mongo
+        RecipeModel.update(
+            {uuid: recipe.uuid},
+            {
+                name: recipe.name,
+                updated: recipe.updated,
+                steps: recipe.steps
+            },
+            function(err, numberAffected, raw) {
+                if(null != err) {
+                    res.send({
+                        status: false,
+                        data : { msg : 'Something wrong happened.' }
+                    });
+                }
+            }
+        );
+
+        res.send({
+            status: true,
+            data: { msg : 'Cocktail updated!' }
+        });
+    });
+
+    app.delete('/api/blender/recipes/:recipe_uuid', function(req, res) {
         // Delete a recipe in the blender
-        res.send('Bye bye sweet recipe ...');
+       RecipeModel.remove(
+            {uuid: req.params.recipe_uuid},
+            function(err) {
+                if(null != err) {
+                    res.send({
+                        status: false,
+                        data : { msg : 'Something wrong happened.' }
+                    });
+                }
+            }
+        );
+
+        res.send({
+            status: true,
+            data: {
+                msg: 'Recipe deleted.'
+            }
+        });
     });
 
     app.get('/api/blender/availability', function(req, res) {
