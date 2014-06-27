@@ -55,6 +55,13 @@ Cart.prototype.init = function() {
             sensor: config.board.sensor
         }
 
+        this.sensorStates = {
+            actual: 0,
+            old: 1
+        };
+
+        this.lockedCart = false;
+
         this.pins.A.pwm.high();
         this.pins.A.brake.low();
 
@@ -76,11 +83,15 @@ Cart.prototype.init = function() {
         });
 
         this.sensor.on('up', function() {
-            this.sensorState = 1;
+            this.sensorStates.old = this.sensorStates.actual;
+            this.sensorStates.actual = 1;
         }.bind(this));
 
         this.sensor.on('down', function() {
-            this.sensorState = 0;
+            this.sensorStates.old = this.sensorStates.actual;
+            this.sensorStates.actual = 0;
+
+            this.lockedCart = false;
         }.bind(this));
     }
 
@@ -89,47 +100,52 @@ Cart.prototype.init = function() {
     return dfd.promise;
 };
 
-Cart.prototype.moveTo = function(step) {
-    var dfd = deferred(),
-        diff = step - this.position;
+Cart.prototype.moveTo = function(destination, dfd) {
+    var steps = 10;
+
+    if (!dfd) {
+        dfd = deferred();
+    }
+
+    var diff = destination - this.position;
 
     if (diff == 0) {
         dfd.resolve();
-        console.log('Cart is already at the good position');
     } else if (diff > 0) {
-        if (!config.board.debug) {
-            this.stepper
-                .rpm(this.parameters.clockwise.rpm)
-                .accel(this.parameters.clockwise.accel)
-                .decel(this.parameters.clockwise.decel)
-                .cw();
+        if (!config.board.debug && this.stepper.direction() !== Five.Stepper.DIRECTION.CW) {
+            this.stepper.cw();
         }
-        console.log('Cart direction : Clockwise');
     } else {
-        if (!config.board.debug) {
-            this.stepper
-                .rpm(this.parameters.counterClockwise.rpm)
-                .accel(this.parameters.counterClockwise.accel)
-                .decel(this.parameters.counterClockwise.decel)
-                .ccw();
+        if (!config.board.debug && this.stepper.direction() !== Five.Stepper.DIRECTION.CCW) {
+            this.stepper.ccw();
         }
-        console.log('Cart direction : Counter clockwise');
     }
 
     if (!config.board.debug) {
-
         this.stepper
-            .step(Math.abs(diff), function() {
-                this.position += diff;
+            .accel(this.parameters.end.accel)
+            .decel(this.parameters.end.decel)
+            .rpm(this.parameters.end.rpm)
+            .step(steps, function() {
+                if (this.sensorStates.actual == 1 && this.sensorStates.old == 0 && this.lockedCart == false) {
+                    this.lockedCart = true;
+                    this.position += (diff > 0) ? 1 : -1;
 
-                dfd.resolve();
+                    if (this.position == destination) {
+                        dfd.resolve();
+
+                        return;
+                    }
+                }
+
+                setTimeout(function() {
+                    this.moveTo(destination, dfd);
+                }.bind(this), 0);
             }.bind(this));
     } else {
-        this.position += diff;
+        this.position = destination;
         dfd.resolve();
     }
-
-    console.log('Moved to ' + this.position);
 
     return dfd.promise;
 };
@@ -139,49 +155,15 @@ Cart.prototype.moveTo = function(step) {
  * @param {Module} module
  */
 Cart.prototype.moveToModule = function(module) {
-    var dfd = deferred();
-
     if (false === module instanceof Module) {
         throw 'Bad parameter instance. Instance of Module expected';
     }
 
-    this.moveTo((module.order * ModuleClass.SIZE)).done(function() {
-        dfd.resolve();
-    });
-
-    return dfd.promise;
+    return this.moveTo(module.order);
 };
 
+
+
 Cart.prototype.moveToMaster = function(dfd) {
-    if (!dfd) {
-        dfd = deferred();
-    }
-
-    var diff = 0 - this.position;
-
-    if (diff == 0) {
-        dfd.resolve();
-    } else if (diff > 0) {
-        this.stepper.cw();
-    } else {
-        this.stepper.ccw();
-    }
-
-    this.stepper
-        .accel(this.parameters.end.accel)
-        .decel(this.parameters.end.decel)
-        .rpm(this.parameters.end.rpm)
-        .step(10, function() {
-            if (this.sensorState == 1) {
-                this.position = 0;
-
-                dfd.resolve();
-            } else {
-                setTimeout(function() {
-                    this.moveToMaster(dfd);
-                }.bind(this), 0);
-            }
-        }.bind(this));
-
-    return dfd.promise;
+    return this.moveTo(0);
 };
