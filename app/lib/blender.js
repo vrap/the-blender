@@ -5,10 +5,11 @@ var config = require('../../config/config'),
     IngredientModel = require('./model/ingredient'),
     Cart = require('./cart').Cart,
     fs = require('fs'),
+    path = require('path'),
     deferred = require('deferred');
 
 // Dynamically load existings modules with require
-fs.readdirSync('./app/lib/module').forEach(function(file) {
+fs.readdirSync(path.resolve(__dirname, 'module/')).forEach(function(file) {
     require('./module/' + file);
 });
 
