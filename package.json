@@ -1,6 +1,6 @@
 {
     "name": "the-blender",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "An automatic and connected cocktail dispenser",
     "keywords": ["cocktail", "blender", "arduino", "bar"],
     "homepage": "http://the-blender.io",
