@@ -127,6 +127,9 @@ Cart.prototype.moveTo = function(destination, dfd) {
             .decel(this.parameters.end.decel)
             .rpm(this.parameters.end.rpm)
             .step(steps, function() {
+
+                console.log(this.sensorStates.actual);
+
                 if (this.sensorStates.actual == 1 && this.sensorStates.old == 0 && this.lockedCart == false) {
                     this.lockedCart = true;
                     this.position += (diff > 0) ? 1 : -1;
@@ -161,8 +164,6 @@ Cart.prototype.moveToModule = function(module) {
 
     return this.moveTo(module.order);
 };
-
-
 
 Cart.prototype.moveToMaster = function(dfd) {
     return this.moveTo(0);

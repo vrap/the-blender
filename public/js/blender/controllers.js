@@ -175,6 +175,23 @@ angular.module('blenderController', [])
                 console.log(result.status);
                 if(result.status == true){
                     $scope.loadCocktail = true;
+
+                    setInterval(function(){
+
+                        ApiService.availability(user.getCommunity('master').uri).then(function(result){
+
+                            console.log(result);
+                            if(result.status == true){
+                                $scope.loadCocktail = false;
+                                return;
+                            }
+
+                        });
+                            
+                    
+                    }, 30);
+                    
+
                 }else{
                     NavService.setErrorMessage("Houtch !The blender is in trouble.");
                 }
@@ -697,6 +714,26 @@ angular.module('blenderController', [])
         $scope.manage = function(){
             $scope.manageBlender = true;
         }
+
+        $scope.callibration = function(){
+
+            var user = SessionService.Users.get();
+
+            ApiService.gradeIt(user.getCommunity('master').uri).then(function(result){
+
+                console.log(result);
+
+
+            },
+            function(error){
+
+                console.log(error);
+
+            });
+
+        }
+
+
 }])
 
 /**

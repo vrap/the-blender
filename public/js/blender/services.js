@@ -139,6 +139,28 @@ angular.module('blenderService', [])
     '$q',
     function($resource, $http, $q){
         return {
+
+            availability: function(masterUri){
+
+                var defered = $q.defer();
+
+                $http.get(
+                    masterUri + '/availability',
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                    )
+                    .success(function(response){
+                        defered.resolve(response);
+                    })
+                    .error(function(response){
+                        defered.reject(response);
+                    });
+
+                return defered.promise;
+
+            },
+
             recipes: function(server){
 
                 return $resource(
@@ -190,7 +212,27 @@ angular.module('blenderService', [])
                         defered.resolve(response);
                     })
                     .error(function(response){
-                        defered.fail(response);
+                        defered.reject(response);
+                    });
+
+                return defered.promise;
+
+            },
+            gradeIt: function(masterUri){
+
+                var defered = $q.defer();
+
+                $http.get(
+                    masterUri + '/grade',
+                    {
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                    )
+                    .success(function(response){
+                        defered.resolve(response);
+                    })
+                    .error(function(response){
+                        defered.reject(response);
                     });
 
                 return defered.promise;

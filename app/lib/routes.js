@@ -10,6 +10,29 @@ var mongoose = require('mongoose'),
  */
 module.exports = function(app) {
 
+    app.get('/api/blender/grade', function(req, res) {
+
+         // Ask the blender to create a recipe (already saved or created by user)
+        if (blender.isAvailable()) {
+            try {
+                blender.grade();
+            } catch (e) {
+                res.send({
+                    status: false
+                });
+            }
+
+            res.send({
+                status: true
+            })
+        } else {
+            res.send({
+                status: false
+            });
+        }
+
+    });
+
     app.get('/api/blender/modules', function(req, res) {
 
         ModuleModel

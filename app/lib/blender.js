@@ -222,7 +222,7 @@ Blender.prototype.step = function(steps) {
         console.log('step n°' + step.order);
         console.log('Moving to the module');
         this.cart.moveToModule(step.module.controller).done(function() {
-            console.log('Cart moved to module')
+            console.log('Cart moved to module');
             step.module.controller.execute(step.params).done(function() {
                 steps = steps.slice(1);
 
@@ -236,6 +236,41 @@ Blender.prototype.step = function(steps) {
 
     return dfd.promise;
 };
+
+Blender.prototype.grade = function(){
+
+    console.log('grade');
+
+    var dfd = deferred();
+
+    if(this.isAvailable()){
+
+        this.available = false;
+
+        var module;
+        for(module in this.modules){
+            break;
+        }
+
+        this.cart.moveToModule(this.modules[module][0].controller).done(function(){
+            console.log('Cart moved to first module');
+            this.cart.moveToMaster().done(function() {
+                    console.log('Cart moved to initial position');
+                    this.available = true;
+                    dfd.resolve();
+                }.bind(this));
+        }.bind(this));
+
+    }else{
+
+        dfd.reject();
+
+    }
+
+    return dfd.promise;
+
+
+}
 
 Blender.prototype.run = function(recipe) {
     var dfd = deferred();
