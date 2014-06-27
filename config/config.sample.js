@@ -112,7 +112,17 @@ module.exports = {
                  * @type {Number}
                  */
                 dir: 13
-            }
-        }
+            },
+            /**
+             * Number of rev for the stepper motor
+             * @type {Number}
+             */
+            stepsPerRev: 200
+        },
+        /**
+         * This is the pin of the sensor connected to the cart
+         * @type {Number}
+         */
+        sensor: 2
     }
 };
