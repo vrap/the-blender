@@ -4,7 +4,7 @@
     "description": "An automatic and connected cocktail dispenser",
     "keywords": ["cocktail", "blender", "arduino", "bar"],
     "homepage": "http://the-blender.io",
-    "main": "app/the-blender",
+    "main": "app/lib/blender",
     "dependencies": {
         "johnny-five": "~0.7.36",
         "socket.io": "~0.9.16",
@@ -15,8 +15,9 @@
     },
     "devDependencies": {},
     "scripts": {
-        "start": "node app/the-blender.js"
+        "start": "node ./app/the-blender.js"
     },
+    "bin": "./bin/the-blender.js",
     "repository": {
         "type": "git",
         "url": "git://github.com/vrap/the-blender.git"

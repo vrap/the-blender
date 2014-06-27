@@ -1,11 +1,17 @@
+#!/usr/bin/env node
+
+'use strict';
+
+process.bin = process.title = 'The Blender';
+
 /**
  * Module dependencies.
  */
 var config = require('../config/config'),
     mongoose = require('mongoose'),
-    blender = require('./lib/blender').Blender,
-    Server = require('./lib/server').Server,
-    RecipeModel = require('./lib/model/recipe'),
+    blender = require('../app/lib/blender').Blender,
+    Server = require('../app/lib/server').Server,
+    RecipeModel = require('../app/lib/model/recipe'),
     deferred = require('deferred');
 
 deferred.profile();
@@ -23,8 +29,8 @@ blender.init().done(function() {
     server.init(config.server.port);
 
     // Setting the routes
-    require('./lib/routes')(server.app);
+    require('../app/lib/routes')(server.app);
 
     console.info('[Blender][infos] Blender is ready, visit http://localhost:' + config.server.port + '/');
-    
+
 });
